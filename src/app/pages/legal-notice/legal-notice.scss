@@ -1,0 +1,78 @@
+@use '../../../styles/abstracts/variables' as var;
+
+.legal-notice-container, .privacy-policy-container {
+    padding: 48px 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    color: var.$color-primary;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 48px;
+
+        h2 {
+            font-size: 61px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: var.$color-gray-light;
+            }
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+
+    section {
+        margin-bottom: 48px;
+
+        h3 {
+            font-size: 27px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var.$color-primary;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: var.$color-primary;
+        }
+
+        ul {
+            list-style: disc;
+            margin-left: 24px;
+            margin-bottom: 16px;
+
+            li {
+                font-size: 16px;
+                line-height: 1.5;
+                margin-bottom: 8px;
+            }
+        }
+
+        a {
+            color: var.$color-highlight;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
