@@ -1,1 +1,66 @@
 @use '../../../styles/components/' as *;
+@use '../../../styles/abstracts/variables/' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 95px;
+  padding: 0 32px;
+  background-color: $header-bg;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  gap: 16px;
+  
+}
+
+.header-title {
+  font-size: 16px;
+  color: $color-text-muted;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $color-gray-light;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.user-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid $button-bg;
+  color: $button-text;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: $button-bg-hover;
+  }
+}

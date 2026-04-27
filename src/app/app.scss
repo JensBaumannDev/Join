@@ -1,0 +1,22 @@
+@use '../styles/abstracts/' as *;
+
+.layout {
+    display: flex;
+    @include maxWidth;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.right-side {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: hidden;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 240px;
+    
+}

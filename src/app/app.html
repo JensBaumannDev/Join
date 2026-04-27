@@ -1,7 +1,11 @@
-<app-header></app-header>
+<div class="layout">
+ <app-sidebar></app-sidebar>
 
-<app-sidebar></app-sidebar>
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+<div class="right-side">
+  <app-header></app-header>
+  <main class="content">
+      <router-outlet></router-outlet>
+  </main>
+</div>
+</div>

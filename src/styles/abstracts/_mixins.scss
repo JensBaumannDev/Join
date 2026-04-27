@@ -26,3 +26,18 @@
     justify-content: $justify-content;
     align-items: $align-items;
 }
+
+@mixin maxContent {
+    padding-left: calc((100% - 1440px) / 2);
+    padding-right: calc((100% - 1440px) / 2);
+}
+
+@mixin maxWidth {
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    
+
+    
+}
