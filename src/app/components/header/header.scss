@@ -1,10 +1,8 @@
 @use '../../../styles/components/' as *;
-@use '../../../styles/abstracts/variables/' as *;
+@use '../../../styles/abstracts/' as *;
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  @include flex($justify-content: flex-end, $align-items: center);
   height: 95px;
   padding: 0 32px;
   background-color: $header-bg;
@@ -21,15 +19,12 @@
 }
 
 .header-actions {
-  display: flex;
-  align-items: center;
+  @include flex($align-items: center);
   gap: 16px;
 }
 
 .header-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex($justify-content: center, $align-items: center);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -47,9 +42,7 @@
 }
 
 .user-initials {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex($justify-content: center, $align-items: center);
   width: 56px;
   height: 56px;
   border-radius: 50%;
