@@ -1,0 +1,47 @@
+$color-text:rgba(0, 0, 0, 1);
+$color-white: rgba(255, 255, 255, 1);
+$color-text-muted: rgba(205, 205, 205, 1);
+$color-gray-light: rgba(241, 241, 241, 1);
+$color-primary: rgba(42, 54, 71, 1);
+$color-primary-dark: rgba(30, 42, 56, 1);
+$color-primary-hover: rgba(9, 25, 49, 1);
+$color-accent: rgba(0, 124, 238, 1);
+$color-highlight: rgba(41, 171, 226, 1);
+
+$sidebar-bg: $color-primary;
+$sidebar-text: $color-text-muted;
+$sidebar-text-hover: $color-white;
+$sidebar-active-bg: $color-primary-dark;
+$sidebar-active-text: $color-white;
+
+$header-bg: $color-white;
+$header-text: $color-primary;
+
+$button-bg: $color-primary;
+$button-bg-hover: $color-highlight;
+$button-text: $color-white;
+
+$contact-email: $color-accent;
+$contact-hover-bg: $color-primary;
+$contact-hover-text: $color-white;
+
+$content-bg: $color-gray-light;
+$content-text: $color-primary;
+
+$user-colors: (
+  rgba(255, 122, 0, 1),
+  rgba(255, 94, 179, 1),
+  rgba(110, 82, 255, 1),
+  rgba(147, 39, 255, 1),
+  rgba(0, 190, 232, 1),
+  rgba(31, 215, 193, 1),
+  rgba(255, 116, 94, 1),
+  rgba(255, 163, 94, 1),
+  rgba(252, 113, 255, 1),
+  rgba(255, 199, 1, 1),
+  rgba(0, 56, 255, 1),
+  rgba(195, 255, 43, 1),
+  rgba(255, 230, 43, 1),
+  rgba(255, 70, 70, 1),
+  rgba(255, 187, 43, 1)
+);
