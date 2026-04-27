@@ -1,5 +1,5 @@
 @use '../../../styles/components/' as *;
-@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/' as *;
 
 .sidebar {
   top: 0;
@@ -8,19 +8,14 @@
   width: 232px;
   flex-shrink: 0;
   background-color: $sidebar-bg;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  @include flex(column, wrap, center, center);
   height: 100vh;
   overflow-y: auto;
 }
 
 
 .sidebar-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex($justify-content: center, $align-items: center);
   padding: 54px 24px 24px;
 
   img {
@@ -30,17 +25,14 @@
 }
 
 .sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  @include flex(column, wrap, flex-start, flex-start);
   gap: 4px;
   padding: 50px 16px;
   flex: 1;
 }
 
 .nav-item {
-  display: flex;
-  align-items: center;
+  @include flex($align-items: center);
   gap: 16px;
   padding: 14px 16px;
   color: $sidebar-text;
@@ -65,26 +57,29 @@
 }
 
 .sidebar-footer {
-  display: flex;
-  flex-direction: column;
+  @include flex(column);
   gap: 8px;
-  padding: 100px 16px;
+  padding: 100px 0;
+  width: 100%;
 }
 
 .footer-link {
+  @include flex($justify-content: center, $align-items: center);
   color: $sidebar-text;
   font-size: 13px;
   text-decoration: none;
-  padding: 6px 16px;
-  border-radius: 8px;
-  transition: color 0.2s;
+  height: 35px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.2s, color 0.2s;
   cursor: pointer;
 
   &:hover {
-    color: $sidebar-text-hover;
+    color: $color-highlight;
   }
 
   &.active {
-    color: $color-highlight;
+    background-color: $color-primary-hover;
+    color: $sidebar-text-hover;
   }
 }

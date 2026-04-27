@@ -1,40 +1,25 @@
-@use '../../../styles/abstracts/variables' as var;
+@use '../../../styles/abstracts' as var;
 
 .privacy-policy-container {
-    padding: 48px 64px;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: 'Inter', sans-serif;
-    color: var.$color-primary;
+    color: var.$color-text;
 
     .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 48px;
+        @include var.flex($justify-content: space-between, $align-items: center);
+        margin-bottom: 30px;
 
-        h2 {
-            font-size: 61px;
-            font-weight: 700;
-            margin: 0;
-        }
     }
 
     section {
-        margin-bottom: 48px;
+        margin-bottom: 24px;
 
         h3 {
-            font-size: 27px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: var.$color-primary;
+            color: var.$color-text;
+            margin-bottom: 10px;
         }
 
         p {
-            font-size: 16px;
-            line-height: 1.5;
             margin-bottom: 16px;
-            color: var.$color-primary;
+            color: var.$color-text;
         }
     }
 }
