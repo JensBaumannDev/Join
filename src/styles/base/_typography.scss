@@ -1,9 +1,9 @@
 @use '../abstracts/mixins' as mx;
 
 // example how to use
-p{
-    @include mx.fluid-text(16, 19);
-    font-family: 'Inter', sans-serif;
+p {
+  @include mx.fluid-text(16, 19);
+  font-family: 'Inter', sans-serif;
 }
 
 
@@ -14,10 +14,30 @@ p{
   font-style: normal;
 }
 
-.text-regular { font-weight: 400; }
-.text-semibold { font-weight: 600; }
-.text-bold { font-weight: 700; }
+.text-regular {
+  font-weight: 400;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+
+.text-bold {
+  font-weight: 700;
+}
 
 body {
   font-family: 'Inter', sans-serif;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+
+h2 {
+  font-size: 60px;
+  font-weight: 700;
+  margin: 0;
 }
