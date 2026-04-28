@@ -1,0 +1,7 @@
+@use '../abstracts/' as *;
+
+:root {
+  @for $i from 1 through length($user-colors) {
+    --user-color-#{$i}: #{nth($user-colors, $i)};
+  }
+}

@@ -1,0 +1,26 @@
+@use '../../../styles/abstracts/' as *;
+
+.avatar-circle {
+  @include flex($justify-content: center, $align-items: center);
+  background-color: var(--avatar-color);
+  color: $color-white;
+  border-radius: 50%;
+  font-weight: 700;
+  border: 2px solid;
+  border-color: $color-white;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.header-variant {
+  background-color: $color-white;
+  color: var(--avatar-color);
+  border-color: $color-primary;
+  box-shadow: none;
+  cursor: pointer;
+  border-width: 3px;
+
+  &:hover {
+    background-color: $color-gray-light;
+  }
+}
