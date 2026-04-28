@@ -2,7 +2,7 @@
   <!-- LEFT: SIDEBAR -->
   <div class="contacts__sidebar">
     <div class="btn-container">
-      <button class="btn-primary contacts__add-btn">
+      <button class="btn-primary contacts__add-btn" (click)="openContactDialog('add')">
         Add new contact
         <img class="contacts__add-icon" src="/icons/other/person_add.svg" alt="Add person icon" />
       </button>
@@ -40,7 +40,11 @@
     </div>
 
     @if (contactService.selectedContact(); as contact) {
-      <app-contact-detail [contact]="contact"></app-contact-detail>
+      <app-contact-detail 
+        [contact]="contact" 
+        (edit)="openContactDialog('edit', contact)"
+        (delete)="contact.id && contactService.deleteContact(contact.id); contactService.selectedContact.set(null)">
+      </app-contact-detail>
     }
   </div>
 </div>
