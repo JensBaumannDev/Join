@@ -2,12 +2,19 @@
 @use '../../../styles/abstracts/' as *;
 
 .header {
-  @include flex($justify-content: space-between, $align-items: center);
   height: 95px;
-  padding: 0 32px 0 100px;
   background-color: $header-bg;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+  width: 100%;
+}
+
+.header-content {
+  @include flex($justify-content: space-between, $align-items: center);
+  height: 100%;
+  padding: 0 32px 0 100px;
+  max-width: 1208px; // 1440 - 232 (space between headline & sidebar)
+  width: 100%;
   gap: 16px;
 }
 
