@@ -1,0 +1,134 @@
+@use '../../../../styles/components/button' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/base/typography' as *;
+
+.content {
+  flex: 1;
+  padding: 32px 60px;
+  @include flex(column, nowrap);
+  gap: 32px;
+  overflow-y: auto;
+  animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.contacts {
+  &__detail {
+    @include flex(column, nowrap, flex-start);
+    gap: 24px;
+  }
+
+  &__detail-top {
+    @include flex(row, nowrap, flex-start, center);
+    gap: 54px;
+  }
+
+  &__detail-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: $color-accent;
+    color: $color-white;
+    font-size: 47px;
+    font-weight: 500;
+    @include flex(row, nowrap, center, center);
+    flex-shrink: 0;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &__detail-name-wrap {
+    @include flex(column, nowrap);
+    gap: 8px;
+  }
+
+  &__detail-name {
+    font-size: 47px;
+    font-weight: 500;
+    line-height: 120%;
+    color: $color-text;
+  }
+
+  &__detail-actions {
+    @include flex(row, nowrap, flex-start, center);
+    gap: 22px;
+  }
+
+  &__action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: $color-text;
+    @include flex(row, nowrap, flex-start, center);
+    gap: 10px;
+    padding: 0;
+    transition: background 120ms ease-in-out;
+
+    &:hover {
+      color: $color-highlight;
+      font-weight: 700;
+
+      .contacts__action-img {
+        filter: brightness(0) saturate(100%) invert(47%) sepia(80%) saturate(500%) hue-rotate(180deg);
+      }
+    }
+
+    &--delete:hover {
+      .contacts__action-img {
+        filter: brightness(0) saturate(100%) invert(47%) sepia(80%) saturate(500%) hue-rotate(180deg);
+      }
+    }
+  }
+
+  &__detail-section {
+    @include flex(column, nowrap);
+    gap: 16px;
+  }
+
+  &__detail-label {
+    font-size: 20px;
+    font-weight: 400;
+    color: $color-text;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    line-height: 120%;
+  }
+
+  &__detail-field {
+    @include flex(column, nowrap);
+    gap: 14px;
+  }
+
+  &__detail-field-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 120%;
+  }
+
+  &__detail-field-value {
+    font-size: 16px;
+    color: $color-text;
+    padding-bottom: 14px;
+    line-height: 120%;
+
+    &--link {
+      color: $color-accent;
+    }
+  }
+}

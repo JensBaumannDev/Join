@@ -1,18 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
-// import { JsonPipe } from '@angular/common';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { Supabase } from '../contact.service';
-import { computed } from '@angular/core';
+import { AvatarComponent } from '../../../components/avatar/avatar.component';
+
+import { ContactDetail } from '../contact-detail/contact-detail';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  // imports: [JsonPipe],
+  imports: [AvatarComponent, ContactDetail],
   templateUrl: './contact-list.html',
   styleUrl:'./contact-list.scss',
 })
-export class ContactList {
+export class ContactList implements OnInit {
   contactService = inject(Supabase);
   private dialog = inject(MatDialog);
 
@@ -49,15 +48,15 @@ export class ContactList {
     this.contactService.subscribeToChanges();
   }
 
-  getInitials(name: string) {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
+  selectContact(contact: any) {
+    this.contactService.selectedContact.set(null);
+    setTimeout(() => {
+      this.contactService.selectedContact.set(contact);
+    }, 50);
   }
 
-  add(name: string, email: string, phone: number) {
+  add(name: string, email: string, phone: string) {
     this.contactService.addContact(name, email, phone);
+    this.contactService.getContacts();
   }
 }

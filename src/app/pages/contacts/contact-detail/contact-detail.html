@@ -1,1 +1,34 @@
-<p>contact-detail works!</p>
+   <div class="content">
+    <div class="contacts__detail">
+      <div class="contacts__detail-top">
+        <app-avatar [name]="contact.name" [size]="120"></app-avatar>
+        <div class="contacts__detail-name-wrap">
+          <div class="contacts__detail-name">{{ contact.name}}</div>
+          <div class="contacts__detail-actions">
+  <button class="contacts__action-btn">
+    <img src="icons/other/edit.svg" alt="Edit" class="contacts__action-img" /> Edit
+  </button>
+  <button class="contacts__action-btn contacts__action-btn--delete">
+    <img src="icons/other/delete.svg" alt="Delete" class="contacts__action-img" /> Delete
+  </button>
+</div>
+        </div>
+      </div>
+
+      <div class="contacts__detail-section">
+        <div class="contacts__detail-label">Contact Information</div>
+
+        <div class="contacts__detail-field">
+          <div class="contacts__detail-field-label">Email</div>
+          <div class="contacts__detail-field-value contacts__detail-field-value--link">
+            {{ contact.email }}
+          </div>
+        </div>
+
+        <div class="contacts__detail-field">
+          <div class="contacts__detail-field-label">Phone</div>
+          <div class="contacts__detail-field-value">{{ contact.phone }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
