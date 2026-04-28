@@ -9,10 +9,19 @@ import { ContactDetail } from '../contact-detail/contact-detail';
   standalone: true,
   imports: [AvatarComponent, ContactDetail],
   templateUrl: './contact-list.html',
-  styleUrl: './contact-list.scss',
+  styleUrl:'./contact-list.scss',
 })
 export class ContactList implements OnInit {
   contactService = inject(Supabase);
+  private dialog = inject(MatDialog);
+
+  openContactDialog(mode: 'add' | 'edit', contact?: any) {
+  const dialogRef = this.dialog.open(ContactDialogComponent, {
+    data: { mode, contact },
+    panelClass: 'contact-dialog-panel',
+    maxWidth: '100vw',
+  });
+}
 
   groupedContacts = computed(() => {
     const contacts = this.contactService.contacts();

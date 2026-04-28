@@ -1,0 +1,41 @@
+@use '@angular/material' as mat;
+@use '../abstracts' as *;
+
+.form {
+  @include flex(column, wrap, flex-start, stretch);
+  gap: 30px;
+  flex: 1;
+
+  .custom-input {
+    width: 100%;
+
+    @include mat.form-field-overrides((
+      container-height: 50px,
+      outlined-container-shape: 10px,
+      outlined-outline-color: $color-gray-form,
+      outlined-focus-outline-color: $color-highlight,
+      outlined-hover-outline-color: #a0a0a0,
+      outlined-input-text-placeholder-color: $color-gray-form,
+      container-vertical-padding: 10px
+    ));
+
+    &.mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .mat-mdc-form-field-infix {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    img[matSuffix] {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+      margin-left: 10px;
+    }
+  }
+}
