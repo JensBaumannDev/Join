@@ -10,7 +10,7 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
   styleUrl: './contact-detail.scss',
 })
 export class ContactDetail {
-  @Input({ required: true }) contact!: { id?: number; name: string; email: string; phone: number };
+  @Input({ required: true }) contact!: { id?: number; name: string; email: string; phone: string };
 
   getInitials(name: string) {
     return name

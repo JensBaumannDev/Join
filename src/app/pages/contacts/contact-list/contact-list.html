@@ -1,20 +1,22 @@
 <div class="contacts">
   <!-- LEFT: SIDEBAR -->
   <div class="contacts__sidebar">
+    <div class="btn-container">
+      <button class="btn-primary contacts__add-btn">
+        Add new contact
+        <img class="contacts__add-icon" src="/icons/other/person_add.svg" alt="Add person icon" />
+      </button>
+    </div>
     <div class="contacts__sidebar-inner">
-      <div class="btn-container">
-        <button class="btn-primary contacts__add-btn">
-          Add new contact
-          <img class="contacts__add-icon" src="/icons/other/person_add.svg" alt="Add person icon" />
-        </button>
-      </div>
       <div class="contacts__list">
         @for (group of groupedContacts(); track group.letter) {
           <div class="contacts__group">
             <div class="contacts__group-letter">{{ group.letter }}</div>
 
             @for (c of group.contacts; track c.email) {
-              <div class="contacts__item">
+              <div class="contacts__item" 
+                   (click)="selectContact(c)"
+                   [class.contacts__item--active]="contactService.selectedContact()?.id === c.id">
                 <app-avatar [name]="c.name"></app-avatar>
 
                 <div class="contacts__info">
@@ -36,6 +38,10 @@
       <div class="contacts__divider"></div>
       <div class="contacts__subtitle">Better with a team</div>
     </div>
+
+    @if (contactService.selectedContact(); as contact) {
+      <app-contact-detail [contact]="contact"></app-contact-detail>
+    }
   </div>
 </div>
 

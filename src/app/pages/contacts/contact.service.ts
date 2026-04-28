@@ -18,6 +18,13 @@ export class Supabase {
     phone: string
   }[]>([])
 
+  selectedContact = signal<{
+    id?: number
+    name: string
+    email: string
+    phone: string
+  } | null>(null)
+
   private channel: any
 
   async getContacts() {
