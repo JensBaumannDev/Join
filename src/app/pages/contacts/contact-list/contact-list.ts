@@ -2,10 +2,12 @@ import { Component, inject, OnInit, computed } from '@angular/core';
 import { Supabase } from '../contact.service';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 
+import { ContactDetail } from '../contact-detail/contact-detail';
+
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [AvatarComponent],
+  imports: [AvatarComponent, ContactDetail],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
@@ -35,6 +37,13 @@ export class ContactList implements OnInit {
   ngOnInit() {
     this.contactService.getContacts();
     this.contactService.subscribeToChanges();
+  }
+
+  selectContact(contact: any) {
+    this.contactService.selectedContact.set(null);
+    setTimeout(() => {
+      this.contactService.selectedContact.set(contact);
+    }, 50);
   }
 
   add(name: string, email: string, phone: string) {
