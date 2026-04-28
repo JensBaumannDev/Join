@@ -18,6 +18,8 @@ export class Supabase {
     phone: number
   }[]>([])
 
+  private channel: any
+
   async getContacts() {
     const { data, error } = await this.supabase
       .from('contacts')
@@ -35,7 +37,10 @@ export class Supabase {
   }
 
   subscribeToChanges(){
-    this.supabase
+
+    if (this.channel) return
+
+    this.channel = this.supabase
     .channel('contacts-changes')
     .on(
       'postgres_changes',
@@ -43,7 +48,6 @@ export class Supabase {
         event: '*',
         schema: 'public',
         table: 'contacts',
-
       },
       () => {
         this.getContacts();
