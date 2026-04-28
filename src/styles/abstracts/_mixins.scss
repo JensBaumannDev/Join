@@ -1,4 +1,6 @@
 @use 'sass:math';
+@use 'variables' as vars;
+
 
 @mixin fluid-text($min: 16, $max: 48) {
   $maxViewportWidth: 1440;
@@ -12,30 +14,28 @@
   $slope: math.div(($maxSize - $minSize), ($maxWidth - $minWidth));
   $yAxisIntersection: -$minWidth * $slope + $minSize;
 
-  font-size: clamp(
-    #{$minSize * 1rem},
+  font-size: clamp(#{$minSize * 1rem},
     calc(#{$yAxisIntersection * 1rem} + #{$slope * 100vw}),
-    #{$maxSize * 1rem}
-  );
+    #{$maxSize * 1rem});
 }
 
 @mixin flex($flex-direction: row, $flex-wrap: wrap, $justify-content: flex-start, $align-items: stretch) {
-    display: flex;
-    flex-direction: $flex-direction;
-    flex-wrap: $flex-wrap;
-    justify-content: $justify-content;
-    align-items: $align-items;
+  display: flex;
+  flex-direction: $flex-direction;
+  flex-wrap: $flex-wrap;
+  justify-content: $justify-content;
+  align-items: $align-items;
 }
 
 @mixin maxContent {
-    padding-left: calc((100% - 1440px) / 2);
-    padding-right: calc((100% - 1440px) / 2);
+  padding-left: calc((100% - 1440px) / 2);
+  padding-right: calc((100% - 1440px) / 2);
 }
 
 @mixin maxWidth {
-    max-width: 1440px;
-    width: 100%;
-    box-sizing: border-box;
+  max-width: 1440px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @mixin custom-material-dialog($radius: 30px) {
@@ -59,3 +59,49 @@
     display: none;
   }
 }
+
+/* #region responsive-mixins */
+
+// Up to 370px
+@mixin mobile-sm {
+  @media (max-width: #{vars.$breakpoint-mobile-sm}) {
+    @content;
+  }
+}
+
+// Up to 480px
+@mixin mobile-md {
+  @media (max-width: #{vars.$breakpoint-mobile}) {
+    @content;
+  }
+}
+
+// Up to 768px (Mobile/Large-Mobile range)
+@mixin mobile {
+  @media (max-width: #{vars.$breakpoint-tablet}) {
+    @content;
+  }
+}
+
+// From 769px to 1024px (Tablet Landscape)
+@mixin tablet {
+  @media (min-width: #{vars.$breakpoint-tablet + 1px}) and (max-width: #{vars.$breakpoint-desktop}) {
+    @content;
+  }
+}
+
+// From 1025px (Desktop)
+@mixin desktop {
+  @media (min-width: #{vars.$breakpoint-desktop + 1px}) {
+    @content;
+  }
+}
+
+// From 1441px (Large Desktop)
+@mixin large-desktop {
+  @media (min-width: #{vars.$breakpoint-large + 1px}) {
+    @content;
+  }
+}
+
+/* #endregion */
