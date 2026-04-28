@@ -53,12 +53,16 @@
       border-radius: 8px;
     }
 
-    &--active {
+    &.active {
       background-color: $color-primary;
       color: $color-white;
 
       .contacts__email {
         color: rgba($color-white, 0.7);
+      }
+
+      .contacts__name {
+        color: $color-white;
       }
     }
   }
@@ -88,6 +92,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__content {
+    flex: 1;
+    padding: 110px 55px;
+    overflow-y: auto;
   }
 
   &__header {

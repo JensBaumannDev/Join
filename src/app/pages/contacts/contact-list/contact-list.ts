@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, computed } from '@angular/core';
 import { Supabase } from '../contact.service';
+import { ContactDetail } from '../contact-detail/contact-detail';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [],
+  imports: [ContactDetail],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
@@ -46,5 +47,9 @@ export class ContactList implements OnInit {
 
   add(name: string, email: string, phone: number) {
     this.contactService.addContact(name, email, phone);
+  }
+
+  selectContact(contact: any) {
+    this.contactService.selectedContact.set(contact);
   }
 }
