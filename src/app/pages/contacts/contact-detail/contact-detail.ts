@@ -1,10 +1,11 @@
 
 import { Component, Input } from '@angular/core';
+import { AvatarComponent } from '../../../components/avatar/avatar.component';
 
 @Component({
   selector: 'app-contact-detail',
   standalone: true,
-  imports: [],
+  imports: [AvatarComponent],
   templateUrl: './contact-detail.html',
   styleUrl: './contact-detail.scss',
 })
