@@ -27,3 +27,18 @@
         max-width: none;
     }
 }
+
+/* #region responsive */
+@include mobile {
+    .content {
+        padding: 50px 16px 0 16px;
+    }
+}
+
+@include tablet {
+    .content {
+        padding: 110px 50px 0 50px;
+    }
+}
+
+/* #endregion */
