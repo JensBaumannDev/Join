@@ -3,6 +3,8 @@ import { Supabase } from '../contact.service';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 
 import { ContactDetail } from '../contact-detail/contact-detail';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
 
 @Component({
   selector: 'app-contact-list',

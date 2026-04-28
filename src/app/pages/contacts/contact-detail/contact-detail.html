@@ -5,10 +5,10 @@
         <div class="contacts__detail-name-wrap">
           <div class="contacts__detail-name">{{ contact.name}}</div>
           <div class="contacts__detail-actions">
-  <button class="contacts__action-btn">
+  <button class="contacts__action-btn" (click)="edit.emit()">
     <img src="icons/other/edit.svg" alt="Edit" class="contacts__action-img" /> Edit
   </button>
-  <button class="contacts__action-btn contacts__action-btn--delete">
+  <button class="contacts__action-btn contacts__action-btn--delete" (click)="delete.emit()">
     <img src="icons/other/delete.svg" alt="Delete" class="contacts__action-img" /> Delete
   </button>
 </div>

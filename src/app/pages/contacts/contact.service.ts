@@ -61,7 +61,7 @@ export class Supabase {
       .subscribe();
   }
 
-  async addContact(name: string, email: string, phone: number) {
+  async addContact(name: string, email: string, phone: string) {
     const { error } = await this.supabase
       .from('contacts')
       .insert([{ name, email, phone }])
@@ -71,7 +71,7 @@ export class Supabase {
     }
   }
 
-  async updateContact(id: number, name: string, email: string, phone: number) {
+  async updateContact(id: number, name: string, email: string, phone: string) {
     const { error } = await this.supabase
       .from('contacts')
       .update({ name, email, phone })
