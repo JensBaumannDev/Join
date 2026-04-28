@@ -3,8 +3,11 @@
     <img src="logo/join-logo.svg" alt="Join Logo" class="logo" />
     <div class="title-container">
       <h2>{{ title() }}</h2>
-      <div class="underline"></div>
+      @if (subtitle()) {
+        <h4 class="subtitle">{{ subtitle() }}</h4>
+      }
     </div>
+    <div class="underline"></div>
   </div>
 
   <div class="right-panel">
@@ -22,32 +25,32 @@
       </div>
 
       <form [formGroup]="form" class="form">
-        <mat-form-field appearance="outline" class="custom-input">
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input matInput formControlName="name" placeholder="Name" />
-          <img matSuffix src="/icons/other/person.svg" alt="user" />
+          <img matSuffix src="/icons/form/person.svg" alt="user" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="custom-input">
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input matInput type="email" formControlName="email" placeholder="Email" />
-          <img matSuffix src="/icons/other/mail.svg" alt="mail" />
+          <img matSuffix src="/icons/form/mail.svg" alt="mail" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="custom-input">
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input matInput type="tel" formControlName="phone" placeholder="Phone" />
-          <img matSuffix src="/icons/other/phone.svg" alt="phone" />
+          <img matSuffix src="/icons/other/call.svg" alt="phone" />
         </mat-form-field>
       </form>
     </div>
 
     <div class="actions">
-      <button mat-stroked-button class="btn btn-secondary" (click)="delete()">
+      <button class="btn btn-secondary" (click)="delete()">
         {{ cancelBtnText() }}
         @if (mode() === 'add') {
           <img src="/icons/other/close.svg" alt="close" />
         }
       </button>
 
-      <button mat-flat-button class="btn btn-primary" [disabled]="form.invalid" (click)="save()">
+      <button class="btn btn-primary" [disabled]="form.invalid" (click)="save()">
         {{ saveBtnText() }}
         <img src="/icons/other/check.svg" alt="check" />
       </button>

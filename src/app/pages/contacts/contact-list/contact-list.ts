@@ -1,17 +1,28 @@
 import { Component, inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
+// import { JsonPipe } from '@angular/common';
 import { Supabase } from '../contact.service';
 import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [JsonPipe],
+  // imports: [JsonPipe],
   templateUrl: './contact-list.html',
-  styleUrl: './contact-list.scss',
+  styleUrl:'./contact-list.scss',
 })
 export class ContactList {
   contactService = inject(Supabase);
+  private dialog = inject(MatDialog);
+
+  openContactDialog(mode: 'add' | 'edit', contact?: any) {
+  const dialogRef = this.dialog.open(ContactDialogComponent, {
+    data: { mode, contact },
+    panelClass: 'contact-dialog-panel',
+    maxWidth: '100vw',
+  });
+}
 
   groupedContacts = computed(() => {
     const contacts = this.contactService.contacts();

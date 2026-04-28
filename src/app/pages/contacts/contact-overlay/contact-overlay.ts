@@ -1,5 +1,5 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Component, inject, signal, computed, ViewEncapsulation } from '@angular/core';
+import { Supabase } from '../contact.service';
+import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -31,17 +31,26 @@ export class ContactDialogComponent {
     private fb = inject(FormBuilder);
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
     private data = inject(MAT_DIALOG_DATA);
+    private supabase = inject(Supabase);
 
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
+    subtitle = computed(() => this.mode() === 'add' ? 'Tasks are better with a team!' : '');
     cancelBtnText = computed(() => this.mode() === 'add' ? 'Cancel' : 'Delete');
     saveBtnText = computed(() => this.mode() === 'add' ? 'Create contact' : 'Save');
 
     form = this.fb.group({
-        name: [this.data?.contact?.name || '', Validators.required],
-        email: [this.data?.contact?.email || '', [Validators.required, Validators.email]],
-        phone: [this.data?.contact?.phone || '', Validators.required]
+        name: [this.data?.contact?.name || '', [Validators.required, Validators.minLength(3)]],
+        email: [
+            this.data?.contact?.email || '',
+            [
+                Validators.required,
+                Validators.email,
+                Validators.pattern(/^\S+@\S+\.[a-zA-Z]{2,}$/)
+            ]
+        ],
+        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\d+$/)]]
     });
 
     formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value });
@@ -57,25 +66,26 @@ export class ContactDialogComponent {
         this.dialogRef.close();
     }
 
-    delete() {
+    async delete() {
+        if (this.mode() === 'edit' && this.data.contact?.id) {
+            await this.supabase.deleteContact(this.data.contact.id);
+        }
         this.dialogRef.close({ action: 'delete' });
     }
 
-    save() {
+    async save() {
         if (this.form.invalid) return;
-        this.dialogRef.close({ action: 'save', data: this.form.getRawValue() });
+        const value = this.form.getRawValue();
+
+        if (this.mode() === 'add') {
+            await this.supabase.addContact(value.name, value.email, value.phone);
+        } else {
+            const contactId = this.data.contact.id;
+            if (contactId) {
+                await this.supabase.updateContact(contactId, value.name, value.email, value.phone);
+            }
+        }
+
+        this.dialogRef.close({ action: 'save', data: value });
     }
 }
-//     if (this.mode() === 'add') {
-//       this.cancel();
-//     } else {
-//       this.dialogRef.close({ action: 'delete' });
-//     }
-//   }
-
-//   save() {
-//     if (this.form.valid) {
-//       this.dialogRef.close({ action: 'save', data: this.form.value });
-//     }
-//   }
-// }

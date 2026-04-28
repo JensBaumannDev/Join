@@ -37,7 +37,26 @@
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
-    
+}
 
-    
+@mixin custom-material-dialog($radius: 30px) {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: #{$radius};
+    --mdc-dialog-container-color: white;
+
+    .mdc-dialog__surface {
+      padding: 0;
+      overflow: hidden;
+      background-color: transparent;
+      border-radius: inherit;
+    }
+  }
+}
+
+.contact-dialog-panel {
+  @include custom-material-dialog(30px);
+
+  .cdk-visually-hidden {
+    display: none;
+  }
 }

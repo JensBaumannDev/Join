@@ -22,7 +22,7 @@ export class Supabase {
     const { data, error } = await this.supabase
       .from('contacts')
       .select('*')
-      .order('name', {ascending: true})
+      .order('name', { ascending: true })
 
     if (error) {
       console.error(error)
@@ -34,31 +34,53 @@ export class Supabase {
     }
   }
 
-  subscribeToChanges(){
+  subscribeToChanges() {
     this.supabase
-    .channel('contacts-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'contacts',
+      .channel('contacts-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'contacts',
 
-      },
-      () => {
-        this.getContacts();
-      }
-    )
-    .subscribe();
+        },
+        () => {
+          this.getContacts();
+        }
+      )
+      .subscribe();
   }
 
-  async addContact (name: string, email: string, phone: number) {
+  async addContact(name: string, email: string, phone: number) {
     const { error } = await this.supabase
-    .from('contacts')
-    .insert ([{ name, email, phone}])
+      .from('contacts')
+      .insert([{ name, email, phone }])
 
     if (error) {
       console.error(error)
+    }
+  }
+
+  async updateContact(id: number, name: string, email: string, phone: number) {
+    const { error } = await this.supabase
+      .from('contacts')
+      .update({ name, email, phone })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Fehler beim Updaten:', error);
+    }
+  }
+
+  async deleteContact(id: number) {
+    const { error } = await this.supabase
+      .from('contacts')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Fehler beim Löschen:', error);
     }
   }
 }

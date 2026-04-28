@@ -13,13 +13,11 @@ import { ContactDialogComponent } from './contact-overlay/contact-overlay';
 export class Contacts {
   private dialog = inject(MatDialog);
 
-  openContactDialog(mode: 'add' | 'edit') {
+  openEditContactDialog() {
     this.dialog.open(ContactDialogComponent, {
-      data: { mode },
+      data: { mode: 'edit' },
       panelClass: 'contact-dialog-panel',
       maxWidth: '100vw',
-      width: 'auto',
-      height: 'auto',
     });
   }
 }

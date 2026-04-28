@@ -2,115 +2,93 @@
 @use '../../../../styles/components' as *;
 
 .dialog-container {
-  display: flex;
-  width: 1212px;
-  min-height: 592px;
-  background-color: $color-white;
+  @include flex(row, wrap, flex-start, stretch);
+  width: 1200px;
+  min-height: 600px;
+  background-color: transparent;
   border-radius: 30px;
   overflow: hidden;
 
   .left-panel {
+    @include flex(column, wrap, center, flex-start);
+    gap: 20px;
     width: 40%;
     background-color: $color-primary;
     color: $color-white;
-    padding: 66px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 30px;
+    padding: 70px 50px;
+
     .logo {
       width: 55px;
     }
 
-    h2 {
-      font-size: 61px;
-      line-height: 1.2;
-      margin: 0;
-      font-weight: 700;
+    .title-container{
+      @include flex(column, wrap, center, flex-start);
+      gap: 10px;
     }
 
     .underline {
       width: 90px;
       height: 3px;
       background-color: $color-highlight;
-      margin-top: 15px;
     }
   }
 
   .right-panel {
     flex: 1;
-    padding: 48px;
+    padding: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
+    background-color: $color-white;
 
     .close-button {
       position: absolute;
-      top: 32px;
-      right: 32px;
+      top: 50px;
+      right: 50px;
+
+      &:hover {
+        background-color: $color-gray-light;
+        border-radius: 50%;
+      }
     }
 
     .content-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 64px;
-      padding-left: 56px;
+      @include flex(row, wrap, flex-start, center);
+      gap: 70px;
+      padding-left: 60px;
 
       .avatar {
+        @include flex(row, wrap, center, center);
+        flex-shrink: 0;
         width: 120px;
         height: 120px;
         border-radius: 50%;
-        background-color: #d1d1d1;
+        background-color: $color-gray-form;
         color: $color-white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        font-size: 47px;
+        font-size: 50px;
         border: 3px solid $color-white;
-        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
+        box-shadow: 0px 0px 4px 0px #0000001a;
+        overflow: hidden;
 
-        .avatar-icon {
+        &-icon {
           width: 60px;
           height: 60px;
           object-fit: contain;
           filter: brightness(0) invert(1);
         }
       }
-
-      .form {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        gap: 8px;
-
-        ::ng-deep .custom-input {
-          width: 100%;
-
-          --mdc-outlined-text-field-outline-color: #d1d1d1;
-          --mdc-outlined-text-field-focus-outline-color: #29abe2;
-          --mat-form-field-container-height: 50px;
-
-          img[matSuffix] {
-            width: 20px;
-            margin-right: 12px;
-          }
-        }
-      }
     }
 
     .actions {
-      display: flex;
-      gap: 24px;
-      margin-top: 48px;
-      padding-left: 240px;
+      @include flex(row, wrap, flex-start, center);
+      gap: 25px;
+      margin-top: 50px;
+      padding-left: 245px;
 
       button img {
-        width: 24px;
-        height: 24px;
+        width: 25px;
+        height: 25px;
       }
     }
   }
