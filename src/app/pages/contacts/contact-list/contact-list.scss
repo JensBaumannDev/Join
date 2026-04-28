@@ -4,27 +4,59 @@
 @use '../../../../styles/base/typography' as *;
 
 .contacts {
-  display: flex;
+  @include flex(row, nowrap, flex-start, stretch);
   height: 100%;
   overflow: hidden;
 
   &__sidebar {
-    width: 320px;
-    padding: 16px;
-    border-right: 1px solid #e5e7eb;
-    display: flex;
-    flex-direction: column;
+    width: 460px;
+    padding: 16px 4px 16px 16px;
+    @include flex(column, nowrap, flex-start, center);
+    height: 100%;
+  }
+
+  &__sidebar-inner {
+    @include flex(column, nowrap, flex-start, center);
     height: 100%;
   }
 
   &__add-btn {
-    width: 100%;
+    width: 350px;
+    flex-shrink: 0;
+    font-size: 21px;
+    font-weight: 700;
+
+    .contacts__add-icon {
+      width: 32px;
+      height: 32px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
   }
 
   &__list {
     flex: 1;
     overflow-y: auto;
     padding: 0 16px 16px;
+
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0 , 0, 0.35);
+    }
   }
 
   &__group {
@@ -34,22 +66,20 @@
   &__group-letter {
     font-size: 20px;
     margin-bottom: 20px;
-    padding-left: 4px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
-    padding-top: 16px;
+    padding: 17px 36px;
+    border-bottom: 1px solid $color-gray-light;
   }
 
   &__item {
-    display: flex;
+    @include flex(row, nowrap, flex-start, center);
     align-items: center;
-    padding: 10px;
+    padding: 17px 36px;
     cursor: pointer;
     transition: all 120ms ease-in-out;
     gap: 12px;
 
     &:hover {
-      background: #eef0f3;
+      background: $color-gray-light;
       border-radius: 8px;
     }
 
@@ -63,15 +93,11 @@
     }
   }
 
-  &__avatar {
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-
   &__info {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    gap: 10px;
   }
 
   &__name {
@@ -94,16 +120,19 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-top: 115px;
+    padding-left: 60px;
   }
 
   &__divider {
-    width: 2px;
-    height: 40px;
-    background-color: $color-accent;
+    width: 4px;
+    border-radius: 8px;
+    height: 60px;
+    background-color: $color-highlight;
   }
 
   &__title {
-    font-size: 61px;
+    font-size: 60px;
     font-weight: 700;
   }
 
@@ -111,13 +140,9 @@
     font-size: 27px;
   }
 
-  &__list::-webkit-scrollbar {
-    width: 6px;
+  &__content {
+    background: $content-bg;
+    width: 100%;
   }
-
-  &__list::-webkit-scrollbar-thumb {
-    background: rgba($color-text, 0.2);
-    border-radius: 10px;
-  }
-
 }
+
