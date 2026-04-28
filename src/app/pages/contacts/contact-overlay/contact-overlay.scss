@@ -1,0 +1,117 @@
+@use '../../../../styles/abstracts' as *;
+@use '../../../../styles/components' as *;
+
+.dialog-container {
+  display: flex;
+  width: 1212px;
+  min-height: 592px;
+  background-color: $color-white;
+  border-radius: 30px;
+  overflow: hidden;
+
+  .left-panel {
+    width: 40%;
+    background-color: $color-primary;
+    color: $color-white;
+    padding: 66px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    .logo {
+      width: 55px;
+    }
+
+    h2 {
+      font-size: 61px;
+      line-height: 1.2;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .underline {
+      width: 90px;
+      height: 3px;
+      background-color: $color-highlight;
+      margin-top: 15px;
+    }
+  }
+
+  .right-panel {
+    flex: 1;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+
+    .close-button {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+    }
+
+    .content-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      padding-left: 56px;
+
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #d1d1d1;
+        color: $color-white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        font-size: 47px;
+        border: 3px solid $color-white;
+        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+
+        .avatar-icon {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
+          filter: brightness(0) invert(1);
+        }
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 8px;
+
+        ::ng-deep .custom-input {
+          width: 100%;
+
+          --mdc-outlined-text-field-outline-color: #d1d1d1;
+          --mdc-outlined-text-field-focus-outline-color: #29abe2;
+          --mat-form-field-container-height: 50px;
+
+          img[matSuffix] {
+            width: 20px;
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 24px;
+      margin-top: 48px;
+      padding-left: 240px;
+
+      button img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
