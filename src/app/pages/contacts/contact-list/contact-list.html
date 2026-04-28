@@ -2,8 +2,10 @@
 
   <!-- LEFT: SIDEBAR -->
   <div class="contacts__sidebar">
+    <div class="contacts__sidebar-inner">
+
     <button class="btn-primary contacts__add-btn">
-      Add new contact +
+      Add new contact <img class="contacts__add-icon" src="/icons/other/person_add.svg" alt="Add person icon">
     </button>
 
     <div class="contacts__list">
@@ -13,9 +15,7 @@
 
           @for (c of group.contacts; track c.email) {
             <div class="contacts__item">
-              <div class="contacts__avatar">
-                {{ getInitials(c.name) }}
-              </div>
+              <app-avatar [name]="c.name"></app-avatar>
 
               <div class="contacts__info">
                 <div class="contacts__name">{{ c.name }}</div>
@@ -26,6 +26,7 @@
         </div>
       }
     </div>
+  </div>
   </div>
 
   <!-- RIGHT: CONTENT -->
