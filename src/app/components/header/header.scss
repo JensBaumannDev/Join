@@ -2,19 +2,18 @@
 @use '../../../styles/abstracts/' as *;
 
 .header {
-  @include flex($justify-content: flex-end, $align-items: center);
+  @include flex($justify-content: space-between, $align-items: center);
   height: 95px;
-  padding: 0 32px;
+  padding: 0 32px 0 100px;
   background-color: $header-bg;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
   gap: 16px;
-  
 }
 
 .header-title {
-  font-size: 16px;
-  color: $color-text-muted;
+  font-size: 20px;
+  color: $color-primary;
   font-weight: 400;
 }
 
@@ -25,8 +24,8 @@
 
 .header-icon {
   @include flex($justify-content: center, $align-items: center);
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   transition: background-color 0.2s;
   cursor: pointer;
@@ -36,8 +35,8 @@
   }
 
   img {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
 }
 
