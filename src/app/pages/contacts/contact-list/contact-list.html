@@ -12,7 +12,7 @@
           <div class="contacts__group-letter">{{ group.letter }}</div>
 
           @for (c of group.contacts; track c.email) {
-            <div class="contacts__item">
+            <div class="contacts__item" (click)="selectContact(c)" [class.active]="contactService.selectedContact()?.email === c.email">
               <div class="contacts__avatar">
                 {{ getInitials(c.name) }}
               </div>
@@ -35,6 +35,10 @@
       <div class="contacts__divider"></div>
       <div class="contacts__subtitle">Better with a team</div>
     </div>
+
+    @if (contactService.selectedContact(); as selected) {
+      <app-contact-detail [contact]="selected"></app-contact-detail>
+    }
   </div>
 
 </div>

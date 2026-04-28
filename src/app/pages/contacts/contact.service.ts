@@ -18,6 +18,13 @@ export class Supabase {
     phone: number
   }[]>([])
 
+  selectedContact = signal<{
+    id?: number
+    name: string
+    email: string
+    phone: number
+  } | null>(null)
+
   async getContacts() {
     const { data, error } = await this.supabase
       .from('contacts')
