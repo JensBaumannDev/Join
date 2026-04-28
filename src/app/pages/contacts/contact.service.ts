@@ -15,15 +15,10 @@ export class Supabase {
     id?: number
     name: string
     email: string
-    phone: number
+    phone: string
   }[]>([])
 
-  selectedContact = signal<{
-    id?: number
-    name: string
-    email: string
-    phone: number
-  } | null>(null)
+  private channel: any
 
   async getContacts() {
     const { data, error } = await this.supabase
@@ -42,7 +37,10 @@ export class Supabase {
   }
 
   subscribeToChanges(){
-    this.supabase
+
+    if (this.channel) return
+
+    this.channel = this.supabase
     .channel('contacts-changes')
     .on(
       'postgres_changes',
@@ -50,7 +48,6 @@ export class Supabase {
         event: '*',
         schema: 'public',
         table: 'contacts',
-
       },
       () => {
         this.getContacts();
@@ -59,7 +56,7 @@ export class Supabase {
     .subscribe();
   }
 
-  async addContact (name: string, email: string, phone: number) {
+  async addContact (name: string, email: string, phone: string) {
     const { error } = await this.supabase
     .from('contacts')
     .insert ([{ name, email, phone}])

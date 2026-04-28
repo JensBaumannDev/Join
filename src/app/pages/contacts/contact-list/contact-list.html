@@ -1,30 +1,31 @@
 <div class="contacts">
-
   <!-- LEFT: SIDEBAR -->
   <div class="contacts__sidebar">
-    <button class="btn-primary contacts__add-btn">
-      Add new contact +
-    </button>
+    <div class="contacts__sidebar-inner">
+      <div class="btn-container">
+        <button class="btn-primary contacts__add-btn">
+          Add new contact
+          <img class="contacts__add-icon" src="/icons/other/person_add.svg" alt="Add person icon" />
+        </button>
+      </div>
+      <div class="contacts__list">
+        @for (group of groupedContacts(); track group.letter) {
+          <div class="contacts__group">
+            <div class="contacts__group-letter">{{ group.letter }}</div>
 
-    <div class="contacts__list">
-      @for (group of groupedContacts(); track group.letter) {
-        <div class="contacts__group">
-          <div class="contacts__group-letter">{{ group.letter }}</div>
+            @for (c of group.contacts; track c.email) {
+              <div class="contacts__item">
+                <app-avatar [name]="c.name"></app-avatar>
 
-          @for (c of group.contacts; track c.email) {
-            <div class="contacts__item" (click)="selectContact(c)" [class.active]="contactService.selectedContact()?.email === c.email">
-              <div class="contacts__avatar">
-                {{ getInitials(c.name) }}
+                <div class="contacts__info">
+                  <div class="contacts__name">{{ c.name }}</div>
+                  <div class="contacts__email">{{ c.email }}</div>
+                </div>
               </div>
-
-              <div class="contacts__info">
-                <div class="contacts__name">{{ c.name }}</div>
-                <div class="contacts__email">{{ c.email }}</div>
-              </div>
-            </div>
-          }
-        </div>
-      }
+            }
+          </div>
+        }
+      </div>
     </div>
   </div>
 
@@ -35,12 +36,7 @@
       <div class="contacts__divider"></div>
       <div class="contacts__subtitle">Better with a team</div>
     </div>
-
-    @if (contactService.selectedContact(); as selected) {
-      <app-contact-detail [contact]="selected"></app-contact-detail>
-    }
   </div>
-
 </div>
 
 <!-- <p> {{ contactService.contacts() | json}} </p> -->
