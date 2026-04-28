@@ -6,6 +6,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, Sidebar, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss'

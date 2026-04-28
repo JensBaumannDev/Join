@@ -1,16 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { Supabase } from '../contact.service';
-import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-contact-list',
   standalone: true,
-  imports: [JsonPipe],
+  imports: [],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
-export class ContactList {
+export class ContactList implements OnInit {
   contactService = inject(Supabase);
 
   groupedContacts = computed(() => {
