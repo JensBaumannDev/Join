@@ -4,7 +4,7 @@
 
 <div class="right-side">
   <app-header></app-header>
-  <main class="content">
+  <main class="content" [class.content--full-bleed]="isFullBleed()">
       <router-outlet></router-outlet>
   </main>
 </div>
