@@ -85,12 +85,13 @@
     background-color: $color-primary-hover;
   }
 
-  & > a {
+  &>a {
     text-align: start;
   }
 }
 
-@include mobile {
+@media (max-width: 1024px) {
+
   .sidebar-logo,
   .sidebar-footer {
     display: none;
@@ -132,8 +133,8 @@
       width: 24px;
       height: 24px;
     }
-   
-   
- 
+
+
+
   }
 }
