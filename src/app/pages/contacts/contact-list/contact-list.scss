@@ -170,6 +170,100 @@
     width: 100%;
     @include flex(column, nowrap, flex-start, stretch);
   }
+
+  @include mobile {
+    @include flex(column, nowrap, flex-start, stretch);
+
+    &__sidebar {
+      @include flex(column, nowrap, flex-start, center);
+      width: 100%;
+      min-width: auto;
+      box-shadow: none;
+      padding: 0;
+      background: $color-white;
+    }
+
+    &__sidebar-inner {
+      height: auto;
+      max-height: none;
+      overflow-y: visible;
+      margin: 10px 0;
+    }
+
+    &__add-btn {
+      position: fixed;
+      bottom: 108px;
+      right: 28px;
+      padding: 12px;
+      width: auto;
+      margin: 0;
+      border-radius: 46px;
+      z-index: 100;
+    }
+
+    .contacts__add-text {
+      display: none;
+    }
+
+    .contacts__add-icon {
+      margin-left: 0;
+    }
+
+    &__list {
+      padding-top: 90px;
+    }
+
+    &__group {
+      max-width: 100%;
+    }
+
+    &__group-letter {
+      font-size: 18px;
+      padding: 14px 22px;
+    }
+
+    &__item {
+      gap: 18px;
+      padding: 12px 18px;
+    }
+
+    &__info {
+      gap: 8px;
+    }
+
+    &__name {
+      font-size: 18px;
+    }
+
+    &__email {
+      font-size: 14px;
+    }
+
+    &__header {
+      @include flex(column, nowrap, flex-start, stretch);
+      align-items: flex-start;
+      gap: 18px;
+      padding-top: 90px;
+      padding-left: 20px;
+      margin-bottom: 24px;
+    }
+
+    &__divider {
+      height: 42px;
+    }
+
+    &__title {
+      font-size: 42px;
+    }
+
+    &__subtitle {
+      font-size: 20px;
+    }
+
+    &__content {
+      padding: 0 12px 20px;
+    }
+  }
 }
 
 .btn-container {
@@ -182,4 +276,10 @@
   left: 0;
   z-index: 10;
   flex-shrink: 0;
+  
+  @include mobile {
+    width: 100%;
+    left: 0;
+    padding: 0 12px;
+  }
 }
