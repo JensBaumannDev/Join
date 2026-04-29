@@ -37,5 +37,16 @@
       opacity: 0.7;
       margin-left: 10px;
     }
+    input,
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="url"],
+    textarea {
+      font-size: 20px;
+    }
   }
 }

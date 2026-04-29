@@ -1,13 +1,15 @@
 <div class="dialog-container">
   <div class="left-panel">
-    <img src="logo/join-logo.svg" alt="Join Logo" class="logo" />
-    <div class="title-container">
-      <h2>{{ title() }}</h2>
-      @if (subtitle()) {
-        <h4 class="subtitle">{{ subtitle() }}</h4>
-      }
+    <div class="content-wrapper">
+      <img src="logo/join-logo.svg" alt="Join Logo" class="logo" />
+      <div class="title-container">
+        <h2>{{ title() }}</h2>
+        @if (subtitle()) {
+          <h4 class="subtitle">{{ subtitle() }}</h4>
+        }
+      </div>
+      <div class="underline"></div>
     </div>
-    <div class="underline"></div>
   </div>
 
   <div class="right-panel">
@@ -16,7 +18,7 @@
     </button>
 
     <div class="content-wrapper">
-      <div class="avatar">
+      <div class="avatar" [style.background]="avatarColor()">
         @if (avatarInitials()) {
           {{ avatarInitials() }}
         } @else {

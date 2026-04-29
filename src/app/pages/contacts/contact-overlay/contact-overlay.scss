@@ -9,27 +9,37 @@
   border-radius: 30px;
   overflow: hidden;
 
+  animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+
   .left-panel {
     @include flex(column, wrap, center, flex-start);
-    gap: 20px;
     width: 40%;
     background-color: $color-primary;
     color: $color-white;
-    padding: 70px 50px;
+    padding: 140px 50px;
 
-    .logo {
-      width: 55px;
-    }
-
-    .title-container{
+    .content-wrapper {
+      position: relative;
       @include flex(column, wrap, center, flex-start);
-      gap: 10px;
-    }
+      gap: 20px;
 
-    .underline {
-      width: 90px;
-      height: 3px;
-      background-color: $color-highlight;
+      .logo {
+        position: absolute;
+        bottom: calc(100% + 12px);
+        left: 0;
+        width: 55px;
+      }
+
+      .title-container {
+        @include flex(column, wrap, center, flex-start);
+        gap: 10px;
+      }
+
+      .underline {
+        width: 90px;
+        height: 3px;
+        background-color: $color-highlight;
+      }
     }
   }
 
@@ -93,3 +103,5 @@
     }
   }
 }
+
+
