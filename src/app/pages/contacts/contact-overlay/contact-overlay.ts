@@ -1,4 +1,5 @@
 import { Supabase } from '../contact.service';
+import { AvatarService } from '../../../services/avatar.service';
 import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -32,6 +33,7 @@ export class ContactDialogComponent {
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
     private data = inject(MAT_DIALOG_DATA);
     private supabase = inject(Supabase);
+    private avatarService = inject(AvatarService);
 
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
 
@@ -50,10 +52,32 @@ export class ContactDialogComponent {
                 Validators.pattern(/^\S+@\S+\.[a-zA-Z]{2,}$/)
             ]
         ],
-        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\d+$/)]]
+        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\d+$/)]],
+        color: [this.data?.contact?.color || (this.mode() === 'add' ? '#bdbdbd' : '')]
     });
 
     formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value });
+
+    avatarColor = computed(() => {
+        const name = this.formValue()?.name || '';
+        // On edit, use the contact color if present
+        if (this.mode() === 'edit') {
+            return this.form.value.color || this.avatarService.getColor(name);
+        }
+        // On add, show gray until name is entered
+        if (this.mode() === 'add') {
+            if (!name) {
+                return '#bdbdbd'; // gray
+            }
+            // Assign color after name is entered
+            const color = this.avatarService.getColor(name);
+            if (this.form.value.color !== color) {
+                this.form.patchValue({ color }, { emitEvent: false });
+            }
+            return color;
+        }
+        return this.form.value.color || this.avatarService.getColor(name);
+    });
     avatarInitials = computed(() => {
         const name = this.formValue()?.name || '';
         const parts = name.trim().split(' ');
