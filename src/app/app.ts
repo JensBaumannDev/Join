@@ -20,7 +20,7 @@ export class App {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.isFullBleed.set(event.url.includes('/contacts'));
+      this.isFullBleed.set(false);
     });
   }
 }

@@ -13,6 +13,7 @@ export class ContactDetail {
   @Input({ required: true }) contact!: { id?: number; name: string; email: string; phone: string };
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
+  @Output() back = new EventEmitter<void>();
 
   getInitials(name: string) {
     return name

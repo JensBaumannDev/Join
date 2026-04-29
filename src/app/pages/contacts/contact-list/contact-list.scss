@@ -19,6 +19,8 @@
     z-index: 2;
     overflow: hidden;
     position: relative;
+    transition: transform 0.3s ease-in-out;
+
   }
 
   &__sidebar-inner {
@@ -118,8 +120,7 @@
   }
 
   &__info {
-    display: flex;
-    flex-direction: column;
+    @include flex(column, nowrap, flex-start, stretch);
     overflow: hidden;
     gap: 10px;
   }
@@ -141,11 +142,8 @@
   }
 
   &__header {
-    display: flex;
-    align-items: center;
+    @include flex(row, nowrap, flex-start, center);
     gap: 30px;
-    padding-top: 110px;
-    padding-left: 60px;
     margin-bottom: 32px;
   }
 
@@ -166,13 +164,23 @@
   }
 
   &__content {
-    background: $color-gray-light;
+    background: $content-bg;
     width: 100%;
     @include flex(column, nowrap, flex-start, stretch);
+    transition: transform 0.3s ease-in-out;
+    padding: 110px 100px 0 100px;
+
+    @include tablet-xl {
+      padding: 0;
+    }
   }
 
-  @include mobile {
+  @include tablet-xl {
     @include flex(column, nowrap, flex-start, stretch);
+
+    &__header {
+      display: none;
+    }
 
     &__sidebar {
       @include flex(column, nowrap, flex-start, center);
@@ -181,6 +189,10 @@
       box-shadow: none;
       padding: 0;
       background: $color-white;
+
+      &--hidden {
+        display: none;
+      }
     }
 
     &__sidebar-inner {
@@ -211,20 +223,25 @@
 
     &__list {
       padding-top: 90px;
+      padding-left: 16px;
+      padding-right: 16px;
     }
 
     &__group {
       max-width: 100%;
+      margin-bottom: 24px;
     }
 
     &__group-letter {
-      font-size: 18px;
-      padding: 14px 22px;
+      font-size: 20px;
+      padding: 17px 36px;
+      margin-bottom: 8px;
     }
 
     &__item {
-      gap: 18px;
-      padding: 12px 18px;
+      gap: 20px;
+      padding: 15px 24px;
+      border-radius: 10px;
     }
 
     &__info {
@@ -237,15 +254,6 @@
 
     &__email {
       font-size: 14px;
-    }
-
-    &__header {
-      @include flex(column, nowrap, flex-start, stretch);
-      align-items: flex-start;
-      gap: 18px;
-      padding-top: 90px;
-      padding-left: 20px;
-      margin-bottom: 24px;
     }
 
     &__divider {
@@ -261,7 +269,12 @@
     }
 
     &__content {
-      padding: 0 12px 20px;
+      padding: 0;
+      display: none;
+
+      &--visible {
+        @include flex(column, nowrap, flex-start, stretch);
+      }
     }
   }
 }
@@ -277,7 +290,7 @@
   z-index: 10;
   flex-shrink: 0;
   
-  @include mobile {
+  @include tablet-xl {
     width: 100%;
     left: 0;
     padding: 0 12px;
