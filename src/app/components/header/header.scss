@@ -108,7 +108,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@include tablet-lg {
   .header-logo {
     display: flex;
   }
