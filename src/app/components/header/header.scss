@@ -10,6 +10,9 @@
   position: relative;
   z-index: 20;
 }
+.header-logo {
+ display: none;
+}
 
 .header-content {
   @include flex($justify-content: space-between, $align-items: center);
@@ -64,4 +67,86 @@
   &:hover {
     background-color: $button-bg-hover;
   }
+
 }
+
+.avatar-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.header-help-mobile{
+  display: none;
+}
+
+.user-menu {
+  @include flex($flex-direction: column, $justify-content: center);
+  position: absolute;
+  top: calc(100% + 20px);
+  right: -25px;
+  background-color: $sidebar-bg;
+  border-radius: 20px 0px 20px 20px;
+  padding: 10px;
+  width: 158px;
+  height: 158px;
+  z-index: 100;
+  gap: 10px;
+}
+
+.user-menu-item {
+  padding: 8px 16px 8px 16px;
+  color: $color-text-muted;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $color-secondary-hover;
+  }
+}
+  
+  @include mobile {
+  .header-logo {
+    display: flex;
+  }
+
+  .header-title {
+    display: none;
+  }
+
+  .header-icon{
+    display: none;
+  }
+
+  .header-content{
+    padding: 0 16px;
+    max-width: none;
+  }
+
+  .user-menu {
+  top: calc(100% + 0px);
+  right: -5px;
+  height: 200px;
+  animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.header-help-mobile{
+  @include flex();
+}
+ 
+}
+

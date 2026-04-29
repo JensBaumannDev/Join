@@ -1,12 +1,26 @@
 <header class="header">
   <div class="header-content">
     <span class="header-title">Kanban Project Management Tool</span>
+    <div class="header-logo">
+      <img src="./logo/join-mobile.svg" alt="Join Logo" />
+    </div>
 
     <div class="header-actions">
       <a href="/help" class="header-icon">
         <img src="./icons/header/help-icon.svg" alt="Help" />
       </a>
-      <app-avatar name="Mario Ramirez" [size]="55" [isHeader]="true"></app-avatar>
+      <div class="avatar-wrapper">
+        <app-avatar name="Mario Ramirez" [size]="55" [isHeader]="true" (click)="toggleMenu()"></app-avatar>
+        
+        @if (menuOpen) {
+          <div class="user-menu">
+            <a href="/help" class="user-menu-item header-help-mobile">Help</a>
+            <a routerLink="/legal-notice" class="user-menu-item" (click)="menuOpen = false">Legal Notice</a>
+            <a routerLink="/privacy-policy" class="user-menu-item" (click)="menuOpen = false">Privacy Policy</a>
+            <span class="user-menu-item" (click)="logout()">Log out</span>
+          </div>
+        }
+      </div>
     </div>
   </div>
 </header>
