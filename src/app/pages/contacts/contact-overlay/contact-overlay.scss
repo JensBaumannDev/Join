@@ -1,15 +1,22 @@
 @use '../../../../styles/abstracts' as *;
 @use '../../../../styles/components' as *;
+@use '../../../../styles/base' as *;
 
 .dialog-container {
   @include flex(row, wrap, flex-start, stretch);
-  width: 1200px;
+  max-width: 1200px;
   min-height: 600px;
   background-color: transparent;
   border-radius: 30px;
   overflow: hidden;
 
-  animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: slideIn 0.3s ease-out forwards;
+
+  &.slide-out {
+    animation: slideOut 0.3s ease-in forwards;
+  }
+
+  
 
   .left-panel {
     @include flex(column, wrap, center, flex-start);
@@ -46,9 +53,7 @@
   .right-panel {
     flex: 1;
     padding: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    @include flex(column, wrap, center, stretch);
     position: relative;
     background-color: $color-white;
 
@@ -64,9 +69,9 @@
     }
 
     .content-wrapper {
-      @include flex(row, wrap, flex-start, center);
+      @include flex(row, center);
       gap: 70px;
-      padding-left: 60px;
+      padding-left: 30px;
 
       .avatar {
         @include flex(row, wrap, center, center);
@@ -80,6 +85,7 @@
         border: 3px solid $color-white;
         box-shadow: 0px 0px 4px 0px #0000001a;
         overflow: hidden;
+        margin-bottom: 70px;
 
         &-icon {
           width: 60px;
@@ -88,13 +94,20 @@
           filter: brightness(0) invert(1);
         }
       }
+
+      .form-actions-section {
+        @include flex(row, wrap, flex-start, center);
+      }
+
+      .avatar-section {
+        @include flex(row, wrap, center, center);
+      }
     }
 
     .actions {
       @include flex(row, wrap, flex-start, center);
       gap: 25px;
       margin-top: 50px;
-      padding-left: 245px;
 
       button img {
         width: 25px;
@@ -103,5 +116,3 @@
     }
   }
 }
-
-

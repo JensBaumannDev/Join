@@ -10,7 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-
 @Component({
     selector: 'app-contact-overlay',
     standalone: true,
@@ -28,6 +27,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     encapsulation: ViewEncapsulation.None,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
+
 export class ContactDialogComponent {
     private fb = inject(FormBuilder);
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
@@ -35,6 +35,7 @@ export class ContactDialogComponent {
     private supabase = inject(Supabase);
     private avatarService = inject(AvatarService);
 
+    isClosing = signal(false);
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
@@ -60,16 +61,13 @@ export class ContactDialogComponent {
 
     avatarColor = computed(() => {
         const name = this.formValue()?.name || '';
-        // On edit, use the contact color if present
         if (this.mode() === 'edit') {
             return this.form.value.color || this.avatarService.getColor(name);
         }
-        // On add, show gray until name is entered
         if (this.mode() === 'add') {
             if (!name) {
-                return '#bdbdbd'; // gray
+                return '#D1D1D1';
             }
-            // Assign color after name is entered
             const color = this.avatarService.getColor(name);
             if (this.form.value.color !== color) {
                 this.form.patchValue({ color }, { emitEvent: false });
@@ -78,6 +76,7 @@ export class ContactDialogComponent {
         }
         return this.form.value.color || this.avatarService.getColor(name);
     });
+
     avatarInitials = computed(() => {
         const name = this.formValue()?.name || '';
         const parts = name.trim().split(' ');
@@ -86,15 +85,23 @@ export class ContactDialogComponent {
         return '';
     });
 
+    private closeDialog(data?: any) {
+        this.isClosing.set(true);
+
+        setTimeout(() => {
+            this.dialogRef.close(data);
+        }, 420);
+    }
+
     cancel() {
-        this.dialogRef.close();
+        this.closeDialog();
     }
 
     async delete() {
         if (this.mode() === 'edit' && this.data.contact?.id) {
             await this.supabase.deleteContact(this.data.contact.id);
         }
-        this.dialogRef.close({ action: 'delete' });
+        this.closeDialog({ action: 'delete' });
     }
 
     async save() {
@@ -110,6 +117,6 @@ export class ContactDialogComponent {
             }
         }
 
-        this.dialogRef.close({ action: 'save', data: value });
+        this.closeDialog({ action: 'save', data: value });
     }
 }
