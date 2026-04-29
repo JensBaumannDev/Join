@@ -1,15 +1,17 @@
-@use '../../../../styles/components/button' as *;
-@use '../../../../styles/abstracts/mixins' as *;
-@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/' as *;
 @use '../../../../styles/base/typography' as *;
 
 .content {
   flex: 1;
-  padding: 32px 60px;
+  padding: 0;
   @include flex(column, nowrap);
   gap: 32px;
   overflow-y: auto;
   animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @include tablet-xl {
+    padding: 32px 0;
+  }
 }
 
 @keyframes slideInRight {
@@ -28,11 +30,26 @@
   &__detail {
     @include flex(column, nowrap, flex-start);
     gap: 24px;
+    width: 100%;
   }
 
   &__detail-top {
     @include flex(row, nowrap, flex-start, center);
     gap: 54px;
+    padding: 0;
+
+    @include tablet-xl {
+      padding: 0 16px;
+
+      @media (min-width: 768px) {
+        padding: 0 60px;
+      }
+    }
+
+    @include mobile-md {
+      @include flex(column, nowrap, flex-start, flex-start);
+      gap: 20px;
+    }
   }
 
   &__detail-avatar {
@@ -61,11 +78,19 @@
     font-weight: 500;
     line-height: 120%;
     color: $color-text;
+
+    @include mobile-md {
+      font-size: 36px;
+    }
   }
 
   &__detail-actions {
     @include flex(row, nowrap, flex-start, center);
     gap: 22px;
+
+    @include tablet-xl {
+      display: none !important;
+    }
   }
 
   &__action-btn {
@@ -98,6 +123,15 @@
   &__detail-section {
     @include flex(column, nowrap);
     gap: 16px;
+    padding: 0;
+
+    @include tablet-xl {
+      padding: 0 16px;
+
+      @media (min-width: 768px) {
+        padding: 0 60px;
+      }
+    }
   }
 
   &__detail-label {
@@ -129,6 +163,94 @@
 
     &--link {
       color: $color-accent;
+    }
+  }
+
+  &__detail-header-mobile {
+    display: none;
+
+    @include tablet-xl {
+      @include flex(row, nowrap, space-between, flex-start);
+      width: 100%;
+      margin-bottom: 40px;
+      padding-left: 16px;
+      padding-right: 16px;
+
+      @media (min-width: 768px) {
+        padding-left: 60px;
+        padding-right: 16px;
+      }
+    }
+  }
+
+  &__mobile-title-wrap {
+    @include flex(column, nowrap);
+    gap: 8px;
+  }
+
+  &__title-mobile {
+    font-size: 47px;
+    font-weight: 700;
+    color: $color-primary;
+  }
+
+  &__subtitle-mobile {
+    font-size: 20px;
+    color: $color-primary;
+  }
+
+  &__divider-mobile {
+    width: 90px;
+    height: 3px;
+    background-color: $color-highlight;
+    margin-top: 8px;
+  }
+
+  &__back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 120ms ease-in-out;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &__options-btn-mobile {
+    display: none;
+
+    @include tablet-xl {
+      @include flex(row, nowrap, center, center);
+      position: fixed;
+      bottom: 108px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      background-color: $color-primary;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      z-index: 100;
+
+      &::after {
+        content: '\22EE';
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      img {
+        display: none;
+      }
     }
   }
 }

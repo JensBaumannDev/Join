@@ -16,6 +16,7 @@ $breakpoint-mobile-sm: 370px;
 $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;
+$breakpoint-tablet-lg: 1200px;
 $breakpoint-large: 1440px;
 
 
@@ -56,5 +57,5 @@ $contact-email: $color-accent;
 $contact-hover-bg: $color-primary;
 $contact-hover-text: $color-white;
 
-$content-bg: $color-gray-light;
+$content-bg: $color-bg-content;
 $content-text: $color-primary;

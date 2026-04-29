@@ -17,9 +17,8 @@
 .content {
     flex: 1;
     overflow-y: auto;
-    padding: 110px 100px 0 100px;
+    padding: 0;
     background-color: $color-bg-content;
-    max-width: 1208px;
     width: 100%;
 
     &--full-bleed {
@@ -35,7 +34,7 @@
     }
 
     .right-side {
-        padding-bottom: 80px;
+        padding-bottom: 0;
     }
 
     .content {
@@ -43,13 +42,13 @@
     }
 }
 
-@include tablet {
+@include tablet-xl {
     .layout {
         flex-direction: row;
     }
 
     .right-side {
-        padding-bottom: 80px;
+        padding-bottom: 0;
     }
 
     .content {

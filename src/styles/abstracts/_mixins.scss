@@ -97,6 +97,14 @@
   }
 }
 
+// Up to 1200px (Large Tablet / Small Laptop)
+@mixin tablet-xl {
+  @media (max-width: #{vars.$breakpoint-tablet-lg}) {
+    @content;
+  }
+}
+
+
 
 // From 1025px (Desktop)
 @mixin desktop {
