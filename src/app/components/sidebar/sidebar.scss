@@ -13,7 +13,6 @@
   overflow-y: auto;
 }
 
-
 .sidebar-logo {
   @include flex($justify-content: center, $align-items: center);
   padding: 64px 0px 0px;
@@ -27,7 +26,7 @@
 .sidebar-nav {
   @include flex(column, wrap, stretch);
   gap: 15px;
-  padding:  0;
+  padding: 0;
   padding-top: 110px;
   flex: 1;
   width: 100%;
@@ -38,7 +37,6 @@
   width: 100%;
   gap: 16px;
   padding: 8px 56px 8px 56px;
-  
   color: $sidebar-text;
   text-decoration: none;
   font-size: 16px;
@@ -60,10 +58,10 @@
 }
 
 .sidebar-footer {
-    @include flex(column, nowrap, center, center);
-    gap: 0;
-    padding: 100px 0 60px 0;
-    width: 100%;
+  @include flex(column, nowrap, center, center);
+  gap: 0;
+  padding: 100px 0 60px 0;
+  width: 100%;
 }
 
 .footer-link {
@@ -77,8 +75,6 @@
   box-sizing: border-box;
   transition: background-color 0.2s, color 0.2s;
   cursor: pointer;
-  
-  
 
   &:hover {
     color: $color-highlight;
@@ -88,8 +84,112 @@
   &.active {
     background-color: $color-primary-hover;
   }
-   &>a{
+
+  & > a {
     text-align: start;
   }
- 
 }
+
+/* #region responsive */
+@include tablet {
+  .sidebar-logo,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 80px;
+    min-height: 80px;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    padding: 0;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    flex: unset;
+    padding-top: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    font-size: 12px;
+    flex: 1;
+    border-radius: 16px;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+    
+  }
+}
+
+@include mobile {
+  .sidebar-logo,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 80px;
+    min-height: 80px;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    padding: 0;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    flex: unset;
+    padding-top: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    font-size: 12px;
+    flex: 1;
+    border-radius: 16px;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+   
+   
+ 
+  }
+}
+/* #endregion */
