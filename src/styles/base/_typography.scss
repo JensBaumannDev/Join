@@ -1,12 +1,5 @@
 @use '../abstracts/mixins' as mx;
 
-// example how to use
-p {
-  @include mx.fluid-text(16, 19);
-  font-family: 'Inter', sans-serif;
-}
-
-
 @font-face {
   font-family: 'Inter';
   src: url('/fonts/inter.ttf') format('truetype-variations');
@@ -30,6 +23,14 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+button{
+  font-size: 21px;
+}
+
+.btn-primary {
+  font-weight: 700;
+}
+
 p {
   font-size: 16px;
   font-weight: 400;
@@ -37,7 +38,7 @@ p {
 }
 
 h2 {
-  font-size: 60px;
+  @include mx.fluid-text(50, 60);
   font-weight: 700;
   margin: 0;
 }

@@ -12,18 +12,6 @@
   animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
 .contacts {
   &__detail {
     @include flex(column, nowrap, flex-start);

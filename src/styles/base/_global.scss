@@ -7,6 +7,14 @@
   }
 }
 
+.contact-dialog-panel {
+  animation: slideInRight 0.4s ease-out forwards;
+}
+
+.contact-dialog-panel[data-closing="true"] {
+  animation: slideInRight 0.4s ease-in reverse forwards;
+}
+
 @keyframes slideInRight {
   from {
     transform: translateX(100vw);
@@ -17,3 +25,26 @@
     opacity: 1;
   }
 }
+// /* Keyframes für das Hineinsliden */
+//   @keyframes slideIn {
+//     from {
+//       transform: translateX(100vw);
+//       opacity: 0;
+//     }
+//     to {
+//       transform: translateX(0);
+//       opacity: 1;
+//     }
+//   }
+
+//   /* Keyframes für das Heraussliden */
+//   @keyframes slideOut {
+//     from {
+//       transform: translateX(0);
+//       opacity: 1;
+//     }
+//     to {
+//       transform: translateX(100vw);
+//       opacity: 0;
+//     }
+//   }
