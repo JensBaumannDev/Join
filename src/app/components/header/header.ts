@@ -11,11 +11,24 @@ import { RouterModule } from '@angular/router';
 })
 export class Header {
   menuOpen = false;
+  isClosing = false;
 
   @ViewChild('menuWrapper') menuWrapper!: ElementRef;
 
   toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+    if (this.menuOpen) {
+      this.closeMenu();
+    } else {
+      this.menuOpen = true;
+    }
+  }
+
+  closeMenu() {
+    this.isClosing = true;
+    setTimeout(() => {
+      this.menuOpen = false;
+      this.isClosing = false;
+    }, 250);
   }
 
   logout() {
@@ -23,8 +36,8 @@ export class Header {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.menuOpen && this.menuWrapper && !this.menuWrapper.nativeElement.contains(event.target)) {
-      this.menuOpen = false;
+    if (this.menuOpen && !this.isClosing && this.menuWrapper && !this.menuWrapper.nativeElement.contains(event.target)) {
+      this.closeMenu();
     }
   }
 }

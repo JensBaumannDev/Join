@@ -66,7 +66,7 @@
     [class.slide-out]="!mobileMenuOpen()"
     (click)="closeMobileMenu()"
   >
-    <div class="user-menu contacts__mobile-menu" (click)="$event.stopPropagation()">
+    <div class="user-menu contacts__mobile-menu" [class.slide-out]="!mobileMenuOpen()" (click)="$event.stopPropagation()">
       <button class="user-menu-item" (click)="edit.emit(); closeMobileMenu()">
         <img src="icons/other/edit.svg" alt="Edit" class="contacts__action-img" /> Edit
       </button>
