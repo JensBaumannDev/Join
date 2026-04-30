@@ -2,12 +2,13 @@ import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Sidebar } from './components/sidebar/sidebar';
 import { Header } from './components/header/header';
+import { Toast } from './components/toast/toast';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Sidebar, Header],
+  imports: [RouterOutlet, Sidebar, Header, Toast],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

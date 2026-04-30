@@ -4,6 +4,7 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { ContactDetail } from '../contact-detail/contact-detail';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -15,15 +16,24 @@ import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
 export class ContactList implements OnInit {
   contactService = inject(Supabase);
   private dialog = inject(MatDialog);
+  private toastService = inject(ToastService);
 
   openContactDialog(mode: 'add' | 'edit', contact?: any) {
-    this.dialog.open(ContactDialogComponent, {
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
       data: { mode, contact },
       panelClass: 'contact-dialog-panel',
       maxWidth: '100vw',
       enterAnimationDuration: '0',
       exitAnimationDuration: '0',
       disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'save') {
+        this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
+      } else if (result?.action === 'delete') {
+        this.toastService.show('Contact successfully deleted');
+      }
     });
   }
 
@@ -62,5 +72,11 @@ export class ContactList implements OnInit {
   add(name: string, email: string, phone: string) {
     this.contactService.addContact(name, email, phone);
     this.contactService.getContacts();
+  }
+  
+  async deleteContact(id: number) {
+    await this.contactService.deleteContact(id);
+    this.contactService.selectedContact.set(null);
+    this.toastService.show('Contact successfully deleted');
   }
 }
