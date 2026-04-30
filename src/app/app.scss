@@ -3,6 +3,7 @@
 .layout {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     width: 100%;
 }
@@ -17,6 +18,8 @@
 .content {
     flex: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 0;
     background-color: $color-bg-content;
     width: 100%;

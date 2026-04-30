@@ -2,6 +2,11 @@
 @use '../../../../styles/abstracts/' as *;
 @use '../../../../styles/base/typography' as *;
 
+:host {
+  display: block;
+  height: 100%;
+}
+
 .contacts {
   @include flex(row, nowrap, flex-start, stretch);
   height: 100%;
@@ -272,6 +277,9 @@
 
       &--visible {
         @include flex(column, nowrap, flex-start, stretch);
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
       }
     }
   }
