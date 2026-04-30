@@ -2,6 +2,7 @@
 
 .legal-notice-container,
 .privacy-policy-container {
+    padding: 110px 100px 0 100px;
     color: var.$color-primary;
 
     .header {
@@ -72,5 +73,12 @@
 
     .text-accent {
         color: var.$color-accent;
+    }
+}
+
+@include var.mobile {
+    .legal-notice-container,
+    .privacy-policy-container {
+        padding: 50px 16px 0 16px;
     }
 }
