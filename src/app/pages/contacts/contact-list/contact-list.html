@@ -43,7 +43,7 @@
       <app-contact-detail 
         [contact]="contact" 
         (edit)="openContactDialog('edit', contact)"
-        (delete)="contact.id && contactService.deleteContact(contact.id); contactService.selectedContact.set(null)"
+        (delete)="contact.id && deleteContact(contact.id)"
         (back)="contactService.selectedContact.set(null)">
       </app-contact-detail>
     }

@@ -1,1 +1,9 @@
-<p>toast works!</p>
+@if (toastService.message()) {
+  <div class="toast-container" 
+       [class.show]="toastService.isVisible()" 
+       [class.hide]="toastService.isHiding()">
+    <div class="toast-content">
+      {{ toastService.message() }}
+    </div>
+  </div>
+}

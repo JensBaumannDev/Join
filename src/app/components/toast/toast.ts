@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-toast',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './toast.html',
   styleUrl: './toast.scss',
 })
-export class Toast {}
+export class Toast {
+  toastService = inject(ToastService);
+}
