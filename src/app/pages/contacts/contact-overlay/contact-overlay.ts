@@ -108,9 +108,10 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
 
     private closeDialog(data?: any) {
         this.isClosing.set(true);
+        this.dialogRef.addPanelClass('slide-out');
         setTimeout(() => {
             this.dialogRef.close(data);
-        }, 420);
+        }, 500);
     }
 
     cancel() {
