@@ -49,7 +49,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     saveBtnText = computed(() => this.mode() === 'add' ? 'Create contact' : 'Save');
 
     form = this.fb.group({
-        name: [this.data?.contact?.name || '', [Validators.required, , Validators.minLength(3), Validators.pattern(/^[^0-9\s]+\s+[^0-9]+$/)]],
+        name: [this.data?.contact?.name || '', [Validators.required, Validators.minLength(3), Validators.pattern(/^[^0-9\s]+\s+[^0-9]+$/)]],
         email: [
             this.data?.contact?.email || '',
             [
