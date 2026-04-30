@@ -222,7 +222,7 @@
     }
 
     &__list {
-      padding-top: 90px;
+      padding-top: 0;
       padding-left: 16px;
       padding-right: 16px;
     }
@@ -289,10 +289,17 @@
   left: 0;
   z-index: 10;
   flex-shrink: 0;
-  
+
   @include tablet-xl {
+    height: 0;
+    background-color: transparent;
+    pointer-events: none;
     width: 100%;
     left: 0;
     padding: 0 12px;
+
+    * {
+      pointer-events: auto;
+    }
   }
 }

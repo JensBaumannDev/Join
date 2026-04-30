@@ -1,6 +1,7 @@
 @use '../../../styles/abstracts' as var;
 
 .privacy-policy-container {
+    padding: 110px 100px 0 100px;
     color: var.$color-text;
 
     .header {
@@ -21,5 +22,11 @@
             margin-bottom: 16px;
             color: var.$color-text;
         }
+    }
+}
+
+@include var.mobile {
+    .privacy-policy-container {
+        padding: 50px 16px 0 16px;
     }
 }

@@ -1,6 +1,7 @@
 @use "../../../styles/abstracts/" as *;
 
 .help-section {
+  padding: 110px 100px 0 100px;
   color: $color-primary;
 }
 
@@ -107,5 +108,11 @@
       font-size: 27px;
       margin-top: 32px;
     }
+  }
+}
+
+@include mobile {
+  .help-section {
+    padding: 50px 16px 0 16px;
   }
 }
