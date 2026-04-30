@@ -10,6 +10,20 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
   styleUrl: './contact-detail.scss',
 })
 export class ContactDetail {
+  mobileMenuOpen = false;
+  mobileMenuVisible = false;
+
+  openMobileMenu() {
+    this.mobileMenuVisible = true;
+    this.mobileMenuOpen = true;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
+    setTimeout(() => {
+      this.mobileMenuVisible = false;
+    }, 400); // Dauer der Animation
+  }
   @Input({ required: true }) contact!: { id?: number; name: string; email: string; phone: string };
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();

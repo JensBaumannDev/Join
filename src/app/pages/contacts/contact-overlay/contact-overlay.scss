@@ -8,7 +8,7 @@
 
   width: 95dvw;
   max-width: 1200px;
-  min-height: 600px;
+  // min-height: 600px;
   max-height: calc(100dvh - 200px);
 
   background-color: transparent;
@@ -24,10 +24,12 @@
 
   .close-button {
     position: absolute;
-    inset-block-start: 50px; 
+    inset-block-start: 50px;
     inset-inline-end: 50px;
     z-index: 10;
-    transition: background-color 0.2s ease, border-radius 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      border-radius 0.2s ease;
 
     @include tablet-lg {
       inset-block-start: 20px;
@@ -58,7 +60,7 @@
     background-color: $color-primary;
     color: $color-white;
 
-    padding-block: clamp(120px, 10vw, 140px);
+    padding-block: clamp(100px, 10vw, 140px);
     padding-inline: clamp(20px, 3vw, 50px);
 
     @include tablet-lg {
@@ -99,7 +101,7 @@
     position: relative;
     @include flex(column, wrap, center, stretch);
     background-color: $color-white;
-    
+
     padding-block: clamp(40px, 4vw, 50px);
     padding-inline: clamp(40px, 4vw, 50px);
 
@@ -129,11 +131,13 @@
     .content-wrapper {
       @include flex(row, flex-end, stretch);
       gap: clamp(30px, 4vw, 70px);
+      margin-top: 90px;
+      margin-bottom: 100px;
 
       @include tablet-lg {
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-end;
+        @include flex(column, flex-end, stretch);
+        margin-top: 0;
+        margin-bottom: 0;
       }
 
       .avatar {
@@ -186,7 +190,7 @@
     .actions {
       @include flex(row, wrap, flex-start, center);
       gap: 20px;
-      margin-block-start: 50px;
+      margin-block-start: 30px;
 
       button img {
         width: 25px;

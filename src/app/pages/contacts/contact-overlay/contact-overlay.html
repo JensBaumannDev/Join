@@ -29,27 +29,27 @@
 
       <div class="form-actions-section">
         <form [formGroup]="form" class="form">
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput formControlName="name" placeholder="Name" />
             <img matSuffix src="/icons/form/person.svg" alt="user" />
             @if (form.get('name')?.hasError('minlength')) {
-              <mat-error>Name must be at least 3 characters.</mat-error>
+              <mat-error>Minimum 3 characters required</mat-error>
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="email" formControlName="email" placeholder="Email" />
             <img matSuffix src="/icons/form/mail.svg" alt="mail" />
             @if (form.get('email')?.hasError('email')) {
-              <mat-error>Email is invalid.</mat-error>
+              <mat-error>Email is invalid</mat-error>
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="tel" formControlName="phone" placeholder="Phone" />
             <img matSuffix src="/icons/other/call.svg" alt="phone" />
             @if (form.get('phone')?.hasError('pattern')) {
-              <mat-error>Only numbers are allowed.</mat-error>
+              <mat-error>Only numbers are allowed</mat-error>
             }
           </mat-form-field>
         </form>
