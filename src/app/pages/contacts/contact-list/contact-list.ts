@@ -29,13 +29,18 @@ export class ContactList implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-      if (result?.action === 'save' && contact?.id) {
-        const updated = this.contactService.contacts().find(c => c.id === contact.id);
-        if (updated) {
-          this.contactService.selectedContact.set({ ...updated });
+      if (!result) return;
+
+      if (result.action === 'save') {
+        this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
+        if (mode === 'edit' && contact?.id) {
+          const updated = this.contactService.contacts().find(c => c.id === contact.id);
+          if (updated) {
+            this.contactService.selectedContact.set({ ...updated });
+          }
         }
-      }
-      if (result?.action === 'delete' && contact?.id) {
+      } else if (result.action === 'delete') {
+        this.toastService.show('Contact successfully deleted');
         this.contactService.selectedContact.set(null);
       }
     });
