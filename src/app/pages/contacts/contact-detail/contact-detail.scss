@@ -204,8 +204,17 @@
     padding-bottom: 14px;
     line-height: 120%;
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     &--link {
       color: $color-accent;
+
+      &__phone{
+        color: $color-text;
+      }
     }
   }
 

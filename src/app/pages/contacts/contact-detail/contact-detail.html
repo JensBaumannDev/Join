@@ -31,13 +31,15 @@
         <div class="contacts__detail-field">
           <div class="contacts__detail-field-label">Email</div>
           <div class="contacts__detail-field-value contacts__detail-field-value--link">
-            {{ contact.email }}
+            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
           </div>
         </div>
 
         <div class="contacts__detail-field">
           <div class="contacts__detail-field-label">Phone</div>
-          <div class="contacts__detail-field-value">{{ contact.phone }}</div>
+          <div class="contacts__detail-field-value contacts__detail-field-value--link__phone">
+            <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a>
+          </div>
         </div>
       </div>
 
