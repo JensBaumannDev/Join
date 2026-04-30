@@ -38,8 +38,9 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     private injector = inject(Injector);
 
     isClosing = signal(false);
+    isLoading = signal(false);
     private subscriptions = new Subscription();
-    
+
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
@@ -48,16 +49,16 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     saveBtnText = computed(() => this.mode() === 'add' ? 'Create contact' : 'Save');
 
     form = this.fb.group({
-        name: [this.data?.contact?.name || '', [Validators.required, Validators.minLength(3)]],
+        name: [this.data?.contact?.name || '', [Validators.required, , Validators.minLength(3), Validators.pattern(/^[^0-9\s]+\s+[^0-9]+$/)]],
         email: [
             this.data?.contact?.email || '',
             [
                 Validators.required,
                 Validators.email,
-                Validators.pattern(/^\S+@\S+\.[a-zA-Z]{2,}$/)
+                Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
             ]
         ],
-        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\d+$/)]],
+        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\+?[0-9]+$/)]],
         color: [this.data?.contact?.color || (this.mode() === 'add' ? '#bdbdbd' : '')]
     });
 
@@ -126,24 +127,34 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     }
 
     async delete() {
-        if (this.mode() === 'edit' && this.data.contact?.id) {
-            await this.supabase.deleteContact(this.data.contact.id);
+        this.isLoading.set(true);
+        try {
+            if (this.mode() === 'edit' && this.data.contact?.id) {
+                await this.supabase.deleteContact(this.data.contact.id);
+            }
+            this.closeDialog({ action: 'delete' });
+        } finally {
+            this.isLoading.set(false);
         }
-        this.closeDialog({ action: 'delete' });
     }
 
     async save() {
         if (this.form.invalid) return;
-        const value = this.form.getRawValue();
+        this.isLoading.set(true);
+        try {
+            const value = this.form.getRawValue();
 
-        if (this.mode() === 'add') {
-            await this.supabase.addContact(value.name, value.email, value.phone);
-        } else {
-            const contactId = this.data.contact.id;
-            if (contactId) {
-                await this.supabase.updateContact(contactId, value.name, value.email, value.phone);
+            if (this.mode() === 'add') {
+                await this.supabase.addContact(value.name, value.email, value.phone);
+            } else {
+                const contactId = this.data.contact.id;
+                if (contactId) {
+                    await this.supabase.updateContact(contactId, value.name, value.email, value.phone);
+                }
             }
+            this.closeDialog({ action: 'save', data: value });
+        } finally {
+            this.isLoading.set(false);
         }
-        this.closeDialog({ action: 'save', data: value });
     }
 }

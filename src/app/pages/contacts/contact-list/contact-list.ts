@@ -17,13 +17,25 @@ export class ContactList implements OnInit {
   private dialog = inject(MatDialog);
 
   openContactDialog(mode: 'add' | 'edit', contact?: any) {
-    this.dialog.open(ContactDialogComponent, {
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
       data: { mode, contact },
       panelClass: 'contact-dialog-panel',
       maxWidth: '100vw',
       enterAnimationDuration: '0',
       exitAnimationDuration: '0',
       disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result?.action === 'save' && contact?.id) {
+        const updated = this.contactService.contacts().find(c => c.id === contact.id);
+        if (updated) {
+          this.contactService.selectedContact.set({ ...updated });
+        }
+      }
+      if (result?.action === 'delete' && contact?.id) {
+        this.contactService.selectedContact.set(null);
+      }
     });
   }
 

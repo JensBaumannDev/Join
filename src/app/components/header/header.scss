@@ -40,7 +40,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: background-color 125ms;
   cursor: pointer;
 
   &:hover {
@@ -101,7 +101,7 @@
   font-weight: 400;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 125ms;
 
   &:hover {
     background-color: $color-secondary-hover;

@@ -40,7 +40,7 @@
   color: $sidebar-text;
   text-decoration: none;
   font-size: 16px;
-  transition: background-color 0.2s;
+  transition: background-color 125ms;
 
   img {
     width: 22px;
@@ -73,7 +73,7 @@
   width: 100%;
   padding: 8px 60px 8px 60px;
   box-sizing: border-box;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 125ms, color 125ms;
   cursor: pointer;
 
   &:hover {

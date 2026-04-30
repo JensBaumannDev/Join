@@ -28,8 +28,8 @@
     inset-inline-end: 50px;
     z-index: 10;
     transition:
-      background-color 0.2s ease,
-      border-radius 0.2s ease;
+      background-color 125ms ease,
+      border-radius 125ms ease;
 
     @include tablet-lg {
       inset-block-start: 20px;
@@ -173,7 +173,7 @@
 
         @include tablet-lg {
           @include flex(column, wrap, flex-start, center);
-          gap: 30px;
+          gap: 10px;
         }
       }
 
