@@ -22,7 +22,8 @@ export class ContactList implements OnInit {
       panelClass: 'contact-dialog-panel',
       maxWidth: '100vw',
       enterAnimationDuration: '0',
-      exitAnimationDuration: '0'
+      exitAnimationDuration: '0',
+      disableClose: true
     });
   }
 
