@@ -92,6 +92,11 @@
   height: 158px;
   z-index: 100;
   gap: 10px;
+  animation: fadeIn 0.15s ease-out forwards;
+
+  &.closing {
+    animation: fadeOut 0.15s ease-out forwards;
+  }
 }
 
 .user-menu-item {
@@ -108,7 +113,7 @@
   }
 }
 
-@include tablet-lg {
+@include tablet-xl {
   .header-logo {
     display: flex;
   }
@@ -131,6 +136,10 @@
     right: -5px;
     height: 200px;
     animation: slideInRight 0.25s ease-out forwards;
+
+    &.closing {
+      animation: slideOutRight 0.25s ease-out forwards;
+    }
   }
 
 
