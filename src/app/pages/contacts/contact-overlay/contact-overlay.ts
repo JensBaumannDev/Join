@@ -1,6 +1,6 @@
 import { Supabase } from '../contact.service';
 import { AvatarService } from '../../../services/avatar.service';
-import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy, effect, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -35,6 +35,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     private data = inject(MAT_DIALOG_DATA);
     private supabase = inject(Supabase);
     private avatarService = inject(AvatarService);
+    private injector = inject(Injector);
 
     isClosing = signal(false);
     private subscriptions = new Subscription();
@@ -69,11 +70,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         }
         if (this.mode() === 'add') {
             if (!name) return '#D1D1D1';
-            const color = this.avatarService.getColor(name);
-            if (this.form.value.color !== color) {
-                this.form.patchValue({ color }, { emitEvent: false });
-            }
-            return color;
+            return this.avatarService.getColor(name);
         }
         return this.form.value.color || this.avatarService.getColor(name);
     });
@@ -100,6 +97,16 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
                     this.closeDialog();
                 })
         );
+
+        effect(() => {
+            const name = this.formValue()?.name || '';
+            if (this.mode() === 'add' && name) {
+                const color = this.avatarService.getColor(name);
+                if (this.form.value.color !== color) {
+                    this.form.patchValue({ color }, { emitEvent: false });
+                }
+            }
+        }, { injector: this.injector });
     }
 
     ngOnDestroy() {

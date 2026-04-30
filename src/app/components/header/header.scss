@@ -130,20 +130,10 @@
     top: calc(100% + 0px);
     right: -5px;
     height: 200px;
-    animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: slideInRight 0.25s ease-out forwards;
   }
 
-  @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
 
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
 
   .header-help-mobile {
     @include flex();
