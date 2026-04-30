@@ -114,11 +114,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     }
 
     cancel() {
-        if (this.mode() === 'edit') {
-            this.delete();
-        } else {
-            this.closeDialog();
-        }
+        this.closeDialog();
     }
 
     async delete() {

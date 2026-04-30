@@ -8,8 +8,7 @@
 
   width: 95dvw;
   max-width: 1200px;
-  // min-height: 600px;
-  max-height: calc(100dvh - 200px);
+  max-height: calc(95dvh);
 
   background-color: transparent;
   border-radius: 30px;
@@ -20,6 +19,7 @@
   @include tablet-lg {
     flex-direction: column;
     min-width: 80dvw;
+    max-width: 85dvw;
   }
 
   .close-button {
