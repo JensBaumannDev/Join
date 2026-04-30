@@ -1,6 +1,61 @@
 @use '../../../../styles/abstracts/' as *;
 @use '../../../../styles/base/typography' as *;
 
+.contacts__mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  @include flex(row, nowrap, flex-end, flex-end);
+  background: transparent;
+  animation: slideInRight 0.4s linear forwards;
+
+  &.slide-out {
+    animation: slideOutRight 0.4s linear forwards;
+  }
+}
+
+.contacts__mobile-menu {
+  position: fixed;
+  bottom: 100px;
+  right: 16px;
+  width: auto;
+  min-width: 140px;
+  background-color: #ffffff;
+  border-radius: 20px 20px 0 20px; 
+  padding: 26px 16px;
+  z-index: 201;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  
+  animation: slideInRight 0.4s linear forwards;
+
+  &.slide-out {
+    animation: slideOutRight 0.4s linear forwards;
+  }
+}
+
+// --- (Edit / Delete) ---
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+
+  .contacts__action-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+}
+
 .content {
   flex: 1;
   padding: 0;

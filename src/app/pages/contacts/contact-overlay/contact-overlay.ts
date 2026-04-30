@@ -1,6 +1,6 @@
 import { Supabase } from '../contact.service';
 import { AvatarService } from '../../../services/avatar.service';
-import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-contact-overlay',
@@ -27,8 +29,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     encapsulation: ViewEncapsulation.None,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-
-export class ContactDialogComponent {
+export class ContactDialogComponent implements OnInit, OnDestroy {
     private fb = inject(FormBuilder);
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
     private data = inject(MAT_DIALOG_DATA);
@@ -36,6 +37,8 @@ export class ContactDialogComponent {
     private avatarService = inject(AvatarService);
 
     isClosing = signal(false);
+    private subscriptions = new Subscription();
+    
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
@@ -65,9 +68,7 @@ export class ContactDialogComponent {
             return this.form.value.color || this.avatarService.getColor(name);
         }
         if (this.mode() === 'add') {
-            if (!name) {
-                return '#D1D1D1';
-            }
+            if (!name) return '#D1D1D1';
             const color = this.avatarService.getColor(name);
             if (this.form.value.color !== color) {
                 this.form.patchValue({ color }, { emitEvent: false });
@@ -85,16 +86,39 @@ export class ContactDialogComponent {
         return '';
     });
 
+    ngOnInit() {
+        this.subscriptions.add(
+            this.dialogRef.backdropClick().subscribe(() => {
+                this.closeDialog();
+            })
+        );
+
+        this.subscriptions.add(
+            this.dialogRef.keydownEvents()
+                .pipe(filter(event => event.key === 'Escape'))
+                .subscribe(() => {
+                    this.closeDialog();
+                })
+        );
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.unsubscribe();
+    }
+
     private closeDialog(data?: any) {
         this.isClosing.set(true);
-
         setTimeout(() => {
             this.dialogRef.close(data);
         }, 420);
     }
 
     cancel() {
-        this.closeDialog();
+        if (this.mode() === 'edit') {
+            this.delete();
+        } else {
+            this.closeDialog();
+        }
     }
 
     async delete() {
@@ -116,7 +140,6 @@ export class ContactDialogComponent {
                 await this.supabase.updateContact(contactId, value.name, value.email, value.phone);
             }
         }
-
         this.closeDialog({ action: 'save', data: value });
     }
 }

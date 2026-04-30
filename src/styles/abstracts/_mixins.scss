@@ -104,8 +104,6 @@
   }
 }
 
-
-
 // From 1025px (Desktop)
 @mixin desktop {
   @media (min-width: #{vars.$breakpoint-desktop + 1px}) {

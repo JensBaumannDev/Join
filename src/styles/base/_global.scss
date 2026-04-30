@@ -9,42 +9,38 @@
 
 .contact-dialog-panel {
   animation: slideInRight 0.4s ease-out forwards;
+
+  @include tablet-lg {
+    animation: slideInBottom 0.4s ease-out forwards;
+  }
 }
 
-.contact-dialog-panel[data-closing="true"] {
-  animation: slideInRight 0.4s ease-in reverse forwards;
+.slide-out {
+  animation: slideOutRight 0.4s ease-in forwards;
+
+  @include tablet-lg {
+    animation: slideOutBottom 0.4s ease-in forwards;
+  }
 }
+
+// --- Keyframes ---
 
 @keyframes slideInRight {
-  from {
-    transform: translateX(100vw);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(100vw); }
+  to   { transform: translateX(0); }
 }
-// /* Keyframes für das Hineinsliden */
-//   @keyframes slideIn {
-//     from {
-//       transform: translateX(100vw);
-//       opacity: 0;
-//     }
-//     to {
-//       transform: translateX(0);
-//       opacity: 1;
-//     }
-//   }
 
-//   /* Keyframes für das Heraussliden */
-//   @keyframes slideOut {
-//     from {
-//       transform: translateX(0);
-//       opacity: 1;
-//     }
-//     to {
-//       transform: translateX(100vw);
-//       opacity: 0;
-//     }
-//   }
+@keyframes slideInBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes slideOutBottom {
+  from { transform: translateY(0);}
+  to   { transform: translateY(100%);}
+}

@@ -1,4 +1,7 @@
-<div class="dialog-container" [class.slide-out]="isClosing()">
+<div class="dialog-container" [class.slide-out]="isClosing()" [class.edit-mode]="mode() === 'edit'">
+  <button mat-icon-button class="close-button" (click)="cancel()">
+    <img src="/icons/other/close.svg" alt="close" />
+  </button>
   <div class="left-panel">
     <div class="content-wrapper">
       <img src="logo/join-logo.svg" alt="Join Logo" class="logo" />
@@ -13,10 +16,6 @@
   </div>
 
   <div class="right-panel">
-    <button mat-icon-button class="close-button" mat-dialog-close (click)="cancel()">
-      <img src="/icons/other/close.svg" alt="close" />
-    </button>
-
     <div class="content-wrapper">
       <div class="avatar-section">
         <div class="avatar" [style.background]="avatarColor()">
@@ -30,24 +29,37 @@
 
       <div class="form-actions-section">
         <form [formGroup]="form" class="form">
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput formControlName="name" placeholder="Name" />
             <img matSuffix src="/icons/form/person.svg" alt="user" />
+            @if (form.get('name')?.hasError('minlength')) {
+              <mat-error>Minimum 3 characters required</mat-error>
+            }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="email" formControlName="email" placeholder="Email" />
             <img matSuffix src="/icons/form/mail.svg" alt="mail" />
+            @if (form.get('email')?.hasError('email')) {
+              <mat-error>Email is invalid</mat-error>
+            }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="tel" formControlName="phone" placeholder="Phone" />
             <img matSuffix src="/icons/other/call.svg" alt="phone" />
+            @if (form.get('phone')?.hasError('pattern')) {
+              <mat-error>Only numbers are allowed</mat-error>
+            }
           </mat-form-field>
         </form>
 
         <div class="actions">
-          <button class="btn btn-secondary" (click)="delete()">
+          <button
+            class="btn btn-secondary cancel"
+            [class.hide-on-mobile]="mode() === 'add'"
+            (click)="delete()"
+          >
             {{ cancelBtnText() }}
 
             @if (mode() === 'add') {
@@ -87,19 +99,5 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="actions">
-      <button class="btn btn-secondary" (click)="delete()">
-        {{ cancelBtnText() }}
-        @if (mode() === 'add') {
-          <img src="/icons/other/close.svg" alt="close" />
-        }
-      </button>
-
-      <button class="btn btn-primary" [disabled]="form.invalid" (click)="save()">
-        {{ saveBtnText() }}
-        <img src="/icons/other/check.svg" alt="check" />
-      </button>
-    </div> -->
   </div>
 </div>

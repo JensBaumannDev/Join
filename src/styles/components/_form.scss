@@ -3,21 +3,48 @@
 
 .form {
   @include flex(column, wrap, flex-start, stretch);
-  gap: 30px;
+  gap: 15px;
   flex: 1;
+  width: 100%;
 
   .custom-input {
     width: 100%;
 
-    @include mat.form-field-overrides((
+    @include mat.form-field-overrides(
+    (
       container-height: 50px,
       outlined-container-shape: 10px,
       outlined-outline-color: $color-gray-form,
       outlined-focus-outline-color: $color-highlight,
       outlined-hover-outline-color: #a0a0a0,
       outlined-input-text-placeholder-color: $color-gray-form,
-      container-vertical-padding: 10px
-    ));
+      container-vertical-padding: 10px,
+      
+      outlined-error-outline-color: $color-error,
+      outlined-error-hover-outline-color: $color-error,
+      outlined-error-focus-outline-color: $color-error,
+    )
+  );
+
+  ::v-deep .mat-mdc-form-field-subscript-wrapper {
+    height: 25px;
+    display: block;
+  }
+
+    @include tablet-lg {
+      @include mat.form-field-overrides(
+        (
+          container-height: 40px,
+        )
+      );
+    }
+    .mat-mdc-form-field-error {
+      color: $color-error;
+    }
+
+    .mat-mdc-form-field-error-wrapper {
+      padding: 3px 0 5px 0;
+    }
 
     &.mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
@@ -38,15 +65,19 @@
       margin-left: 10px;
     }
     input,
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="url"],
+    input[type='text'],
+    input[type='password'],
+    input[type='email'],
+    input[type='number'],
+    input[type='search'],
+    input[type='tel'],
+    input[type='url'],
     textarea {
-      font-size: 20px;
+      @include fluid-text(16, 20);
     }
+  }
+
+  @include tablet-lg {
+    gap: 8px;
   }
 }
