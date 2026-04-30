@@ -7,10 +7,10 @@
   z-index: 200;
   @include flex(row, nowrap, flex-end, flex-end);
   background: transparent;
-  animation: slideInRight 0.4s linear forwards;
+  animation: fadeIn 0.2s ease-out forwards;
 
   &.slide-out {
-    animation: slideOutRight 0.4s linear forwards;
+    animation: fadeOut 0.2s ease-in forwards;
   }
 }
 
@@ -31,10 +31,10 @@
   align-items: center;
   gap: 16px;
   
-  animation: slideInRight 0.4s linear forwards;
+  animation: slideInRight 0.25s ease-out forwards;
 
   &.slide-out {
-    animation: slideOutRight 0.4s linear forwards;
+    animation: slideOutRight 0.2s ease-in forwards;
   }
 }
 
@@ -297,3 +297,6 @@
     }
   }
 }
+
+
+
