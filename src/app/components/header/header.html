@@ -9,8 +9,9 @@
       <a href="/help" class="header-icon">
         <img src="./icons/header/help-icon.svg" alt="Help" />
       </a>
-      <div class="avatar-wrapper">
-        <app-avatar name="Mario Ramirez" [size]="55" [isHeader]="true" (click)="toggleMenu()"></app-avatar>
+      
+      <div class="avatar-wrapper" #menuWrapper>
+        <app-avatar name="Mario Ramirez" [size]="55" [isHeader]="true" (click)="toggleMenu()" tabindex="0"></app-avatar>
         
         @if (menuOpen) {
           <div class="user-menu">

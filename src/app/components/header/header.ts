@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { RouterModule } from '@angular/router';
 
@@ -12,11 +12,19 @@ import { RouterModule } from '@angular/router';
 export class Header {
   menuOpen = false;
 
-toggleMenu() {
-  this.menuOpen = !this.menuOpen;
-}
+  @ViewChild('menuWrapper') menuWrapper!: ElementRef;
 
-logout() {
-  
-}
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  logout() {
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.menuOpen && this.menuWrapper && !this.menuWrapper.nativeElement.contains(event.target)) {
+      this.menuOpen = false;
+    }
+  }
 }
