@@ -28,11 +28,15 @@ export class ContactList implements OnInit {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.action === 'save') {
-        this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
-      } else if (result?.action === 'delete') {
-        this.toastService.show('Contact successfully deleted');
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result?.action === 'save' && contact?.id) {
+        const updated = this.contactService.contacts().find(c => c.id === contact.id);
+        if (updated) {
+          this.contactService.selectedContact.set({ ...updated });
+        }
+      }
+      if (result?.action === 'delete' && contact?.id) {
+        this.contactService.selectedContact.set(null);
       }
     });
   }

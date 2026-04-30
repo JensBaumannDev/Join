@@ -32,15 +32,21 @@
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput formControlName="name" placeholder="Name" />
             <img matSuffix src="/icons/form/person.svg" alt="user" />
-            @if (form.get('name')?.hasError('minlength')) {
-              <mat-error>Minimum 3 characters required</mat-error>
+            @if (form.get('name')?.hasError('required')) {
+              <mat-error>Field is required</mat-error>
+            }
+            @if (form.get('name')?.hasError('pattern')) {
+              <mat-error>Please enter first and last name (no numbers)</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="email" formControlName="email" placeholder="Email" />
             <img matSuffix src="/icons/form/mail.svg" alt="mail" />
-            @if (form.get('email')?.hasError('email')) {
+            @if (form.get('email')?.hasError('required')) {
+              <mat-error>Field is required</mat-error>
+            }
+            @if (form.get('email')?.hasError('pattern')) {
               <mat-error>Email is invalid</mat-error>
             }
           </mat-form-field>
@@ -48,6 +54,9 @@
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
             <input matInput type="tel" formControlName="phone" placeholder="Phone" />
             <img matSuffix src="/icons/other/call.svg" alt="phone" />
+            @if (form.get('phone')?.hasError('required')) {
+              <mat-error>Field is required</mat-error>
+            }
             @if (form.get('phone')?.hasError('pattern')) {
               <mat-error>Only numbers are allowed</mat-error>
             }
@@ -58,6 +67,7 @@
           <button
             class="btn btn-secondary cancel"
             [class.hide-on-mobile]="mode() === 'add'"
+            [disabled]="isLoading()"
             (click)="delete()"
           >
             {{ cancelBtnText() }}
@@ -92,7 +102,7 @@
             }
           </button>
 
-          <button class="btn btn-primary" [disabled]="form.invalid" (click)="save()">
+          <button class="btn btn-primary" [disabled]="form.invalid || isLoading()" (click)="save()">
             {{ saveBtnText() }}
             <img src="/icons/other/check.svg" alt="check" />
           </button>
