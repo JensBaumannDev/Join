@@ -13,7 +13,7 @@
           <div class="contacts__group">
             <div class="contacts__group-letter">{{ group.letter }}</div>
 
-            @for (c of group.contacts; track c.email) {
+            @for (c of group.contacts; track c.id) {
               <div class="contacts__item" 
                    (click)="selectContact(c)"
                    [class.contacts__item--active]="contactService.selectedContact()?.id === c.id">
