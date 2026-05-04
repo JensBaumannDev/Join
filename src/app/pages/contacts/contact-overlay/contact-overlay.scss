@@ -190,7 +190,7 @@
     .actions {
       @include flex(row, wrap, flex-start, center);
       gap: 20px;
-      margin-block-start: 30px;
+      margin-block-start: 50px;
 
       button img {
         width: 25px;
@@ -198,7 +198,7 @@
       }
 
       @include tablet-lg {
-        margin-block-start: 0;
+        margin-block-start: 30px;
       }
 
       .cancel.hide-on-mobile {
