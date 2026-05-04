@@ -1,6 +1,6 @@
 import { Supabase } from '../contact.service';
 import { AvatarService } from '../../../services/avatar.service';
-import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy, effect, Injector } from '@angular/core';
+import { Component, inject, signal, computed, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -35,13 +35,14 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     private data = inject(MAT_DIALOG_DATA);
     private supabase = inject(Supabase);
     private avatarService = inject(AvatarService);
-    private injector = inject(Injector);
+
 
     isClosing = signal(false);
     isLoading = signal(false);
     private subscriptions = new Subscription();
 
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
+    private randomColor = this.avatarService.getRandomColor();
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
     subtitle = computed(() => this.mode() === 'add' ? 'Tasks are better with a team!' : '');
@@ -59,21 +60,18 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
             ]
         ],
         phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\+?[0-9]+$/)]],
-        color: [this.data?.contact?.color || (this.mode() === 'add' ? '#bdbdbd' : '')]
+        color: [this.data?.contact?.color || this.randomColor]
     });
 
     formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value });
 
     avatarColor = computed(() => {
-        const name = this.formValue()?.name || '';
-        if (this.mode() === 'edit') {
-            return this.form.value.color || this.avatarService.getColor(name);
-        }
         if (this.mode() === 'add') {
+            const name = this.formValue()?.name || '';
             if (!name) return '#D1D1D1';
-            return this.avatarService.getColor(name);
+            return this.randomColor;
         }
-        return this.form.value.color || this.avatarService.getColor(name);
+        return this.form.value.color || this.avatarService.getColor(this.formValue()?.name || '');
     });
 
     avatarInitials = computed(() => {
@@ -98,16 +96,6 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
                     this.closeDialog();
                 })
         );
-
-        effect(() => {
-            const name = this.formValue()?.name || '';
-            if (this.mode() === 'add' && name) {
-                const color = this.avatarService.getColor(name);
-                if (this.form.value.color !== color) {
-                    this.form.patchValue({ color }, { emitEvent: false });
-                }
-            }
-        }, { injector: this.injector });
     }
 
     ngOnDestroy() {

@@ -53,4 +53,10 @@ export class AvatarService {
       color: this.getColor(name)
     };
   }
+
+  /** Returns a random color from the palette */
+  getRandomColor(): string {
+    const index = Math.floor(Math.random() * this.colors.length);
+    return this.colors[index];
+  }
 }
