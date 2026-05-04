@@ -29,18 +29,18 @@
 
       <div class="form-actions-section">
         <form [formGroup]="form" class="form">
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput formControlName="name" placeholder="Name" />
             <img matSuffix src="./icons/form/person.svg" alt="user" />
             @if (form.get('name')?.hasError('required')) {
               <mat-error>Field is required</mat-error>
             }
             @if (form.get('name')?.hasError('pattern')) {
-              <mat-error>Please enter first and last name (no numbers)</mat-error>
+              <mat-error>First &amp; last name required (no numbers)</mat-error>
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput type="email" formControlName="email" placeholder="Email" />
             <img matSuffix src="./icons/form/mail.svg" alt="mail" />
             @if (form.get('email')?.hasError('required')) {
@@ -51,7 +51,7 @@
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="fixed">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput type="tel" formControlName="phone" placeholder="Phone" />
             <img matSuffix src="./icons/other/call.svg" alt="phone" />
             @if (form.get('phone')?.hasError('required')) {
