@@ -68,7 +68,7 @@
             class="btn btn-secondary cancel"
             [class.hide-on-mobile]="mode() === 'add'"
             [disabled]="isLoading()"
-            (click)="delete()"
+            (click)="mode() === 'add' ? cancel() : delete()"
           >
             {{ cancelBtnText() }}
 
