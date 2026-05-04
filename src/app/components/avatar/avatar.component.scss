@@ -16,7 +16,7 @@
 
 .header-variant {
   background-color: $color-white;
-  color: var(--avatar-color);
+  color: $color-highlight;
   border: 3px solid $color-primary;
   box-shadow: none;
   cursor: pointer;
