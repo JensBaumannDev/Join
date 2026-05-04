@@ -55,6 +55,10 @@
     background-color: $color-primary-hover;
     color: $sidebar-active-text;
   }
+
+  img {
+      filter: brightness(0) invert(1); 
+    }
 }
 
 .sidebar-footer {
