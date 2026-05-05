@@ -1,0 +1,37 @@
+@use '../../../styles/abstracts' as *;
+@use '../../../styles/components' as *;
+@use '../../../styles/base' as *;
+
+.dialog-container {
+	position: relative;
+	@include flex(row, flex-start, stretch);
+	width: 500px;
+	height: 900px;
+	background-color: $color-white;
+	border-radius: 30px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	margin: 10px;
+
+	.close-button {
+		position: absolute;
+		inset-block-start: 50px;
+		inset-inline-end: 50px;
+		z-index: 10;
+		background: none;
+		border: none;
+		cursor: pointer;
+		transition: background-color 125ms ease, border-radius 125ms ease;
+
+		@include tablet-lg {
+			inset-block-start: 20px;
+			inset-inline-end: 10px;
+		}
+
+		&:hover{
+			background-color: $color-gray-light;
+			border-radius: 50%;
+	}
+
+}
+}

@@ -1,4 +1,6 @@
 import { Component, OnInit, inject, computed } from '@angular/core';
+import { DialogService } from '../../services/dialog.service';
+import { TaskDetail } from '../../components/task-detail/task-detail';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDragDrop,
@@ -23,6 +25,11 @@ import { FindTask } from '../../components/find-task/find-task';
 export class BoardComponent implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
+  private dialogService = inject(DialogService);
+  
+  openTaskDetailDialog(task: any) {
+    this.dialogService.open(TaskDetail, { task }, 'task-dialog-panel');
+  }
 
   /** Filtered tasks for the 'To do' column */
   todo = computed(() => this.taskService.tasks().filter(t =>
