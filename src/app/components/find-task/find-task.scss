@@ -4,8 +4,6 @@
 .board-header {
   @include flex($justify-content: space-between, $align-items: center);
   width: 100%;
-  max-width: 1208px;
-  padding: 96px 64px;
 }
 
 .board-title {
