@@ -11,11 +11,12 @@ import {
 import { TaskService } from '../../services/task.service';
 import { AvatarService } from '../../services/avatar.service';
 import { Task } from '../../interfaces/task.interface';
+import { FindTask } from '../../components/find-task/find-task';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask],
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
@@ -45,10 +46,10 @@ export class BoardComponent implements OnInit {
 
   /** Configuration for each column in the kanban board */
   columns = [
-    { id: 'to do',         configKey: 'to_do',          label: 'To do',          tasks: this.todo },
-    { id: 'in progress',   configKey: 'in_progress',     label: 'In progress',    tasks: this.in_progress },
-    { id: 'await feedback',configKey: 'await_feedback',  label: 'Await feedback', tasks: this.await_feedback },
-    { id: 'done',          configKey: 'done',            label: 'Done',           tasks: this.done },
+    { id: 'to do', configKey: 'to_do', label: 'To do', tasks: this.todo },
+    { id: 'in progress', configKey: 'in_progress', label: 'In progress', tasks: this.in_progress },
+    { id: 'await feedback', configKey: 'await_feedback', label: 'Await feedback', tasks: this.await_feedback },
+    { id: 'done', configKey: 'done', label: 'Done', tasks: this.done },
   ];
 
   /** Retrieves the current board configuration from the task service */
