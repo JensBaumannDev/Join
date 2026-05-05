@@ -1,0 +1,83 @@
+@use '../../../styles/components/' as *;
+@use '../../../styles/abstracts/' as *;
+
+.board-header {
+  @include flex($justify-content: space-between, $align-items: center);
+  width: 100%;
+  max-width: 1208px;
+  padding: 96px 64px;
+}
+
+.board-title {
+  font-size: 61px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.board-actions {
+  @include flex($align-items: center);
+  gap: 32px;
+}
+
+.search-wrapper {
+  @include flex($align-items: center);
+  border: 1px solid $color-find-task-border;
+  border-radius: 10px;
+  padding: 8px 16px;
+  height: 48px;
+  width: 312px;
+
+  &:focus-within {
+    border-color: $button-bg-hover;
+  }
+
+  &:active {
+    border-color: transparent;
+  }
+
+  .search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-weight: 400;
+    line-height: 120%;
+
+    &::placeholder {
+      color:  $color-gray-form;
+    }
+  }
+
+  .search-divider {
+    width: 0.5px;
+    height: 32px;
+    background: $color-gray-form;
+    margin: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .search-icon {
+    padding-left: 10px;
+    flex-shrink: 0;
+   
+  }
+}
+
+.add-task-btn {
+  gap: 12px;
+  height: 48px;
+  font-size: 21px;
+  width: 160px;
+
+  &:hover {
+    background: $button-bg-hover;
+  }
+
+  &:active {
+    background: $color-primary-hover;
+  }
+
+  .btn-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
