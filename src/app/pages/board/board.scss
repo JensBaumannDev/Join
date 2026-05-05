@@ -1,0 +1,186 @@
+@use '../../../styles/abstracts/' as *;
+@use '../../../styles/base/' as *;
+
+.board-container {
+    padding: 80px 0px 0px 60px;
+
+    h2 {
+        padding-bottom: 50px;
+    }
+}
+
+.board-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 244px);
+    gap: 25px;
+    width: 100%;
+}
+
+.column-header {
+    @include flex(row, wrap, space-between, center);
+    margin-bottom: 24px;
+
+    h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: $color-primary;
+    }
+}
+
+.add-task-btn {
+    @include flex(row, wrap, flex-start, center);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &:hover {
+
+        svg rect,
+        svg path {
+            stroke: $color-highlight;
+        }
+    }
+}
+
+.task-list {
+    min-height: 50px;
+}
+
+.task-card {
+    width: 100%;
+    @include flex(column, nowrap, flex-start, stretch);
+    box-sizing: border-box;
+    background: $color-white;
+    border-radius: 24px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.08);
+    cursor: grab;
+    gap: 12px;
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    .category-badge {
+        padding: 4px 16px;
+        color: $color-white;
+        border-radius: 8px;
+        font-size: 16px;
+        width: fit-content;
+    }
+
+    .task-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: $color-primary;
+        margin: 0;
+    }
+
+    .task-desc {
+        font-size: 16px;
+        color: $color-text-muted;
+        margin: 0;
+    }
+
+    .progress-section {
+        @include flex(row, nowrap, space-between, center);
+        gap: 10px;
+        font-size: 12px;
+
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background-color: $color-gray-light;
+            border-radius: 4px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: $color-accent;
+            border-radius: 4px;
+        }
+    }
+
+    .task-footer {
+        @include flex(row, nowrap, space-between, center);
+        margin-top: 8px;
+
+        .contact-list {
+            @include flex(row, nowrap, flex-start, center);
+            margin-left: 8px;
+
+            .avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: 2px solid $color-white;
+                margin-right: -8px;
+                @include flex(row, nowrap, center, center);
+                color: $color-white;
+                font-size: 16px;
+                font-weight: 400;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .prio-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+    }
+}
+
+.empty-list-placeholder {
+    height: 56px;
+    border: 1px dashed $color-text-muted;
+    border-radius: 10px;
+    background-color: $color-gray-light;
+    color: $color-text-muted;
+    @include flex(row, nowrap, center, center);
+    font-size: 16px;
+}
+
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 24px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    rotate: 5deg;
+    background: $color-white;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.2;
+    border: 2px dashed $color-text-muted;
+    border-radius: 24px;
+    background: rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+    height: 150px;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* #region RESPONSIVE */
+@media (max-width: $breakpoint-mobile) {
+    .board-container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+/* #endregion */
