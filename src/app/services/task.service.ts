@@ -11,6 +11,8 @@ export class TaskService {
   /** Signals for reactive state management */
   tasks = signal<Task[]>([]);
 
+  categories = signal<string[]>([]);
+
   /** Signal holding the current list of contacts */
   contacts = signal<any[]>([]);
 
@@ -54,6 +56,41 @@ export class TaskService {
 
     if (data) {
       this.tasks.set(data as Task[]);
+    }
+  }
+
+  async createTask(task:Task) {
+
+    const { error } = 
+    await this.supabaseService.supabase
+    .from ('task')
+    .insert([task]);
+
+    if (error) {
+      console.error('create task error:', error);
+      return;
+    }
+    await this.getTasks();
+  }
+
+  async getCategories() {
+
+    const { data, error } =
+    await this.supabaseService.supabase
+    .from('task')
+    .select('category');
+
+    if (error) {
+      console.error('Category loading error:', error);
+      return;
+    }
+    if(data) {
+      const uniqueCategories = [
+        ...new Set(
+          data.map(item => item.category)
+        )
+      ];
+      this.categories.set(uniqueCategories);
     }
   }
 
