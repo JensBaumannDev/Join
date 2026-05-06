@@ -1,14 +1,15 @@
 import { Component, inject, ViewEncapsulation, OnInit, OnDestroy, signal } from '@angular/core';
+import { DatePipe, LowerCasePipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CategoryBadge } from '../category-badge/category-badge';
+import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
-// import { Supabase } from '../service'; ANPASSEN LINK
-
+import { TaskService } from '../../services/task.service';
 @Component({
   selector: 'app-task-detail',
-  imports: [CategoryBadge],
+  imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.scss',
   encapsulation: ViewEncapsulation.None,
@@ -17,9 +18,10 @@ export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
   task: Task = inject(MAT_DIALOG_DATA).task;
   private subscriptions = new Subscription();
-  // private supabase = inject(Supabase);
+  private supabase = inject(TaskService);
 
   isClosing = signal(false);
+  subtasks = signal<any[]>([]);
 
   ngOnInit() {
     this.subscriptions.add(
@@ -35,6 +37,11 @@ export class TaskDetail implements OnInit, OnDestroy {
           this.closeDialog();
         })
     );
+
+    // Subtasks laden
+    this.supabase.getSubtasksForTask(this.task.id).then(subtasks => {
+      this.subtasks.set(subtasks);
+    });
   }
 
   ngOnDestroy() {
@@ -47,5 +54,12 @@ export class TaskDetail implements OnInit, OnDestroy {
     setTimeout(() => {
       this.dialogRef.close();
     }, 500);
+  }
+
+  get assignees(): string[] {
+    const val = this.task.assigned_to;
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    return (val as unknown as string).split(',').map(n => n.trim()).filter(n => n.length > 0);
   }
 }

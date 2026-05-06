@@ -26,185 +26,174 @@
   padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
   margin: 10px;
 
-  .top-line {
-    @include flex(row, nowrap, space-between, center);
-    width: 100%;
+  font-weight: 400;
+  @include fluid-text(16, 20);
+}
+.top-line {
+  @include flex(row, nowrap, space-between, center);
+  width: 100%;
 
-    .close-button {
+  .close-button {
+    @include flex(row, nowrap, center, center);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: $color-gray-light;
+      border-radius: 50%;
+    }
+
+    img {
+      width: 20px;
+    }
+  }
+}
+
+.dialog-title {
+  overflow-wrap: anywhere;
+}
+
+.dialog-description {
+  margin: 0;
+  font-weight: 400;
+  @include fluid-text(16, 20);
+}
+
+.meta-label,
+.section-label {
+  color: $color-primary;
+
+  @include mobile {
+    font-weight: 700;
+  }
+}
+
+.meta-section {
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 16px;
+
+  .meta-row {
+    @include flex(row, nowrap, flex-start, center);
+    gap: 25px;
+  }
+
+  .meta-value {
+    &.priority {
       @include flex(row, nowrap, center, center);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-
-      &:hover,
-      &:focus-visible {
-        background-color: $color-gray-light;
-        border-radius: 50%;
-      }
+      gap: 5px;
 
       img {
-        width: 20px;
+        width: 30px;
+        height: auto;
       }
     }
   }
+}
 
-  .dialog-description {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 400;
-    color: $color-text;
-  }
+.assignees-section {
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 16px;
 
-  .meta-label,
-  .section-label {
-    font-weight: 400;
-    color: $color-primary;
-    @include fluid-text(16, 20);
-
-    @include mobile{
-      font-weight: 700;
-    }
-  }
-
-  .meta-section {
+  .assignee-list {
     @include flex(column, nowrap, flex-start, stretch);
-    gap: 16px;
-
-    .meta-row {
-      @include flex(row, nowrap, flex-start, center);
-      gap: 32px;
-    }
-
-    .meta-label {
-      min-width: 85px;
-    }
-
-    .meta-value {
-      font-size: 16px;
-      color: $color-text;
-
-      &.priority {
-        @include flex(row, nowrap, flex-start, center);
-        gap: 8px;
-
-        img {
-          width: 16px;
-          height: auto;
-        }
-      }
-    }
-  }
-
-  // --- Assignees Section ---
-  .assignees-section {
-    @include flex(column, nowrap, flex-start, stretch);
-    gap: 16px;
-
-    .assignee-list {
-      @include flex(column, nowrap, flex-start, stretch);
-      gap: 16px;
-      padding-left: 12px;
-    }
-
-    .assignee-item {
-      @include flex(row, nowrap, flex-start, center);
-      gap: 16px;
-
-      .avatar {
-        @include flex(row, nowrap, center, center);
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        color: $color-white;
-        font-size: 14px;
-        font-weight: 400;
-      }
-
-      .assignee-name {
-        font-size: 16px;
-        color: $color-text;
-      }
-    }
-  }
-
-  // --- Subtasks Section ---
-  .subtasks-section {
-    @include flex(column, nowrap, flex-start, stretch);
-    gap: 12px;
-
-    .subtask-list {
-      @include flex(column, nowrap, flex-start, stretch);
-      gap: 12px;
-      padding-left: 12px;
-    }
-
-    .subtask-item {
-      @include flex(row, nowrap, flex-start, center);
-      gap: 12px;
-
-      .checkbox-icon {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-      }
-
-      .subtask-text {
-        font-size: 15px;
-        color: $color-text;
-      }
-    }
-  }
-
-  .dialog-footer {
-    @include flex(row, nowrap, flex-end, center);
     gap: 10px;
+    padding-left: 12px;
+  }
 
-    .separator {
-      width: 1px;
-      height: 24px;
-      background-color: $color-gray-form;
+  .assignee-item {
+    @include flex(row, nowrap, flex-start, center);
+    gap: 16px;
+
+    .avatar {
+      @include flex(row, nowrap, center, center);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: $color-white;
+      font-size: 14px;
+      font-weight: 400;
     }
+  }
+}
 
-    .action-btn {
-      background: none;
-      border: none;
+.subtasks-section {
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 12px;
+
+  .subtask-list {
+    @include flex(column, nowrap, flex-start, stretch);
+    gap: 10px;
+    padding-left: 16px;
+  }
+
+  .subtask-item {
+    @include flex(row, nowrap, flex-start, flex-start);
+    gap: 16px;
+
+    .checkbox-icon {
+      width: 24px;
+      height: 24px;
       cursor: pointer;
-      font-size: 16px;
-      @include flex(row, nowrap, flex-start, center);
-      gap: 10px;
-      padding: 0;
-      transition:
-        background 120ms ease-in-out,
-        color 120ms;
 
       &:hover {
-        color: $color-highlight;
+        background-color: $color-hover-check;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+.dialog-footer {
+  @include flex(row, nowrap, flex-end, center);
+  gap: 10px;
+
+  .separator {
+    width: 1px;
+    height: 24px;
+    background-color: $color-gray-form;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    @include flex(row, nowrap, flex-start, center);
+    gap: 10px;
+    padding: 0;
+    transition:
+      background 120ms ease-in-out,
+      color 120ms;
+
+    &:hover {
+      color: $color-highlight;
+      font-weight: 700;
+    }
+
+    &--delete:hover {
+      .action-img {
+        filter: none;
+      }
+    }
+
+    .action-text {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+
+      &::after {
+        content: attr(data-text);
         font-weight: 700;
-      }
-
-      &--delete:hover {
-        .action-img {
-          filter: none;
-        }
-      }
-
-      .action-text {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-
-        &::after {
-          content: attr(data-text);
-          font-weight: 700;
-          height: 0;
-          overflow: hidden;
-          visibility: hidden;
-          user-select: none;
-          pointer-events: none;
-        }
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        user-select: none;
+        pointer-events: none;
       }
     }
   }
