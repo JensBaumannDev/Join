@@ -104,5 +104,18 @@ export class TaskService {
     if (error) {
       console.error('Update error:', error);
     }
+    }
+
+    /** Fetches subtasks for a given taskId from Supabase */
+    async getSubtasksForTask(taskId: string) {
+      const { data, error } = await this.supabaseService.supabase
+        .from('subtasks')
+        .select('*')
+        .eq('task_id', taskId);
+      if (error) {
+        console.error('Subtask loading error:', error);
+        return [];
+      }
+      return data || [];
   }
 }

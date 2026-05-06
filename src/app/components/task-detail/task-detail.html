@@ -5,20 +5,19 @@
       <img src="icons/other/close.svg" alt="close" />
     </button>
   </section>
-<!-- Lange Wörter Umbruch einbauen!!!!!!!!!!!!!!!!!!!!!!!-->
-  <h2 class="dialog-title">CSS Architecture Planning</h2> 
-  <p class="dialog-description">Define CSS naming conventions and structure.</p>
+  <h2 class="dialog-title">{{ task.title }}</h2>
+  <p class="dialog-description">{{ task.description }}</p>
 
   <section class="meta-section">
     <div class="meta-row">
       <span class="meta-label">Due date:</span>
-      <span class="meta-value">02/09/2023</span>
+      <span class="meta-value">{{ task.due_date | date:'MM/dd/yyyy' }}</span>
     </div>
     <div class="meta-row">
       <span class="meta-label">Priority:</span>
       <span class="meta-value priority">
-        Urgent
-        <img src="icons/board/prio-urgent.svg" alt="urgent priority" />
+        {{ task.priority }}
+        <img [src]="'icons/board/prio-' + (task.priority | lowercase) + '.svg'" [alt]="task.priority + ' priority'" />
       </span>
     </div>
   </section>
@@ -26,29 +25,25 @@
   <section class="assignees-section">
     <span class="section-label">Assigned To:</span>
     <div class="assignee-list">
-      <div class="assignee-item">
-        <div class="avatar" style="background-color: #05d2e0">SM</div>
-        <span class="assignee-name">Sofia Müller</span>
-      </div>
-      <div class="assignee-item">
-        <div class="avatar" style="background-color: #6f50ff">BZ</div>
-        <span class="assignee-name">Benedikt Ziegler</span>
-      </div>
+      @for (name of assignees; track name) {
+        <div class="assignee-item">
+          <app-avatar [name]="name" [size]="38" />
+          <span>{{ name }}</span>
+        </div>
+      }
     </div>
   </section>
 
   <section class="subtasks-section">
     <span class="section-label">Subtasks</span>
     <div class="subtask-list">
-      <div class="subtask-item">
-        <img src="icons/checkbox-checked.svg" alt="checked" class="checkbox-icon" />
-        <span class="subtask-text">Establish CSS Methodology</span>
+      @for (subtask of subtasks(); track subtask.id) {
+        <div class="subtask-item">
+          <img [src]="subtask.completed ? 'icons/board/checkbox_checked.svg' : 'icons/board/checkbox.svg'" [alt]="subtask.completed ? 'checked' : 'unchecked'" class="checkbox-icon" />
+          <span class="subtask-text">{{ subtask.title }}</span>
+        </div>
+      }
       </div>
-      <div class="subtask-item">
-        <img src="icons/checkbox-checked.svg" alt="checked" class="checkbox-icon" />
-        <span class="subtask-text">Setup Base Styles</span>
-      </div>
-    </div>
   </section>
 
   <footer class="dialog-footer">
