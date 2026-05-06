@@ -23,7 +23,7 @@ import { CategoryBadge } from '../../components/category-badge/category-badge';
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
-export class BoardComponent implements OnInit {
+export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
