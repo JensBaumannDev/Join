@@ -56,6 +56,7 @@
 
 .dialog-title {
   overflow-wrap: anywhere;
+  @include fluid-text(30, 60);
 }
 
 .dialog-description {
