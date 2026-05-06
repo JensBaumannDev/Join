@@ -1,17 +1,14 @@
 <div class="task-detail-content">
-  <!-- Top Line -->
   <section class="top-line">
-    <app-category-badge [category]="task.category || 'Technical Task'" />
+    <app-category-badge [category]="task.category" [inDialog]="true"/>
     <button class="close-button" (click)="closeDialog()">
       <img src="icons/other/close.svg" alt="close" />
     </button>
   </section>
-
-  <!-- Header -->
-  <h1 class="dialog-title">CSS Architecture Planning</h1>
+<!-- Lange Wörter Umbruch einbauen!!!!!!!!!!!!!!!!!!!!!!!-->
+  <h2 class="dialog-title">CSS Architecture Planning</h2> 
   <p class="dialog-description">Define CSS naming conventions and structure.</p>
 
-  <!-- Metadata -->
   <section class="meta-section">
     <div class="meta-row">
       <span class="meta-label">Due date:</span>
@@ -21,13 +18,11 @@
       <span class="meta-label">Priority:</span>
       <span class="meta-value priority">
         Urgent
-        <!-- Angenommener Icon-Pfad -->
-        <img src="icons/priority-urgent.svg" alt="urgent priority" />
+        <img src="icons/board/prio-urgent.svg" alt="urgent priority" />
       </span>
     </div>
   </section>
 
-  <!-- Assignees -->
   <section class="assignees-section">
     <span class="section-label">Assigned To:</span>
     <div class="assignee-list">
@@ -42,7 +37,6 @@
     </div>
   </section>
 
-  <!-- Subtasks -->
   <section class="subtasks-section">
     <span class="section-label">Subtasks</span>
     <div class="subtask-list">

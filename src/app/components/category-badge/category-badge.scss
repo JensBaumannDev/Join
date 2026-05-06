@@ -1,7 +1,15 @@
+@use '../../../styles/abstracts' as *;
+
 .category-badge {
   padding: 4px 16px;
   color: white;
   border-radius: 8px;
   font-size: 16px;
+  font-weight: 300;
   width: fit-content;
+
+  &.in-dialog {
+    @include fluid-text(16, 20);
+    padding: 4px 24px;
+  }
 }
