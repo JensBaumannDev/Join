@@ -1,1 +1,76 @@
-<p>add-task works!</p>
+<div class="task-container">
+  <h2>Add Task</h2>
+
+  <form [formGroup]="taskForm" (ngSubmit)="submit()">
+
+    <div class="form-grid">
+
+
+      <div class="left">
+        <label>Title *</label>
+        <input formControlName="title" placeholder="Enter a title" />
+
+        <label>Description</label>
+        <textarea formControlName="description"></textarea>
+
+        <label>Due date *</label>
+        <input type="date" formControlName="dueDate" />
+      </div>
+
+     
+      <div class="right">
+
+        <label>Priority</label>
+        <div class="priority-buttons">
+          <button type="button"
+                  [class.active]="taskForm.value.priority === 'Urgent'"
+                  (click)="setPriority('Urgent')">
+            Urgent
+          </button>
+
+          <button type="button"
+                  [class.active]="taskForm.value.priority === 'Medium'"
+                  (click)="setPriority('Medium')">
+            Medium
+          </button>
+
+          <button type="button"
+                  [class.active]="taskForm.value.priority === 'Low'"
+                  (click)="setPriority('Low')">
+            Low
+          </button>
+        </div>
+
+        <label>Assigned to</label>
+        <select formControlName="assignedTo">
+          <option value="">Select contacts</option>
+          
+            @for (c of contacts(); track c.id) {
+                <option [value]="c.id">
+                    {{ c.name }}
+                </option>
+            }
+
+        </select>
+
+        <label>Category *</label>
+        <select formControlName="category">
+          <option value="">Select category</option>
+          <option value="dev">Development</option>
+          <option value="design">Design</option>
+        </select>
+
+        <label>Subtasks</label>
+        <input formControlName="subtasks" placeholder="Add new subtask" />
+
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button type="button" (click)="clear()">Clear</button>
+      <button type="submit" class="primary">Create Task</button>
+    </div>
+
+  </form>
+</div>
