@@ -10,6 +10,7 @@ import { AvatarService } from '../../services/avatar.service';
 })
 export class CategoryBadge {
   category = input.required<string>();
+  inDialog = input<boolean>(false);
 
   private avatarService = inject(AvatarService);
 

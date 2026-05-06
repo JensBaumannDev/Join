@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CategoryBadge } from '../category-badge/category-badge';
 import { Task } from '../../interfaces/task.interface';
+// import { Supabase } from '../service'; ANPASSEN LINK
 
 @Component({
   selector: 'app-task-detail',
@@ -16,6 +17,7 @@ export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
   task: Task = inject(MAT_DIALOG_DATA).task;
   private subscriptions = new Subscription();
+  // private supabase = inject(Supabase);
 
   isClosing = signal(false);
 

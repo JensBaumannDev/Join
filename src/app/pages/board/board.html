@@ -24,9 +24,7 @@
                 @for (task of col.tasks(); track task.id) {
                 <div class="task-card" cdkDrag (click)="openTaskDetailDialog(task)">
                     @if (task.category) {
-                    <div class="category-badge" [style.background-color]="getCategoryColor(task.category)">
-                        {{ task.category }}
-                    </div>
+                    <app-category-badge [category]="task.category" />
                     }
                     <h4 class="task-title">{{ task.title }}</h4>
                     <p class="task-desc">{{ task.description }}</p>

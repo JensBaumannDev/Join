@@ -14,11 +14,12 @@ import { TaskService } from '../../services/task.service';
 import { AvatarService } from '../../services/avatar.service';
 import { Task } from '../../interfaces/task.interface';
 import { FindTask } from '../../components/find-task/find-task';
+import { CategoryBadge } from '../../components/category-badge/category-badge';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask],
+  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge],
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
@@ -136,11 +137,6 @@ export class BoardComponent implements OnInit {
     // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     return [];
-  }
-
-  /** Returns a deterministic color for a task category */
-  getCategoryColor(category: string): string {
-    return this.avatarService.getColor(category + ' category');
   }
 
   /** Handles the drag and drop event for moving tasks between columns */
