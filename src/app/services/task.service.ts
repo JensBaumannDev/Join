@@ -17,6 +17,9 @@ export class TaskService {
   /** Signal holding the board configuration data */
   boardConfig = signal<any>(null);
 
+  /** Signal for filtering tasks by search term */
+  searchTerm = signal<string>('');
+
   /** Fetches all contacts from Supabase */
   async getContacts() {
     const { data, error } = await this.supabaseService.supabase
