@@ -24,23 +24,34 @@ export class BoardComponent implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
 
+  /** All tasks filtered by the search term */
+  filteredTasks = computed(() => {
+    const term = this.taskService.searchTerm().toLowerCase();
+    const tasks = this.taskService.tasks();
+    if (!term) return tasks;
+    return tasks.filter(t =>
+      t.title?.toLowerCase().includes(term) ||
+      t.description?.toLowerCase().includes(term)
+    );
+  });
+
   /** Filtered tasks for the 'To do' column */
-  todo = computed(() => this.taskService.tasks().filter(t =>
+  todo = computed(() => this.filteredTasks().filter(t =>
     ['to do', 'todo'].includes(t.status?.toLowerCase() ?? '')
   ));
 
   /** Filtered tasks for the 'In progress' column */
-  in_progress = computed(() => this.taskService.tasks().filter(t =>
+  in_progress = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'in progress'
   ));
 
   /** Filtered tasks for the 'Await feedback' column */
-  await_feedback = computed(() => this.taskService.tasks().filter(t =>
+  await_feedback = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'await feedback'
   ));
 
   /** Filtered tasks for the 'Done' column */
-  done = computed(() => this.taskService.tasks().filter(t =>
+  done = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'done'
   ));
 

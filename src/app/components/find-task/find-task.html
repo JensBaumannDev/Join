@@ -3,7 +3,7 @@
 
   <div class="board-actions">
     <div class="search-wrapper">
-      <input type="text" class="search-input" placeholder="Find Task"/>
+      <input type="text" class="search-input" placeholder="Find Task" (input)="onSearch($event)"/>
       <div class="search-divider"></div>
       <img src="./icons/form/search.svg" alt="search" class="search-icon"/>
     </div>
