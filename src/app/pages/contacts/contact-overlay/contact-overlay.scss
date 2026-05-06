@@ -209,3 +209,11 @@
     }
   }
 }
+
+.contact-dialog-panel {
+  @include custom-material-dialog(30px);
+
+  .cdk-visually-hidden {
+    display: none;
+  }
+}

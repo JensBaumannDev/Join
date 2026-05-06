@@ -8,7 +8,7 @@ export class DialogService {
   open<T>(component: Type<T>, data?: any, panelClass: string = '', options: any = {}) {
     return this.dialog.open(component, {
       data,
-      panelClass,
+      panelClass: 'dialog-container',
       maxWidth: '100vw',
       enterAnimationDuration: '0',
       exitAnimationDuration: '0',

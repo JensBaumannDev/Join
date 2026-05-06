@@ -52,14 +52,6 @@
   }
 }
 
-.contact-dialog-panel {
-  @include custom-material-dialog(30px);
-
-  .cdk-visually-hidden {
-    display: none;
-  }
-}
-
 /* #region responsive-mixins */
 
 // Up to 370px

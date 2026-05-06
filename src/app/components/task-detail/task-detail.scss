@@ -3,35 +3,45 @@
 @use '../../../styles/base' as *;
 
 .dialog-container {
-	position: relative;
-	@include flex(row, flex-start, stretch);
-	width: 500px;
-	height: 900px;
-	background-color: $color-white;
-	border-radius: 30px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	margin: 10px;
+  @include custom-material-dialog(30px);
 
-	.close-button {
-		position: absolute;
-		inset-block-start: 50px;
-		inset-inline-end: 50px;
-		z-index: 10;
-		background: none;
-		border: none;
-		cursor: pointer;
-		transition: background-color 125ms ease, border-radius 125ms ease;
+  .cdk-visually-hidden {
+    display: none;
+  }
 
-		@include tablet-lg {
-			inset-block-start: 20px;
-			inset-inline-end: 10px;
-		}
+  position: relative;
+  @include flex(row, flex-start, stretch);
+  width: fit-content;
+  max-width: 95dvw;
+  height: auto;
+  max-height: 95dvh;
+  background-color: $color-white;
+  border-radius: 30px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 10px;
+  padding: 50px 40px;
 
-		&:hover{
-			background-color: $color-gray-light;
-			border-radius: 50%;
-	}
+  .close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    // transition:
+    //   background-color 125ms ease,
+    //   border-radius 125ms ease;
 
+    // @include tablet-lg {
+    //   inset-block-start: 20px;
+    //   inset-inline-end: 10px;
+    // }
+
+    // &:hover {
+    //   background-color: $color-gray-light;
+    //   border-radius: 50%;
+    // }
+  }
 }
+
+.top-line{
+	@include flex(space-between, center)
 }
