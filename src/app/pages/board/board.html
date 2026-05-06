@@ -22,7 +22,7 @@
             <div class="task-list" [id]="col.id" cdkDropList [cdkDropListData]="col.tasks()"
                 (cdkDropListDropped)="drop($event)">
                 @for (task of col.tasks(); track task.id) {
-                <div class="task-card" cdkDrag>
+                <div class="task-card" cdkDrag (click)="openTaskDetailDialog(task)">
                     @if (task.category) {
                     <div class="category-badge" [style.background-color]="getCategoryColor(task.category)">
                         {{ task.category }}
