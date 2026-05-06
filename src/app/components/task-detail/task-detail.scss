@@ -2,46 +2,227 @@
 @use '../../../styles/components' as *;
 @use '../../../styles/base' as *;
 
+$color-text-detail-muted: #4a5b75;
+$color-divider: #cbd5e0;
+
 .dialog-container {
   @include custom-material-dialog(30px);
 
   .cdk-visually-hidden {
     display: none;
   }
+}
 
+.task-detail-content {
   position: relative;
-  @include flex(row, flex-start, stretch);
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 24px;
+
   width: fit-content;
-  max-width: 95dvw;
+  max-width: 500px;
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 10px;
   padding: 50px 40px;
 
-  .close-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    // transition:
-    //   background-color 125ms ease,
-    //   border-radius 125ms ease;
+  // --- Top Line ---
+  .top-line {
+    @include flex(row, nowrap, space-between, center);
+    width: 100%;
 
-    // @include tablet-lg {
-    //   inset-block-start: 20px;
-    //   inset-inline-end: 10px;
-    // }
+    .close-button {
+      @include flex(row, nowrap, center, center);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
 
-    // &:hover {
-    //   background-color: $color-gray-light;
-    //   border-radius: 50%;
-    // }
+      &:hover,
+      &:focus-visible {
+        background-color: $color-gray-light;
+        border-radius: 50%;
+      }
+
+      img {
+        width: 20px;
+      }
+    }
   }
-}
 
-.top-line{
-	@include flex(space-between, center)
+  // --- Typografie Header ---
+  .dialog-title {
+    margin: 0;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: $color-text;
+  }
+
+  .dialog-description {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    color: $color-text;
+  }
+
+  // --- Generische Labels ---
+  .meta-label,
+  .section-label {
+    color: $color-text-detail-muted;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  // --- Metadata Section ---
+  .meta-section {
+    @include flex(column, nowrap, flex-start, stretch);
+    gap: 16px;
+
+    .meta-row {
+      @include flex(row, nowrap, flex-start, center);
+      gap: 32px;
+    }
+
+    .meta-label {
+      min-width: 85px;
+    }
+
+    .meta-value {
+      font-size: 16px;
+      color: $color-text;
+
+      &.priority {
+        @include flex(row, nowrap, flex-start, center);
+        gap: 8px;
+
+        img {
+          width: 16px;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  // --- Assignees Section ---
+  .assignees-section {
+    @include flex(column, nowrap, flex-start, stretch);
+    gap: 16px;
+
+    .assignee-list {
+      @include flex(column, nowrap, flex-start, stretch);
+      gap: 16px;
+      padding-left: 12px;
+    }
+
+    .assignee-item {
+      @include flex(row, nowrap, flex-start, center);
+      gap: 16px;
+
+      .avatar {
+        @include flex(row, nowrap, center, center);
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        color: $color-white;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .assignee-name {
+        font-size: 16px;
+        color: $color-text;
+      }
+    }
+  }
+
+  // --- Subtasks Section ---
+  .subtasks-section {
+    @include flex(column, nowrap, flex-start, stretch);
+    gap: 12px;
+
+    .subtask-list {
+      @include flex(column, nowrap, flex-start, stretch);
+      gap: 12px;
+      padding-left: 12px;
+    }
+
+    .subtask-item {
+      @include flex(row, nowrap, flex-start, center);
+      gap: 12px;
+
+      .checkbox-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      .subtask-text {
+        font-size: 15px;
+        color: $color-text;
+      }
+    }
+  }
+
+  // --- Footer / Actions ---
+  .dialog-footer {
+    @include flex(row, nowrap, flex-end, center);
+    gap: 12px;
+    margin-top: 8px;
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      color: $color-text;
+      @include flex(row, nowrap, flex-start, center);
+      gap: 10px;
+      padding: 0;
+      transition:
+        background 120ms ease-in-out,
+        color 120ms;
+
+      &:hover {
+        color: $color-highlight;
+        font-weight: 700;
+
+        .action-img {
+          filter: none;
+        }
+      }
+
+      &--delete:hover {
+        .action-img {
+          filter: none;
+        }
+      }
+
+      .action-text {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+
+        &::after {
+          content: attr(data-text);
+          font-weight: 700;
+          height: 0;
+          overflow: hidden;
+          visibility: hidden;
+          user-select: none;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  .separator {
+    width: 1px;
+    height: 24px;
+    background-color: $color-gray-form;
+  }
 }
