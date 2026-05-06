@@ -30,8 +30,9 @@ export class BoardComponent implements OnInit {
     const tasks = this.taskService.tasks();
     if (!term) return tasks;
     return tasks.filter(t =>
-      t.title?.toLowerCase().includes(term) ||
-      t.description?.toLowerCase().includes(term)
+      (t.title?.toLowerCase() ?? '').includes(term) ||
+      (t.description?.toLowerCase() ?? '').includes(term) ||
+      (t.category?.toLowerCase() ?? '').includes(term)
     );
   });
 
