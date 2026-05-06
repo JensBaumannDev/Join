@@ -13,6 +13,6 @@ export class FindTask {
 
   onSearch(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.taskService.searchTerm.set(input.value);
+    this.taskService.searchTerm.set(input.value.trim());
   }
 }
