@@ -6,7 +6,6 @@ import { filter } from 'rxjs/operators';
 import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
-import { TaskService } from '../../services/task.service';
 @Component({
   selector: 'app-task-detail',
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
@@ -18,10 +17,9 @@ export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
   task: Task = inject(MAT_DIALOG_DATA).task;
   private subscriptions = new Subscription();
-  private supabase = inject(TaskService);
 
   isClosing = signal(false);
-  subtasks = signal<any[]>([]);
+  subtasks: any[] = inject(MAT_DIALOG_DATA).subtasks ?? [];
 
   ngOnInit() {
     this.subscriptions.add(
@@ -37,11 +35,6 @@ export class TaskDetail implements OnInit, OnDestroy {
           this.closeDialog();
         })
     );
-
-    // Subtasks laden
-    this.supabase.getSubtasksForTask(this.task.id).then(subtasks => {
-      this.subtasks.set(subtasks);
-    });
   }
 
   ngOnDestroy() {

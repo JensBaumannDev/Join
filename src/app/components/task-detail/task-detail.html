@@ -37,13 +37,13 @@
   <section class="subtasks-section">
     <span class="section-label">Subtasks</span>
     <div class="subtask-list">
-      @for (subtask of subtasks(); track subtask.id) {
+      @for (subtask of subtasks; track subtask.id) {
         <div class="subtask-item">
           <img [src]="subtask.completed ? 'icons/board/checkbox_checked.svg' : 'icons/board/checkbox.svg'" [alt]="subtask.completed ? 'checked' : 'unchecked'" class="checkbox-icon" />
           <span class="subtask-text">{{ subtask.title }}</span>
         </div>
       }
-      </div>
+    </div>
   </section>
 
   <footer class="dialog-footer">
