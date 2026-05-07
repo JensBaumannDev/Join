@@ -77,7 +77,7 @@
           >
             Urgent
 
-            <img class="add-task__priority-icon" src="/icons/board/prio-urgent.svg" />
+            <img class="add-task__priority-icon" src="icons/board/prio-urgent.svg" />
           </button>
 
           <button
@@ -89,7 +89,7 @@
           >
             Medium
 
-            <img class="add-task__priority-icon" src="/icons/board/prio-medium.svg" />
+            <img class="add-task__priority-icon" src="icons/board/prio-medium.svg" />
           </button>
 
           <button
@@ -101,7 +101,7 @@
           >
             Low
 
-            <img class="add-task__priority-icon" src="/icons/board/prio-low.svg" />
+            <img class="add-task__priority-icon" src="icons/board/prio-low.svg" />
           </button>
         </div>
 
@@ -221,7 +221,7 @@
                 (mousedown)="$event.preventDefault()"
                 (click)="taskForm.patchValue({ subtasks: '' }); subtaskFocus = false"
               >
-                <img src="/icons/other/close.svg" alt="Clear" />
+                <img src="icons/other/close.svg" alt="Clear" />
               </button>
               <div class="add-task__subtask-divider"></div>
               <button
@@ -230,7 +230,7 @@
                 (mousedown)="$event.preventDefault()"
                 (click)="addSubtask(); subtaskFocus = false"
               >
-                <img src="/icons/other/check.svg" alt="Confirm" />
+                <img src="icons/other/check.svg" alt="Confirm" />
               </button>
             }
           </div>
@@ -255,7 +255,7 @@
                       class="add-task__subtask-item-btn"
                       (click)="removeSubtask($index)"
                     >
-                      <img src="/icons/other/delete.svg" alt="Delete" />
+                      <img src="icons/other/delete.svg" alt="Delete" />
                     </button>
 
                     <div class="add-task__subtask-divider--small"></div>
@@ -265,7 +265,7 @@
                       class="add-task__subtask-item-btn"
                       (click)="saveSubtask($index)"
                     >
-                      <img src="/icons/other/check.svg" alt="Save" />
+                      <img src="icons/other/check.svg" alt="Save" />
                     </button>
                   </div>
                 </div>
@@ -281,7 +281,7 @@
                     class="add-task__subtask-item-btn"
                     (click)="editSubtask($index)"
                   >
-                    <img src="/icons/other/edit.svg" alt="Edit" />
+                    <img src="icons/other/edit.svg" alt="Edit" />
                   </button>
 
                   <div class="add-task__subtask-divider--small"></div>
@@ -291,7 +291,7 @@
                     class="add-task__subtask-item-btn"
                     (click)="removeSubtask($index)"
                   >
-                    <img src="/icons/other/delete.svg" alt="Delete" />
+                    <img src="icons/other/delete.svg" alt="Delete" />
                   </button>
                 </div>
               }
@@ -308,9 +308,15 @@
     </div>
 
     <div class="add-task__actions">
-      <button type="button" class="add-task__clear-button" (click)="clear()">Clear</button>
+      <button type="button" class="add-task__clear-button" (click)="clear()">
+        Clear
+        <img src="icons/other/close.svg" alt="" class="add-task__action-icon" />
+      </button>
 
-      <button type="submit" class="add-task__create-button">Create Task</button>
+      <button type="submit" class="add-task__create-button">
+        Create Task
+        <img src="icons/other/check.svg" alt="" class="add-task__action-icon" />
+      </button>
     </div>
   </form>
 </div>

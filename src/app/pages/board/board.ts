@@ -101,7 +101,7 @@ export class Board implements OnInit {
   /** Returns the file path for the priority icon based on the priority level */
   getPriorityIcon(priority: string): string {
     const p = priority?.toLowerCase();
-    return `/icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
+    return `./icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
   }
 
   /** Retrieves initials and color data for a specific contact assignment */
