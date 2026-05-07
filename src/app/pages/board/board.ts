@@ -15,11 +15,12 @@ import { AvatarService } from '../../services/avatar.service';
 import { Task } from '../../interfaces/task.interface';
 import { FindTask } from '../../components/find-task/find-task';
 import { CategoryBadge } from '../../components/category-badge/category-badge';
+import { Subtask } from '../../components/subtask/subtask';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge],
+  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge, Subtask],
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
@@ -27,7 +28,7 @@ export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
-  
+
   openTaskDetailDialog(task: any) {
     this.dialogService.open(TaskDetail, { task }, 'task-dialog-panel');
   }
@@ -84,27 +85,6 @@ export class Board implements OnInit {
       this.taskService.getTasks(),
       this.taskService.getContacts()
     ]);
-  }
-
-  /** Calculates progress stats for the subtasks of a given task */
-  getSubtaskStats(task: Task) {
-    let subtasks = task.subtasks;
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER START !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (!subtasks || subtasks.length === 0) {
-      subtasks = [
-        { title: 'Subtask 1', is_done: true },
-        { title: 'Subtask 2', is_done: false }
-      ];
-    }
-    // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    const done = subtasks.filter(s => s.is_done).length;
-    const total = subtasks.length;
-    return { done, total, percentage: (done / total) * 100 };
   }
 
   /** Returns the file path for the priority icon based on the priority level */
