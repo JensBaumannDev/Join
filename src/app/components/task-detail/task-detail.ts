@@ -56,10 +56,35 @@ export class TaskDetail implements OnInit, OnDestroy {
     await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed, String(this.task.id));
   }
 
-  get assignees(): string[] {
-    const val = this.task.assigned_to;
+  get assignees(): any[] {
+    const val: any = this.task.assigned_to;
     if (!val) return [];
-    if (Array.isArray(val)) return val;
-    return (val as unknown as string).split(',').map(n => n.trim()).filter(n => n.length > 0);
+    
+    let names: string[] = [];
+    if (Array.isArray(val)) {
+      names = val;
+    } else if (typeof val === 'string') {
+      const trimmed = val.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          names = JSON.parse(trimmed);
+        } catch (e) {
+          names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
+        }
+      } else if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+        names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
+      } else {
+        names = trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
+      }
+    }
+
+    const allContacts = this.taskService.contacts();
+    return names.map(name => {
+      const contact = allContacts.find(c => c.name === name);
+      return {
+        name: name,
+        color: contact?.color
+      };
+    });
   }
 }
