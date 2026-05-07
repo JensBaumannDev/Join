@@ -153,4 +153,21 @@ export class TaskService {
       this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
     }
   }
+
+  /** Deletes a task and its subtasks from Supabase */
+  async deleteTask(taskId: string) {
+    await this.supabaseService.supabase
+      .from('subtasks')
+      .delete()
+      .eq('task_id', taskId);
+    const { error } = await this.supabaseService.supabase
+      .from('task')
+      .delete()
+      .eq('id', taskId);
+    if (error) {
+      console.error('Task delete error:', error);
+    } else {
+      this.tasks.update(tasks => tasks.filter(t => String(t.id) !== taskId));
+    }
+  }
 }

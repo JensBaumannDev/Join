@@ -7,6 +7,7 @@ import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
 import { TaskService } from '../../services/task.service';
+import { ToastService } from '../../services/toast.service';
 @Component({
   selector: 'app-task-detail',
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
@@ -17,6 +18,7 @@ import { TaskService } from '../../services/task.service';
 export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
   private taskService = inject(TaskService);
+  private toastService = inject(ToastService);
   task: Task = inject(MAT_DIALOG_DATA).task;
   private subscriptions = new Subscription();
 
@@ -49,6 +51,12 @@ export class TaskDetail implements OnInit, OnDestroy {
     setTimeout(() => {
       this.dialogRef.close();
     }, 500);
+  }
+
+  async deleteTask() {
+    await this.taskService.deleteTask(String(this.task.id));
+    this.toastService.show('Task deleted');
+    this.closeDialog();
   }
 
   async toggleSubtask(subtask: any) {

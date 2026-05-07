@@ -121,8 +121,8 @@ export class AddTask implements OnInit {
       };
 
       await this.taskService.createTask(newTask, this.subtaskList);
-      this.toastService.show('Task added to board');
-
+      this.toastService.show('Task added to board', true);
+      
       setTimeout(() => {
         this.router.navigate(['/board']);
       }, 1000);
