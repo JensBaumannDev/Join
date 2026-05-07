@@ -197,6 +197,10 @@
         height: 25px;
       }
 
+      .btn-primary img {
+        filter: brightness(0) invert(1);
+      }
+
       @include tablet-lg {
         margin-block-start: 30px;
       }
