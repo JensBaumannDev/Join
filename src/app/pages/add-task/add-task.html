@@ -130,7 +130,7 @@
               @for (c of contacts(); track c.id) {
                 <div class="add-task__dropdown-option" (click)="toggleContact(c)">
                   <div class="add-task__dropdown-contact">
-                    <app-avatar [name]="c.name" [size]="36"> </app-avatar>
+                    <app-avatar [name]="c.name" [color]="c.color" [size]="36"> </app-avatar>
 
                     <span class="add-task__dropdown-name">
                       {{ c.name }}
@@ -152,7 +152,7 @@
 
           <div class="add-task__selected-contacts">
             @for (c of selectedContacts.slice(0, maxVisibleContacts); track c.id) {
-              <app-avatar [name]="c.name" [size]="36"> </app-avatar>
+              <app-avatar [name]="c.name" [color]="c.color" [size]="36"> </app-avatar>
             }
 
             @if (selectedContacts.length > maxVisibleContacts) {
@@ -165,7 +165,7 @@
                   <div class="add-task__more-dropdown">
                     @for (c of selectedContacts.slice(maxVisibleContacts); track c.id) {
                       <div class="add-task__more-contact">
-                        <app-avatar [name]="c.name" [size]="32"> </app-avatar>
+                        <app-avatar [name]="c.name" [color]="c.color" [size]="32"> </app-avatar>
 
                         <span>
                           {{ c.name }}

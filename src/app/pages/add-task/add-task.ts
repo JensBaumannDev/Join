@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Supabase } from '../contacts/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
@@ -16,6 +17,7 @@ export class AddTask implements OnInit {
 
   contactService = inject(Supabase);
   taskService = inject(TaskService);
+  private router = inject(Router);
 
   contacts = this.contactService.contacts;
   categories = this.taskService.categories;
@@ -41,11 +43,11 @@ export class AddTask implements OnInit {
 
 
   async ngOnInit(){
-
-  await Promise.all ([
-    this.contactService.getContacts(),
-    this.taskService.getCategories()
-  ]);}
+    await Promise.all ([
+      this.contactService.getContacts(),
+      this.taskService.getCategories()
+    ]);
+  }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -65,7 +67,7 @@ export class AddTask implements OnInit {
     }
 
     this.taskForm.patchValue({
-      assignedTo: this.selectedContacts.map(c => c.id),
+      assignedTo: this.selectedContacts.map(c => c.name),
     });
 
   }
@@ -74,9 +76,21 @@ export class AddTask implements OnInit {
     this.taskForm.patchValue({ priority: value });
   }
 
-  submit() {
+  async submit() {
     if (this.taskForm.valid) {
-      console.log(this.taskForm.value);
+      const formValue = this.taskForm.value;
+      const newTask = {
+        title: formValue.title,
+        description: formValue.description,
+        due_date: formValue.dueDate,
+        priority: formValue.priority,
+        category: formValue.category,
+        assigned_to: formValue.assignedTo,
+        status: 'To do' // Default status
+      };
+
+      await this.taskService.createTask(newTask as any);
+      this.router.navigate(['/board']);
     } else {
       this.taskForm.markAllAsTouched();
     }
