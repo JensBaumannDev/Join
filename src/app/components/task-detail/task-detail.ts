@@ -6,6 +6,7 @@ import { filter } from 'rxjs/operators';
 import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
+import { TaskService } from '../../services/task.service';
 @Component({
   selector: 'app-task-detail',
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
@@ -15,6 +16,7 @@ import { Task } from '../../interfaces/task.interface';
 })
 export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
+  private taskService = inject(TaskService);
   task: Task = inject(MAT_DIALOG_DATA).task;
   private subscriptions = new Subscription();
 
@@ -49,8 +51,9 @@ export class TaskDetail implements OnInit, OnDestroy {
     }, 500);
   }
 
-  toggleSubtask(subtask: any) {
+  async toggleSubtask(subtask: any) {
     subtask.completed = !subtask.completed;
+    await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed);
   }
 
   get assignees(): string[] {
