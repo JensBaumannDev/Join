@@ -135,6 +135,7 @@
   .subtask-item {
     @include flex(row, nowrap, flex-start, flex-start);
     gap: 16px;
+    cursor: pointer;
 
     .checkbox-icon {
       width: 24px;

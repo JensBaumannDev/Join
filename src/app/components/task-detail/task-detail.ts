@@ -49,6 +49,10 @@ export class TaskDetail implements OnInit, OnDestroy {
     }, 500);
   }
 
+  toggleSubtask(subtask: any) {
+    subtask.completed = !subtask.completed;
+  }
+
   get assignees(): string[] {
     const val = this.task.assigned_to;
     if (!val) return [];
