@@ -1,6 +1,7 @@
 
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
+import { Contact } from '../../../interfaces/interface';
 
 @Component({
   selector: 'app-contact-detail',
@@ -24,7 +25,7 @@ export class ContactDetail {
       this.mobileMenuVisible.set(false);
     }, 250);
   }
-  @Input({ required: true }) contact!: { id?: number; name: string; email: string; phone: string };
+  @Input({ required: true }) contact!: Contact;
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();

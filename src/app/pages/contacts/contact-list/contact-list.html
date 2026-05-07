@@ -17,7 +17,7 @@
               <div class="contacts__item" 
                    (click)="selectContact(c)"
                    [class.contacts__item--active]="contactService.selectedContact()?.id === c.id">
-                <app-avatar [name]="c.name"></app-avatar>
+                <app-avatar [name]="c.name" [color]="c.color"></app-avatar>
 
                 <div class="contacts__info">
                   <div class="contacts__name">{{ c.name }}</div>

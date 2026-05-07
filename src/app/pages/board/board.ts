@@ -28,7 +28,7 @@ export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
-  
+
   async openTaskDetailDialog(task: any) {
     const subtasks = await this.taskService.getSubtasksForTask(task.id);
     this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
@@ -97,27 +97,62 @@ export class Board implements OnInit {
   /** Retrieves initials and color data for a specific contact assignment */
   getContactInfo(assignment: any) {
     const name = assignment.contact?.name || assignment.name || 'Unknown';
-    return this.avatarService.getAvatarData(name);
+    const color = assignment.contact?.color || assignment.color;
+    return this.avatarService.getAvatarData(name, color);
   }
 
-  /** Returns assignments for a task, with real contacts as fallback for preview */
+  /** Returns assignments for a task, prioritizing task_assignments but falling back to assigned_to names */
   getTaskAssignments(task: Task): any[] {
     if (task.task_assignments && task.task_assignments.length > 0) {
       return task.task_assignments;
     }
+
+    // Parse assigned_to array of names and match them to real contacts
+    const val = task.assigned_to;
+    if (!val) return [];
+
+    let names: string[] = [];
+    if (Array.isArray(val)) {
+      names = val;
+    } else {
+      names = (val as unknown as string).split(',').map(n => n.trim()).filter(n => n.length > 0);
+    }
+
+    const allContacts = this.taskService.contacts();
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER START !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!   ONLY FOR TESTING  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    const contacts = this.taskService.contacts();
-    if (contacts.length > 0) {
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TEMPORARY PLACEHOLDER: Ensure at least 2-3 contacts for visual testing
+    if (names.length < 2 && allContacts.length >= 3) {
       const idStr = String(task.id);
       const charCodeSum = idStr.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
       const count = (charCodeSum % 2) + 2; // Always 2 or 3
-      return contacts.slice(0, count);
+      const startIndex = charCodeSum % (allContacts.length - count);
+
+      const placeholderContacts = allContacts.slice(startIndex, startIndex + count);
+      return placeholderContacts.map(c => ({
+        name: c.name,
+        color: c.color,
+        contact: c
+      }));
     }
-    // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    return [];
+    // !!!!!!!!!!!!!!!!!!!!!!  PLACEHOLDER END  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    return names.map(name => {
+      const contact = allContacts.find(c => c.name === name);
+      return {
+        name: name,
+        color: contact?.color,
+        contact: contact
+      };
+    });
   }
 
   /** Handles the drag and drop event for moving tasks between columns */

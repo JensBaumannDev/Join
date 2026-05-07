@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core'
 import { createClient } from '@supabase/supabase-js'
+import { Contact } from '../../interfaces/interface'
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +12,9 @@ export class Supabase {
 
   supabase = createClient(this.supabaseUrl, this.supabaseKey)
 
-  contacts = signal<{
-    id?: number
-    name: string
-    email: string
-    phone: string
-  }[]>([])
+  contacts = signal<Contact[]>([])
 
-  selectedContact = signal<{
-    id?: number
-    name: string
-    email: string
-    phone: string
-  } | null>(null)
+  selectedContact = signal<Contact | null>(null)
 
   private channel: any = null
 
@@ -39,7 +30,7 @@ export class Supabase {
     }
 
     if (data) {
-      this.contacts.set(data)
+      this.contacts.set(data as Contact[])
     }
   }
 
@@ -65,20 +56,20 @@ export class Supabase {
       .subscribe();
   }
 
-  async addContact(name: string, email: string, phone: string) {
+  async addContact(name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
-      .insert([{ name, email, phone }])
+      .insert([{ name, email, phone, color }])
 
     if (error) {
       console.error(error)
     }
   }
 
-  async updateContact(id: number, name: string, email: string, phone: string) {
+  async updateContact(id: number, name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
-      .update({ name, email, phone })
+      .update({ name, email, phone, color })
       .eq('id', id);
 
     if (error) {
