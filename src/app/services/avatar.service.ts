@@ -46,11 +46,11 @@ export class AvatarService {
     return this.colors[index];
   }
 
-  /** Returns both initials and color for a user */
-  getAvatarData(name: string) {
+  /** Returns initials and color for a user. If no fixed color is provided, it falls back to a name-based generated color. */
+  getAvatarData(name: string, fixedColor?: string) {
     return {
       initials: this.getInitials(name),
-      color: this.getColor(name)
+      color: fixedColor || this.getColor(name)
     };
   }
 
@@ -58,5 +58,28 @@ export class AvatarService {
   getRandomColor(): string {
     const index = Math.floor(Math.random() * this.colors.length);
     return this.colors[index];
+  }
+
+  /** Smart assignment: Returns a color that guarantees even distribution. 
+      It counts how often each color is used and always picks from the least used colors. */
+  getBalancedColor(usedColors: string[]): string {
+    const frequencies = new Map<string, number>();
+    this.colors.forEach(c => frequencies.set(c, 0));
+    
+    usedColors.forEach(c => {
+      if (frequencies.has(c)) {
+        frequencies.set(c, frequencies.get(c)! + 1);
+      }
+    });
+
+    let minFreq = Infinity;
+    frequencies.forEach(count => {
+      if (count < minFreq) minFreq = count;
+    });
+
+    const leastUsedColors = this.colors.filter(c => frequencies.get(c) === minFreq);
+    
+    const index = Math.floor(Math.random() * leastUsedColors.length);
+    return leastUsedColors[index];
   }
 }

@@ -5,6 +5,8 @@ import { ContactDetail } from '../contact-detail/contact-detail';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
 import { ToastService } from '../../../services/toast.service';
+import { AvatarService } from '../../../services/avatar.service';
+import { Contact } from '../../../interfaces/interface';
 
 @Component({
   selector: 'app-contact-list',
@@ -17,8 +19,9 @@ export class ContactList implements OnInit {
   contactService = inject(Supabase);
   private dialog = inject(MatDialog);
   private toastService = inject(ToastService);
+  private avatarService = inject(AvatarService);
 
-  openContactDialog(mode: 'add' | 'edit', contact?: any) {
+  openContactDialog(mode: 'add' | 'edit', contact?: Contact) {
     const dialogRef = this.dialog.open(ContactDialogComponent, {
       data: { mode, contact },
       panelClass: 'contact-dialog-panel',
@@ -28,10 +31,10 @@ export class ContactList implements OnInit {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
+    dialogRef.afterClosed().subscribe((result: { action: string, data?: Contact } | undefined) => {
       if (!result) return;
 
-      if (result.action === 'save') {
+      if (result.action === 'save' && result.data) {
         this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
         if (mode === 'edit' && contact?.id) {
           this.contactService.selectedContact.set({
@@ -49,7 +52,7 @@ export class ContactList implements OnInit {
   groupedContacts = computed(() => {
     const contacts = this.contactService.contacts();
 
-    const map = new Map<string, any[]>();
+    const map = new Map<string, Contact[]>();
 
     contacts.forEach((c) => {
       const letter = c.name.charAt(0).toUpperCase();
@@ -71,7 +74,7 @@ export class ContactList implements OnInit {
     this.contactService.subscribeToChanges();
   }
 
-  selectContact(contact: any) {
+  selectContact(contact: Contact) {
     this.contactService.selectedContact.set(null);
     setTimeout(() => {
       this.contactService.selectedContact.set(contact);
@@ -79,10 +82,11 @@ export class ContactList implements OnInit {
   }
 
   add(name: string, email: string, phone: string) {
-    this.contactService.addContact(name, email, phone);
+    const usedColors = this.contactService.contacts().map(c => c.color).filter(c => c) as string[];
+    this.contactService.addContact(name, email, phone, this.avatarService.getBalancedColor(usedColors));
     this.contactService.getContacts();
   }
-  
+
   async deleteContact(id: number) {
     await this.contactService.deleteContact(id);
     this.contactService.selectedContact.set(null);

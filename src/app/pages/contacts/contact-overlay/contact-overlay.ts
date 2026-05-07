@@ -42,7 +42,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
     private subscriptions = new Subscription();
 
     mode = signal<'add' | 'edit'>(this.data?.mode || 'add');
-    private randomColor = this.avatarService.getRandomColor();
+    sessionColor = '';
 
     title = computed(() => this.mode() === 'add' ? 'Add contact' : 'Edit contact');
     subtitle = computed(() => this.mode() === 'add' ? 'Tasks are better with a team!' : '');
@@ -59,8 +59,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
                 Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
             ]
         ],
-        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\+?[0-9]+$/)]],
-        color: [this.data?.contact?.color || this.randomColor]
+        phone: [this.data?.contact?.phone || '', [Validators.required, Validators.pattern(/^\+?[0-9]+$/)]]
     });
 
     formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value });
@@ -69,20 +68,27 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         if (this.mode() === 'add') {
             const name = this.formValue()?.name || '';
             if (!name) return '#D1D1D1';
-            return this.randomColor;
+            return this.sessionColor;
         }
-        return this.form.value.color || this.avatarService.getColor(this.formValue()?.name || '');
+        return this.sessionColor;
     });
 
     avatarInitials = computed(() => {
         const name = this.formValue()?.name || '';
-        const parts = name.trim().split(' ');
-        if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-        if (parts[0]) return parts[0][0].toUpperCase();
-        return '';
+        return this.avatarService.getInitials(name);
     });
 
     ngOnInit() {
+        const initialName = this.data?.contact?.name || '';
+        const initialColor = this.data?.contact?.color;
+        
+        if (this.mode() === 'edit') {
+            this.sessionColor = initialColor || this.avatarService.getColor(initialName);
+        } else {
+            const usedColors = this.supabase.contacts().map(c => c.color).filter(c => c) as string[];
+            this.sessionColor = this.avatarService.getBalancedColor(usedColors);
+        }
+
         this.subscriptions.add(
             this.dialogRef.backdropClick().subscribe(() => {
                 this.closeDialog();
@@ -133,14 +139,14 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
             const value = this.form.getRawValue();
 
             if (this.mode() === 'add') {
-                await this.supabase.addContact(value.name, value.email, value.phone);
+                await this.supabase.addContact(value.name, value.email, value.phone, this.sessionColor);
             } else {
                 const contactId = this.data.contact.id;
                 if (contactId) {
-                    await this.supabase.updateContact(contactId, value.name, value.email, value.phone);
+                    await this.supabase.updateContact(contactId, value.name, value.email, value.phone, this.sessionColor);
                 }
             }
-            this.closeDialog({ action: 'save', data: value });
+            this.closeDialog({ action: 'save', data: { ...value, color: this.sessionColor } });
         } finally {
             this.isLoading.set(false);
         }

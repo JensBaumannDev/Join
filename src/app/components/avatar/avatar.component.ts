@@ -19,9 +19,12 @@ export class AvatarComponent {
   /** Whether to use the header-specific styling (white bg, colored text) */
   isHeader = input<boolean>(false);
 
-  /** Data computed from the name */
+  /** The persistent color for the avatar. If not provided, it falls back to a name-based generated color. */
+  color = input<string>();
+
+  /** Data computed from the name and optional color */
   avatarData = computed(() => {
-    return this.avatarService.getAvatarData(this.name());
+    return this.avatarService.getAvatarData(this.name(), this.color());
   });
 
   /** Font size computed based on the avatar size */
