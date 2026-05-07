@@ -28,7 +28,7 @@ export class Subtask implements OnInit {
       if (trigger && String(trigger.taskId) === String(this.taskId())) {
         await this.loadSubtasks();
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   async ngOnInit() {

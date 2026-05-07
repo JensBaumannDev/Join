@@ -107,43 +107,28 @@ export class Board implements OnInit {
       return task.task_assignments;
     }
 
-    // Parse assigned_to array of names and match them to real contacts
-    const val = task.assigned_to;
+    const val: any = task.assigned_to;
     if (!val) return [];
 
     let names: string[] = [];
     if (Array.isArray(val)) {
       names = val;
-    } else {
-      names = (val as unknown as string).split(',').map(n => n.trim()).filter(n => n.length > 0);
+    } else if (typeof val === 'string') {
+      const trimmed = val.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          names = JSON.parse(trimmed);
+        } catch (e) {
+          names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
+        }
+      } else if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+        names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
+      } else {
+        names = trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
+      }
     }
 
     const allContacts = this.taskService.contacts();
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER START !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!   ONLY FOR TESTING  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TEMPORARY PLACEHOLDER: Ensure at least 2-3 contacts for visual testing
-    if (names.length < 2 && allContacts.length >= 3) {
-      const idStr = String(task.id);
-      const charCodeSum = idStr.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-      const count = (charCodeSum % 2) + 2; // Always 2 or 3
-      const startIndex = charCodeSum % (allContacts.length - count);
-
-      const placeholderContacts = allContacts.slice(startIndex, startIndex + count);
-      return placeholderContacts.map(c => ({
-        name: c.name,
-        color: c.color,
-        contact: c
-      }));
-    }
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!  PLACEHOLDER END  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     return names.map(name => {
       const contact = allContacts.find(c => c.name === name);

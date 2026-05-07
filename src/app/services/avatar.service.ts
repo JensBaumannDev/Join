@@ -25,7 +25,10 @@ export class AvatarService {
   /** Generates initials from a name (e.g. "Jens Baumann" -> "JB") */
   getInitials(name: string): string {
     if (!name) return '??';
-    const parts = name.trim().split(/\s+/);
+    const cleaned = name.trim().replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
+    if (!cleaned) return '??';
+
+    const parts = cleaned.split(/\s+/);
     if (parts.length === 1) {
       return parts[0].substring(0, 2).toUpperCase();
     }
@@ -65,7 +68,7 @@ export class AvatarService {
   getBalancedColor(usedColors: string[]): string {
     const frequencies = new Map<string, number>();
     this.colors.forEach(c => frequencies.set(c, 0));
-    
+
     usedColors.forEach(c => {
       if (frequencies.has(c)) {
         frequencies.set(c, frequencies.get(c)! + 1);
@@ -78,7 +81,7 @@ export class AvatarService {
     });
 
     const leastUsedColors = this.colors.filter(c => frequencies.get(c) === minFreq);
-    
+
     const index = Math.floor(Math.random() * leastUsedColors.length);
     return leastUsedColors[index];
   }

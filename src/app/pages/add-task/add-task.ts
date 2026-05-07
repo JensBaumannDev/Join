@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Supabase } from '../contacts/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-add-task',
@@ -23,9 +24,11 @@ export class AddTask implements OnInit {
   categories = this.taskService.categories;
 
   selectedContacts: any[] = [];
+  subtaskList: { title: string; completed: boolean }[] = [];
   maxVisibleContacts = 3;
   dropdownOpen = false;
   moreContactsOpen = false;
+  subtaskFocus = false;
 
   taskForm: FormGroup;
 
@@ -72,9 +75,26 @@ export class AddTask implements OnInit {
 
   }
 
+  addSubtask() {
+    const value = this.taskForm.get('subtasks')?.value;
+    if (value && value.trim()) {
+      this.subtaskList.push({
+        title: value.trim(),
+        completed: false
+      });
+      this.taskForm.patchValue({ subtasks: '' });
+    }
+  }
+
+  removeSubtask(index: number) {
+    this.subtaskList.splice(index, 1);
+  }
+
   setPriority(value: string) {
     this.taskForm.patchValue({ priority: value });
   }
+
+  toastService = inject(ToastService);
 
   async submit() {
     if (this.taskForm.valid) {
@@ -86,11 +106,15 @@ export class AddTask implements OnInit {
         priority: formValue.priority,
         category: formValue.category,
         assigned_to: formValue.assignedTo,
-        status: 'To do' // Default status
+        status: 'To do'
       };
 
-      await this.taskService.createTask(newTask as any);
-      this.router.navigate(['/board']);
+      await this.taskService.createTask(newTask, this.subtaskList);
+      this.toastService.show('Task added to board');
+      
+      setTimeout(() => {
+        this.router.navigate(['/board']);
+      }, 1000);
     } else {
       this.taskForm.markAllAsTouched();
     }
@@ -102,5 +126,6 @@ export class AddTask implements OnInit {
     });
 
     this.selectedContacts = [];
+    this.subtaskList = [];
   }
 }

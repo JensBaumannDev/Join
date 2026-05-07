@@ -25,10 +25,10 @@
   <section class="assignees-section">
     <span class="section-label">Assigned To:</span>
     <div class="assignee-list">
-      @for (name of assignees; track name) {
+      @for (item of assignees; track item.name) {
         <div class="assignee-item">
-          <app-avatar [name]="name" [size]="38" />
-          <span>{{ name }}</span>
+          <app-avatar [name]="item.name" [color]="item.color" [size]="38" />
+          <span>{{ item.name }}</span>
         </div>
       }
     </div>

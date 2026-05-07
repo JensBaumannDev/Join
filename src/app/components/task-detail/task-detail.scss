@@ -15,8 +15,8 @@
   @include flex(column, nowrap, flex-start, stretch);
   gap: 24px;
 
-  width: fit-content;
-  max-width: 500px;
+
+  width: 525px;
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
@@ -29,6 +29,7 @@
   font-weight: 400;
   @include fluid-text(16, 20);
 }
+
 .top-line {
   @include flex(row, nowrap, space-between, center);
   width: 100%;

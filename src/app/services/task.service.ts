@@ -59,32 +59,51 @@ export class TaskService {
     }
   }
 
-  async createTask(task:Task) {
 
-    const { error } = 
-    await this.supabaseService.supabase
-    .from ('task')
-    .insert([task]);
+  async createTask(task: any, subtasks: { title: string; completed: boolean }[] = []) {
+    const { data, error } = await this.supabaseService.supabase
+      .from('task')
+      .insert([task])
+      .select();
 
     if (error) {
       console.error('create task error:', error);
       return;
     }
+
+    if (data && data.length > 0 && subtasks && subtasks.length > 0) {
+      const taskId = data[0].id;
+      const subtasksWithId = subtasks.map(s => ({
+        task_id: taskId,
+        title: s.title,
+        completed: s.completed ?? false
+      }));
+
+      const { error: subError } = await this.supabaseService.supabase
+        .from('subtasks')
+        .insert(subtasksWithId);
+
+      if (subError) {
+        console.error('create subtasks error:', subError);
+      }
+    }
+
     await this.getTasks();
+    return data?.[0];
   }
 
   async getCategories() {
 
     const { data, error } =
-    await this.supabaseService.supabase
-    .from('task')
-    .select('category');
+      await this.supabaseService.supabase
+        .from('task')
+        .select('category');
 
     if (error) {
       console.error('Category loading error:', error);
       return;
     }
-    if(data) {
+    if (data) {
       const uniqueCategories = [
         ...new Set(
           data.map(item => item.category)
@@ -104,19 +123,19 @@ export class TaskService {
     if (error) {
       console.error('Update error:', error);
     }
-    }
+  }
 
-    /** Fetches subtasks for a given taskId from Supabase */
-    async getSubtasksForTask(taskId: string) {
-      const { data, error } = await this.supabaseService.supabase
-        .from('subtasks')
-        .select('*')
-        .eq('task_id', taskId);
-      if (error) {
-        console.error('Subtask loading error:', error);
-        return [];
-      }
-      return data || [];
+  /** Fetches subtasks for a given taskId from Supabase */
+  async getSubtasksForTask(taskId: string) {
+    const { data, error } = await this.supabaseService.supabase
+      .from('subtasks')
+      .select('*')
+      .eq('task_id', taskId);
+    if (error) {
+      console.error('Subtask loading error:', error);
+      return [];
+    }
+    return data || [];
   }
 
   /** Signal to trigger refresh of subtasks in specific components */
