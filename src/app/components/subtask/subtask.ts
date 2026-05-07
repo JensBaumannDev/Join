@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, input, OnInit, signal, inject, computed, effect } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 
 @Component({
@@ -22,7 +22,20 @@ export class Subtask implements OnInit {
   );
   tooltip = computed(() => `${this.done()} von ${this.total()} Subtasks erledigt`);
 
+  constructor() {
+    effect(async () => {
+      const trigger = this.taskService.subtaskUpdateTrigger();
+      if (trigger && String(trigger.taskId) === String(this.taskId())) {
+        await this.loadSubtasks();
+      }
+    }, { allowSignalWrites: true });
+  }
+
   async ngOnInit() {
+    await this.loadSubtasks();
+  }
+
+  async loadSubtasks() {
     const result = await this.taskService.getSubtasksForTask(this.taskId());
     this.subtasks.set(result);
     this.isLoading.set(false);

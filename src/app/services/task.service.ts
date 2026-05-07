@@ -119,14 +119,19 @@ export class TaskService {
       return data || [];
   }
 
+  /** Signal to trigger refresh of subtasks in specific components */
+  subtaskUpdateTrigger = signal<{ taskId: string; timestamp: number } | null>(null);
+
   /** Updates the completed state of a subtask */
-  async updateSubtaskCompleted(subtaskId: string, completed: boolean) {
+  async updateSubtaskCompleted(subtaskId: string, completed: boolean, taskId: string) {
     const { error } = await this.supabaseService.supabase
       .from('subtasks')
       .update({ completed })
       .eq('id', subtaskId);
     if (error) {
       console.error('Subtask update error:', error);
+    } else {
+      this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
     }
   }
 }

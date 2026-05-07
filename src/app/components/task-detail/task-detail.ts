@@ -53,7 +53,7 @@ export class TaskDetail implements OnInit, OnDestroy {
 
   async toggleSubtask(subtask: any) {
     subtask.completed = !subtask.completed;
-    await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed);
+    await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed, String(this.task.id));
   }
 
   get assignees(): string[] {
