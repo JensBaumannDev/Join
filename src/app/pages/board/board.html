@@ -16,7 +16,9 @@
         <div class="column">
             <div class="column-header">
                 <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
+                @if (col.id !== 'done') {
                 <ng-container *ngTemplateOutlet="addBtn" />
+                }
             </div>
 
             <div class="task-list" [id]="col.id" cdkDropList [cdkDropListData]="col.tasks()"
@@ -28,14 +30,9 @@
                     }
                     <h4 class="task-title">{{ task.title }}</h4>
                     <p class="task-desc">{{ task.description }}</p>
-                    @if (getSubtaskStats(task); as stats) {
-                    <div class="progress-section">
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" [style.width.%]="stats.percentage"></div>
-                        </div>
-                        <span>{{ stats.done }}/{{ stats.total }} Subtasks</span>
-                    </div>
-                    }
+
+                    <app-subtask [taskId]="task.id" />
+
                     <div class="task-footer">
                         <div class="contact-list">
                             @for (assign of getTaskAssignments(task); track $index) {

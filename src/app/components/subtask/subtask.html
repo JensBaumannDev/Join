@@ -1,0 +1,9 @@
+@if (!isLoading() && total() > 0) {
+<div class="progress-section" [title]="tooltip()">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" [style.width.%]="percentage()" [attr.aria-valuenow]="percentage()" aria-valuemin="0"
+      aria-valuemax="100" role="progressbar"></div>
+  </div>
+  <span class="subtask-label">{{ done() }}/{{ total() }} Subtasks</span>
+</div>
+}
