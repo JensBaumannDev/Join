@@ -16,7 +16,9 @@
         <div class="column">
             <div class="column-header">
                 <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
+                @if (col.id !== 'done') {
                 <ng-container *ngTemplateOutlet="addBtn" />
+                }
             </div>
 
             <div class="task-list" [id]="col.id" cdkDropList [cdkDropListData]="col.tasks()"
