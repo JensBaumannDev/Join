@@ -4,6 +4,10 @@
        [class.hide]="toastService.isHiding()">
     <div class="toast-content">
       {{ toastService.message() }}
+      @if (toastService.showIcon()) {
+        <img src="icons/board/board.svg" alt="board" class="toast-icon" />
+      }
+      
     </div>
   </div>
 }
