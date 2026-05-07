@@ -28,9 +28,10 @@ export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
-
-  openTaskDetailDialog(task: any) {
-    this.dialogService.open(TaskDetail, { task }, 'task-dialog-panel');
+  
+  async openTaskDetailDialog(task: any) {
+    const subtasks = await this.taskService.getSubtasksForTask(task.id);
+    this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
   }
 
   /** All tasks filtered by the search term */
