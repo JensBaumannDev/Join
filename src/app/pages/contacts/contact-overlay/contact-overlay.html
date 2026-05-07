@@ -1,10 +1,10 @@
 <div class="dialog-container" [class.edit-mode]="mode() === 'edit'">
   <button mat-icon-button class="close-button" (click)="cancel()">
-    <img src="./icons/other/close.svg" alt="close" />
+    <img src="icons/other/close.svg" alt="close" />
   </button>
   <div class="left-panel">
     <div class="content-wrapper">
-      <img src="./logo/join-logo.svg" alt="Join Logo" class="logo" />
+      <img src="logo/join-logo.svg" alt="Join Logo" class="logo" />
       <div class="title-container">
         <h2>{{ title() }}</h2>
         @if (subtitle()) {
@@ -22,7 +22,7 @@
           @if (avatarInitials()) {
             {{ avatarInitials() }}
           } @else {
-            <img src="./icons/form/person.svg" alt="default-avatar" class="avatar-icon" />
+            <img src="icons/form/person.svg" alt="default-avatar" class="avatar-icon" />
           }
         </div>
       </div>
@@ -31,7 +31,7 @@
         <form [formGroup]="form" class="form">
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput formControlName="name" placeholder="Name" />
-            <img matSuffix src="./icons/form/person.svg" alt="user" />
+            <img matSuffix src="icons/form/person.svg" alt="user" />
             @if (form.get('name')?.hasError('required')) {
               <mat-error>Field is required</mat-error>
             }
@@ -42,7 +42,7 @@
 
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput type="email" formControlName="email" placeholder="Email" />
-            <img matSuffix src="./icons/form/mail.svg" alt="mail" />
+            <img matSuffix src="icons/form/mail.svg" alt="mail" />
             @if (form.get('email')?.hasError('required')) {
               <mat-error>Field is required</mat-error>
             }
@@ -53,7 +53,7 @@
 
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input matInput type="tel" formControlName="phone" placeholder="Phone" />
-            <img matSuffix src="./icons/other/call.svg" alt="phone" />
+            <img matSuffix src="icons/other/call.svg" alt="phone" />
             @if (form.get('phone')?.hasError('required')) {
               <mat-error>Field is required</mat-error>
             }
@@ -104,7 +104,7 @@
 
           <button class="btn btn-primary" [disabled]="form.invalid || isLoading()" (click)="save()">
             {{ saveBtnText() }}
-            <img src="./icons/other/check.svg" alt="check" />
+            <img src="icons/other/check.svg" alt="check" />
           </button>
         </div>
       </div>

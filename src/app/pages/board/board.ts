@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, HostListener } from '@angular/core';
 import { DialogService } from '../../services/dialog.service';
 import { TaskDetail } from '../../components/task-detail/task-detail';
 import { NgTemplateOutlet } from '@angular/common';
@@ -28,6 +28,16 @@ export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
+  
+  screenWidth = signal(window.innerWidth);
+  
+  @HostListener('window:resize')
+  onResize() {
+    this.screenWidth.set(window.innerWidth);
+  }
+
+  listOrientation = computed(() => this.screenWidth() <= 1024 ? 'horizontal' : 'vertical');
+  dragDelay = computed(() => this.screenWidth() <= 1024 ? 150 : 0);
 
   async openTaskDetailDialog(task: any) {
     const subtasks = await this.taskService.getSubtasksForTask(task.id);
@@ -91,7 +101,7 @@ export class Board implements OnInit {
   /** Returns the file path for the priority icon based on the priority level */
   getPriorityIcon(priority: string): string {
     const p = priority?.toLowerCase();
-    return `/icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
+    return `./icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
   }
 
   /** Retrieves initials and color data for a specific contact assignment */

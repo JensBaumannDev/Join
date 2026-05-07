@@ -15,7 +15,6 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './add-task.scss',
 })
 export class AddTask implements OnInit {
-
   contactService = inject(Supabase);
   taskService = inject(TaskService);
   private router = inject(Router);
@@ -29,6 +28,9 @@ export class AddTask implements OnInit {
   dropdownOpen = false;
   moreContactsOpen = false;
   subtaskFocus = false;
+
+  editingIndex: number | null = null;
+  editingValue = '';
 
   taskForm: FormGroup;
 
@@ -44,12 +46,8 @@ export class AddTask implements OnInit {
     });
   }
 
-
-  async ngOnInit(){
-    await Promise.all ([
-      this.contactService.getContacts(),
-      this.taskService.getCategories()
-    ]);
+  async ngOnInit() {
+    await Promise.all([this.contactService.getContacts(), this.taskService.getCategories()]);
   }
 
   toggleDropdown() {
@@ -70,9 +68,8 @@ export class AddTask implements OnInit {
     }
 
     this.taskForm.patchValue({
-      assignedTo: this.selectedContacts.map(c => c.name),
+      assignedTo: this.selectedContacts.map((c) => c.name),
     });
-
   }
 
   addSubtask() {
@@ -80,7 +77,7 @@ export class AddTask implements OnInit {
     if (value && value.trim()) {
       this.subtaskList.push({
         title: value.trim(),
-        completed: false
+        completed: false,
       });
       this.taskForm.patchValue({ subtasks: '' });
     }
@@ -88,6 +85,20 @@ export class AddTask implements OnInit {
 
   removeSubtask(index: number) {
     this.subtaskList.splice(index, 1);
+  }
+
+  editSubtask(index: number) {
+    this.editingIndex = index;
+    this.editingValue = this.subtaskList[index].title;
+  }
+
+  saveSubtask(index: number) {
+    if (this.editingValue.trim()) {
+      this.subtaskList[index].title = this.editingValue.trim();
+    }
+
+    this.editingIndex = null;
+    this.editingValue = '';
   }
 
   setPriority(value: string) {
@@ -106,7 +117,7 @@ export class AddTask implements OnInit {
         priority: formValue.priority,
         category: formValue.category,
         assigned_to: formValue.assignedTo,
-        status: 'To do'
+        status: 'To do',
       };
 
       await this.taskService.createTask(newTask, this.subtaskList);

@@ -7,6 +7,8 @@
 
   padding: 80px 32px 0 100px;
 
+
+
   background: #f6f7fb;
   box-sizing: border-box;
 
@@ -19,6 +21,8 @@
     font-weight: 700;
 
     color: #000;
+
+
   }
 
   /* FORM */
@@ -30,6 +34,8 @@
   &__grid {
     @include flex;
     gap: 48px;
+
+
   }
 
   &__column {
@@ -48,10 +54,12 @@
     font-weight: 500;
 
     color: #2a3647;
+
+
   }
 
   &__required {
-    color: #E60026;
+    color: #e60026;
   }
 
   &__required-info {
@@ -74,11 +82,11 @@
     font-size: 12px;
     font-weight: 400;
 
-    color: #E60026;
+    color: #e60026;
   }
 
   &__input--error {
-    border: 1px solid #E60026 !important;
+    border: 1px solid #e60026 !important;
   }
 
   /* INPUTS */
@@ -131,6 +139,8 @@
     gap: 12px;
 
     margin-top: 8px;
+
+
   }
 
   &__priority-button {
@@ -149,8 +159,12 @@
     cursor: pointer;
 
     display: flex;
-    @include flex(row, wrap, center, center);
+    @include flex(row, nowrap, center, center);
     gap: 8px;
+
+    white-space: nowrap;
+
+    padding: 0 10px;
 
     transition: 0.2s ease;
 
@@ -378,6 +392,8 @@
 
     @include flex(row, wrap, flex-end);
     gap: 16px;
+
+
   }
 
   &__clear-button,
@@ -392,6 +408,9 @@
     font-weight: 500;
 
     cursor: pointer;
+
+    @include flex(row, wrap, center, center);
+    gap: 8px;
 
     transition: 0.2s ease;
   }
@@ -417,6 +436,15 @@
     &:hover {
       background: #29abe2;
     }
+
+    .add-task__action-icon {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  &__action-icon {
+    width: 24px;
+    height: 24px;
   }
 
   &__subtask-input-wrapper {
@@ -466,7 +494,6 @@
 
   &__subtask-item {
     @include flex(row, wrap, space-between, center);
-    padding: 4px 12px;
     font-size: 16px;
     border-radius: 10px;
     transition: background 0.2s ease;
@@ -518,4 +545,64 @@
     background: #d1d1d1;
     margin: 0 4px;
   }
+
+  &__subtask-edit-mode {
+    @include flex(row, wrap, space-between, center);
+    width: 100%;
+    background: white;
+    border-bottom: 1px solid #29abe2;
+    border-radius: 0;
+  }
+
+  &__subtask-edit-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    font-family: inherit;
+    color: #000;
+  }
 }
+
+/* #region Responsive */
+@include tablet-xl {
+  .add-task {
+    padding: 48px 16px 120px 16px;
+    height: auto;
+    min-height: calc(100vh - 80px);
+
+    &__title {
+      font-size: 36px;
+      margin-bottom: 24px;
+    }
+
+    &__grid {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    &__label {
+      margin-top: 16px;
+    }
+
+    &__actions {
+      justify-content: flex-end;
+      margin-top: 32px;
+      padding-bottom: 32px;
+    }
+  }
+}
+
+@include mobile-md {
+  .add-task {
+    &__priority-buttons {
+      flex-direction: column;
+
+      .add-task__priority-button {
+        flex: none;
+      }
+    }
+  }
+}
+/* #endregion */
