@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, computed, signal, HostListener } from '@angular/core';
 import { DialogService } from '../../services/dialog.service';
 import { TaskDetail } from '../../components/task-detail/task-detail';
+import { AddTaskDialog } from '../../components/add-task-dialog/add-task-dialog';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDragDrop,
@@ -42,6 +43,10 @@ export class Board implements OnInit {
   async openTaskDetailDialog(task: any) {
     const subtasks = await this.taskService.getSubtasksForTask(task.id);
     this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
+  }
+
+  openAddTaskDialog(status: string) {
+    this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
   }
 
   /** All tasks filtered by the search term */

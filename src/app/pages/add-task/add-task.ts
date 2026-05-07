@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Supabase } from '../contacts/contact.service';
@@ -15,6 +15,10 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './add-task.scss',
 })
 export class AddTask implements OnInit {
+  @Input() isDialog = false;
+  @Input() initialStatus = 'To do';
+  @Output() taskCreated = new EventEmitter<void>();
+
   contactService = inject(Supabase);
   taskService = inject(TaskService);
   private router = inject(Router);
@@ -117,15 +121,19 @@ export class AddTask implements OnInit {
         priority: formValue.priority,
         category: formValue.category,
         assigned_to: formValue.assignedTo,
-        status: 'To do',
+        status: this.initialStatus,
       };
 
       await this.taskService.createTask(newTask, this.subtaskList);
       this.toastService.show('Task added to board', true);
-      
-      setTimeout(() => {
-        this.router.navigate(['/board']);
-      }, 1000);
+
+      if (this.isDialog) {
+        this.taskCreated.emit();
+      } else {
+        setTimeout(() => {
+          this.router.navigate(['/board']);
+        }, 1000);
+      }
     } else {
       this.taskForm.markAllAsTouched();
     }
