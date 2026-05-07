@@ -51,7 +51,7 @@
   }
 
   &__required {
-    color: #E60026;
+    color: #e60026;
   }
 
   &__required-info {
@@ -74,11 +74,11 @@
     font-size: 12px;
     font-weight: 400;
 
-    color: #E60026;
+    color: #e60026;
   }
 
   &__input--error {
-    border: 1px solid #E60026 !important;
+    border: 1px solid #e60026 !important;
   }
 
   /* INPUTS */
@@ -466,7 +466,6 @@
 
   &__subtask-item {
     @include flex(row, wrap, space-between, center);
-    padding: 4px 12px;
     font-size: 16px;
     border-radius: 10px;
     transition: background 0.2s ease;
@@ -517,5 +516,23 @@
     height: 24px;
     background: #d1d1d1;
     margin: 0 4px;
+  }
+
+  &__subtask-edit-mode {
+    @include flex(row, wrap, space-between, center);
+    width: 100%;
+    background: white;
+    border-bottom: 1px solid #29abe2;
+    border-radius: 0;
+  }
+
+  &__subtask-edit-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    font-family: inherit;
+    color: #000;
   }
 }
