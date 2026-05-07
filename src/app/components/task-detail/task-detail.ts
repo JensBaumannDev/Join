@@ -51,6 +51,11 @@ export class TaskDetail implements OnInit, OnDestroy {
     }, 500);
   }
 
+  async deleteTask() {
+    await this.taskService.deleteTask(String(this.task.id));
+    this.closeDialog();
+  }
+
   async toggleSubtask(subtask: any) {
     subtask.completed = !subtask.completed;
     await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed, String(this.task.id));
