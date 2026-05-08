@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, computed, signal, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { DialogService } from '../../services/dialog.service';
 import { TaskDetail } from '../../components/task-detail/task-detail';
 import { AddTaskDialog } from '../../components/add-task-dialog/add-task-dialog';
@@ -29,6 +30,7 @@ export class Board implements OnInit {
   private taskService = inject(TaskService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
+  private router = inject(Router);
   
   screenWidth = signal(window.innerWidth);
   
@@ -46,6 +48,10 @@ export class Board implements OnInit {
   }
 
   openAddTaskDialog(status: string) {
+    if (this.screenWidth() <= 1200) {
+      this.router.navigate(['/add-task']);
+      return;
+    }
     this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
   }
 
