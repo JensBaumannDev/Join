@@ -351,8 +351,8 @@
     </div>
 
     <div class="add-task__actions">
-      <button type="button" class="btn btn-secondary" (click)="clear()">
-        Clear
+      <button type="button" class="btn btn-secondary" (click)="onCancelOrClear()">
+        {{ isDialog ? 'Cancel' : 'Clear' }}
         <img src="icons/other/close.svg" alt="" />
       </button>
 

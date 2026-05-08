@@ -18,6 +18,7 @@ export class AddTask implements OnInit {
   @Input() isDialog = false;
   @Input() initialStatus = 'To do';
   @Output() taskCreated = new EventEmitter<void>();
+  @Output() cancelClicked = new EventEmitter<void>();
 
   contactService = inject(Supabase);
   taskService = inject(TaskService);
@@ -136,43 +137,39 @@ export class AddTask implements OnInit {
   toastService = inject(ToastService);
 
   async submit() {
-
     if (this.isSubmitting) return;
-    
+
     this.isSubmitting = true;
 
-    try{
+    try {
+      if (this.taskForm.valid) {
+        const formValue = this.taskForm.value;
+        const newTask = {
+          title: formValue.title,
+          description: formValue.description,
+          due_date: formValue.dueDate,
+          priority: formValue.priority,
+          category: formValue.category,
+          assigned_to: formValue.assignedTo,
+          status: this.initialStatus,
+        };
 
-    
-    if (this.taskForm.valid) {
-      const formValue = this.taskForm.value;
-      const newTask = {
-        title: formValue.title,
-        description: formValue.description,
-        due_date: formValue.dueDate,
-        priority: formValue.priority,
-        category: formValue.category,
-        assigned_to: formValue.assignedTo,
-        status: this.initialStatus,
-      };
+        await this.taskService.createTask(newTask, this.subtaskList);
+        this.toastService.show('Task added to board', true);
 
-      await this.taskService.createTask(newTask, this.subtaskList);
-
-      this.toastService.show('Task added to board', true);
-
-      if (this.isDialog) {
-        this.taskCreated.emit();
+        if (this.isDialog) {
+          this.taskCreated.emit();
+        } else {
+          setTimeout(() => {
+            this.router.navigate(['/board']);
+          }, 1000);
+        }
       } else {
-        setTimeout(() => {
-          this.router.navigate(['/board']);
-        }, 1000);
+        this.taskForm.markAllAsTouched();
+        this.isSubmitting = false;
       }
-    } else {
-      this.taskForm.markAllAsTouched();
-    }
-  } finally {
-
-    this.isSubmitting = false;
+    } catch {
+      this.isSubmitting = false;
     }
   }
 
@@ -183,5 +180,13 @@ export class AddTask implements OnInit {
 
     this.selectedContacts = [];
     this.subtaskList = [];
+  }
+
+  onCancelOrClear() {
+    if (this.isDialog) {
+      this.cancelClicked.emit();
+    } else {
+      this.clear();
+    }
   }
 }
