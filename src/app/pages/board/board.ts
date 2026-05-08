@@ -31,9 +31,19 @@ export class Board implements OnInit {
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
   private router = inject(Router);
-  
+
   screenWidth = signal(window.innerWidth);
-  
+
+  /** State for the avatar hover popup */
+  avatarPopup = signal<{ visible: boolean; x: number; y: number; assignments: any[] }>({
+    visible: false,
+    x: 0,
+    y: 0,
+    assignments: [],
+  });
+
+  private hideTimeout: any = null;
+
   @HostListener('window:resize')
   onResize() {
     this.screenWidth.set(window.innerWidth);
@@ -53,6 +63,43 @@ export class Board implements OnInit {
       return;
     }
     this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
+  }
+
+  /** Returns done/total/percentage stats for subtasks of a task */
+  getSubtaskStats(task: Task): { done: number; total: number; percentage: number } | null {
+    const subtasks = (task as any).subtasks;
+    if (!subtasks || subtasks.length === 0) return null;
+    const total = subtasks.length;
+    const done = subtasks.filter((s: any) => s.done || s.completed || s.is_done).length;
+    return { done, total, percentage: Math.round((done / total) * 100) };
+  }
+
+  /** Shows the avatar popup on hover of the overflow indicator */
+  showAvatarPopup(event: MouseEvent, task: Task) {
+    clearTimeout(this.hideTimeout);
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const assignments = this.getTaskAssignments(task);
+    // estimate popup height: 12px padding top/bottom + (42px per row * count)
+    const estimatedHeight = 24 + assignments.length * 42;
+    this.avatarPopup.set({
+      visible: true,
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY - estimatedHeight - 8,
+      assignments,
+    });
+  }
+
+  /** Keeps the popup open when hovering over it */
+  keepAvatarPopup() {
+    clearTimeout(this.hideTimeout);
+  }
+
+  /** Hides the avatar popup with a short delay so the user can move the mouse onto it */
+  hideAvatarPopup() {
+    this.hideTimeout = setTimeout(() => {
+      this.avatarPopup.update(p => ({ ...p, visible: false }));
+    }, 120);
   }
 
   /** All tasks filtered by the search term */
