@@ -34,6 +34,7 @@ export class AddTask implements OnInit {
   moreContactsOpen = false;
   subtaskFocus = false;
   contactSearchTerm = '';
+  isSubmitting = false;
 
   editingIndex: number | null = null;
   editingValue = '';
@@ -135,6 +136,14 @@ export class AddTask implements OnInit {
   toastService = inject(ToastService);
 
   async submit() {
+
+    if (this.isSubmitting) return;
+    
+    this.isSubmitting = true;
+
+    try{
+
+    
     if (this.taskForm.valid) {
       const formValue = this.taskForm.value;
       const newTask = {
@@ -148,6 +157,7 @@ export class AddTask implements OnInit {
       };
 
       await this.taskService.createTask(newTask, this.subtaskList);
+
       this.toastService.show('Task added to board', true);
 
       if (this.isDialog) {
@@ -159,6 +169,10 @@ export class AddTask implements OnInit {
       }
     } else {
       this.taskForm.markAllAsTouched();
+    }
+  } finally {
+
+    this.isSubmitting = false;
     }
   }
 
