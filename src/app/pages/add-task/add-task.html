@@ -112,23 +112,34 @@
         <div class="add-task__assigned">
           <!-- SELECT -->
 
-          <div class="add-task__assigned-input" (click)="toggleDropdown()">
-            <span class="add-task__assigned-placeholder"> Select contacts to assign </span>
+          <div class="add-task__assigned-input" (click)="dropdownOpen = !dropdownOpen">
+            <input
+              class="add-task__assigned-search"
+              [placeholder]="dropdownOpen ? '' : 'Select contacts to assign'"
+              [value]="contactSearchTerm"
+              (input)="contactSearchTerm = $any($event.target).value; dropdownOpen = true"
+              (click)="$event.stopPropagation(); dropdownOpen = true"
+            />
 
-            <span
+            <img
+              src="icons/other/arrow_drop_down.svg"
               class="add-task__assigned-arrow"
               [class.add-task__assigned-arrow--open]="dropdownOpen"
-            >
-              ▼
-            </span>
+            />
           </div>
 
           <!-- DROPDOWN -->
 
           @if (dropdownOpen) {
             <div class="add-task__dropdown">
-              @for (c of contacts(); track c.id) {
-                <div class="add-task__dropdown-option" (click)="toggleContact(c)">
+              @for (c of filteredContacts; track c.id) {
+            <div
+              class="add-task__dropdown-option"
+              [class.add-task__dropdown-option--selected]="
+                selectedContacts.some((sc) => sc.id === c.id)
+              "
+              (click)="toggleContact(c)"
+            >
                   <div class="add-task__dropdown-contact">
                     <app-avatar [name]="c.name" [color]="c.color" [size]="36"> </app-avatar>
 
@@ -137,11 +148,14 @@
                     </span>
                   </div>
 
-                  <input
+                  <img
                     class="add-task__checkbox"
-                    type="checkbox"
-                    [checked]="selectedContacts.some((sc) => sc.id === c.id)"
-                    tabindex="-1"
+                    [src]="
+                      selectedContacts.some((sc) => sc.id === c.id)
+                        ? 'icons/board/checkbox_checked.svg'
+                        : 'icons/board/checkbox.svg'
+                    "
+                    alt=""
                   />
                 </div>
               }
@@ -186,15 +200,41 @@
           <span class="add-task__required">*</span>
         </label>
 
-        <select class="add-task__select" formControlName="category">
-          <option value="">Select category</option>
+        <div class="add-task__category">
+          <div
+            class="add-task__category-input"
+            (click)="categoryDropdownOpen = !categoryDropdownOpen"
+            [class.add-task__input--error]="
+              taskForm.get('category')?.invalid && taskForm.get('category')?.touched
+            "
+          >
+            <span [class.add-task__category-placeholder]="!taskForm.get('category')?.value">
+              {{ taskForm.get('category')?.value || 'Select task category' }}
+            </span>
 
-          @for (category of categories(); track category) {
-            <option [value]="category">
-              {{ category }}
-            </option>
+            <img
+              src="icons/other/arrow_drop_down.svg"
+              class="add-task__assigned-arrow"
+              [class.add-task__assigned-arrow--open]="categoryDropdownOpen"
+            />
+          </div>
+
+          @if (categoryDropdownOpen) {
+            <div class="add-task__dropdown">
+              @for (category of categories(); track category) {
+                <div
+                  class="add-task__dropdown-option"
+                  [class.add-task__dropdown-option--selected]="
+                    taskForm.get('category')?.value === category
+                  "
+                  (click)="taskForm.patchValue({ category: category }); categoryDropdownOpen = false"
+                >
+                  {{ category }}
+                </div>
+              }
+            </div>
           }
-        </select>
+        </div>
 
         @if (taskForm.get('category')?.invalid && taskForm.get('category')?.touched) {
           <span class="add-task__error"> This field is required </span>
@@ -238,7 +278,10 @@
 
         <ul class="add-task__subtask-list">
           @for (subtask of subtaskList; track $index) {
-            <li class="add-task__subtask-item">
+            <li
+              class="add-task__subtask-item"
+              [class.add-task__subtask-item--editing]="editingIndex === $index"
+            >
               @if (editingIndex === $index) {
                 <div class="add-task__subtask-edit-mode">
                   <input
