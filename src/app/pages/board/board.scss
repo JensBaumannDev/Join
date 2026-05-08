@@ -79,7 +79,7 @@
     .progress-section {
         @include flex(row, nowrap, space-between, center);
         gap: 10px;
-        font-size: 12px;
+        font-size: 16px;
 
         .progress-bar-bg {
             flex: 1;
@@ -210,7 +210,7 @@
 }
 
 .avatar-popup-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     color: $color-primary;
     white-space: nowrap;
