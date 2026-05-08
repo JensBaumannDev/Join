@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Supabase } from '../contacts/contact.service';
@@ -30,8 +30,10 @@ export class AddTask implements OnInit {
   subtaskList: { title: string; completed: boolean }[] = [];
   maxVisibleContacts = 3;
   dropdownOpen = false;
+  categoryDropdownOpen = false;
   moreContactsOpen = false;
   subtaskFocus = false;
+  contactSearchTerm = '';
 
   editingIndex: number | null = null;
   editingValue = '';
@@ -48,6 +50,26 @@ export class AddTask implements OnInit {
       category: ['', Validators.required],
       subtasks: [''],
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const isAssignedClick = target.closest('.add-task__assigned');
+    const isCategoryClick = target.closest('.add-task__category');
+
+    if (!isAssignedClick) {
+      this.dropdownOpen = false;
+      this.contactSearchTerm = '';
+    }
+    if (!isCategoryClick) {
+      this.categoryDropdownOpen = false;
+    }
+  }
+
+  get filteredContacts() {
+    const term = this.contactSearchTerm.toLowerCase();
+    return this.contacts().filter((c: any) => c.name.toLowerCase().includes(term));
   }
 
   async ngOnInit() {
@@ -84,6 +106,7 @@ export class AddTask implements OnInit {
         completed: false,
       });
       this.taskForm.patchValue({ subtasks: '' });
+      this.editingIndex = null;
     }
   }
 
