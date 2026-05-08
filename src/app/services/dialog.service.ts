@@ -1,5 +1,7 @@
-import { Injectable, Type, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Injectable, inject, Type } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -16,6 +18,22 @@ export class DialogService {
       disableClose: true,
       ...options
     });
+  }
+
+  closeDialog(dialogRef: MatDialogRef<any>) {
+    dialogRef.addPanelClass('slide-out');
+    setTimeout(() => dialogRef.close(), 500);
+  }
+
+  setupListeners(dialogRef: MatDialogRef<any>, onClose: () => void): Subscription {
+    const sub = new Subscription();
+    sub.add(dialogRef.backdropClick().subscribe(() => onClose()));
+    sub.add(
+      dialogRef.keydownEvents()
+        .pipe(filter(e => e.key === 'Escape'))
+        .subscribe(() => onClose())
+    );
+    return sub;
   }
 
   closeAll() {

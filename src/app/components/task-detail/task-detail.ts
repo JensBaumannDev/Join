@@ -2,12 +2,12 @@ import { Component, inject, ViewEncapsulation, OnInit, OnDestroy, signal } from 
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
+import { DialogService } from '../../services/dialog.service';
 @Component({
   selector: 'app-task-detail',
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
@@ -17,40 +17,26 @@ import { ToastService } from '../../services/toast.service';
 })
 export class TaskDetail implements OnInit, OnDestroy {
   private dialogRef = inject(MatDialogRef<TaskDetail>);
+  private dialogService = inject(DialogService);
   private taskService = inject(TaskService);
   private toastService = inject(ToastService);
   task: Task = inject(MAT_DIALOG_DATA).task;
-  private subscriptions = new Subscription();
 
   isClosing = signal(false);
   subtasks: any[] = inject(MAT_DIALOG_DATA).subtasks ?? [];
+  private sub = new Subscription();
 
   ngOnInit() {
-    this.subscriptions.add(
-      this.dialogRef.backdropClick().subscribe(() => {
-        this.closeDialog();
-      })
-    );
-
-    this.subscriptions.add(
-      this.dialogRef.keydownEvents()
-        .pipe(filter(event => event.key === 'Escape'))
-        .subscribe(() => {
-          this.closeDialog();
-        })
-    );
+    this.sub = this.dialogService.setupListeners(this.dialogRef, () => this.closeDialog());
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this.sub.unsubscribe();
   }
 
   closeDialog() {
     this.isClosing.set(true);
-    this.dialogRef.addPanelClass('slide-out');
-    setTimeout(() => {
-      this.dialogRef.close();
-    }, 500);
+    this.dialogService.closeDialog(this.dialogRef);
   }
 
   async deleteTask() {
@@ -67,7 +53,7 @@ export class TaskDetail implements OnInit, OnDestroy {
   get assignees(): any[] {
     const val: any = this.task.assigned_to;
     if (!val) return [];
-    
+
     let names: string[] = [];
     if (Array.isArray(val)) {
       names = val;

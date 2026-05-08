@@ -1,6 +1,6 @@
 <div class="board-header">
   <h1 class="board-title">Board</h1>
-  <button class="btn btn-primary add-task-btn-mobile">
+  <button class="btn btn-primary add-task-btn-mobile" (click)="openAddTaskDialog()">
     <img src="./icons/other/add.svg" alt="add" class="btn-icon-mobile"/>
   </button>
 
@@ -11,7 +11,7 @@
       <img src="./icons/form/search.svg" alt="search" class="search-icon"/>
     </div>
 
-    <button class="btn btn-primary add-task-btn">
+    <button class="btn btn-primary add-task-btn" (click)="openAddTaskDialog()">
       Add task
       <img src="./icons/other/add.svg" alt="add" class="btn-icon"/>
     </button>

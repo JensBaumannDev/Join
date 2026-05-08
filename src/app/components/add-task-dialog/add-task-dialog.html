@@ -1,0 +1,6 @@
+<div class="add-task-dialog-content">
+  <button class="close-button" (click)="closeDialog()">
+    <img src="icons/other/close.svg" alt="close" />
+  </button>
+  <app-add-task [isDialog]="true" [initialStatus]="initialStatus" (taskCreated)="closeDialog()" />
+</div>

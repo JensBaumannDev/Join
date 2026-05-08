@@ -1,0 +1,52 @@
+@use '../../../styles/abstracts' as *;
+@use '../../../styles/components' as *;
+@use '../../../styles/base' as *;
+
+.dialog-container {
+  @include custom-material-dialog(30px);
+
+  .cdk-visually-hidden {
+    display: none;
+  }
+}
+
+.add-task-dialog-content {
+  position: relative;
+  background-color: $color-white;
+  border-radius: 30px;
+  width: clamp(290px, 95vw, 1100px);
+  max-height: 95dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  app-add-task {
+    .add-task {
+      padding: 60px 70px;
+      background: transparent;
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    top: 60px;
+    right: 40px;
+    z-index: 10;
+    @include flex(row, nowrap, center, center);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: $color-gray-light;
+      border-radius: 50%;
+    }
+
+    img {
+      width: 20px;
+    }
+  }
+}
