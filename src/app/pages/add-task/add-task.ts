@@ -42,8 +42,7 @@ export class AddTask implements OnInit {
 
   editingIndex: number | null = null;
   editingValue = '';
-  minDate: string = new Date().toISOString().split('T')[0];
-
+  todayDate: string = new Date().toISOString().split('T')[0];
   taskForm: FormGroup;
 
   pastDateValidators(control: AbstractControl): ValidationErrors | null {
@@ -88,7 +87,6 @@ export class AddTask implements OnInit {
     if (!isMoreClick) {
       this.moreContactsOpen = false;
     }
-    
   }
 
   get filteredContacts() {

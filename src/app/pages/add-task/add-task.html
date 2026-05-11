@@ -47,7 +47,7 @@
             id="dueDate"
             class="add-task__input"
             type="date"
-            [min]="minDate"
+            [min]="todayDate"
             [class.add-task__input--error]="
               taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched
             "
@@ -363,26 +363,26 @@
     <div class="add-task__actions">
       <div class="add-task__required-info add-task__required-info--desktop">
         <span class="add-task__required">*</span>
-
-        This field is requiredee
+        This field is required
       </div>
 
-    <div class="add-task__actions">
-      @if (taskToEdit) {
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-          Ok
-          <img src="icons/other/check.svg" alt="" />
-        </button>
-      } @else {
-        <button type="button" class="btn btn-secondary" (click)="onCancelOrClear()">
-          {{ isDialog ? 'Cancel' : 'Clear' }}
-          <img src="icons/other/close.svg" alt="" />
-        </button>
+      <div class="add-task__buttons">
+        @if (taskToEdit) {
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            Ok
+            <img src="icons/other/check.svg" alt="" />
+          </button>
+        } @else {
+          <button type="button" class="btn btn-secondary" (click)="onCancelOrClear()">
+            {{ isDialog ? 'Cancel' : 'Clear' }}
+            <img src="icons/other/close.svg" alt="" />
+          </button>
 
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-          Create Task
-          <img src="icons/other/check.svg" alt="check" />
-        </button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            Create Task
+            <img src="icons/other/check.svg" alt="check" />
+          </button>
+        }
       </div>
     </div>
   </form>
