@@ -246,12 +246,16 @@
     margin: 2px 8px;
 
     &:hover {
-      background: $color-primary;
+      background: $color-text-muted;
+    }
+
+    &:active {
+      background: $color-secondary-hover;
       color: white;
     }
 
     &--selected {
-      background: $color-primary-hover;
+      background: $color-primary-dark;
       color: white;
     }
   }
@@ -272,12 +276,12 @@
     flex-shrink: 0;
   }
 
-  &__dropdown-option:hover &__checkbox,
+  &__dropdown-option:active &__checkbox,
   &__dropdown-option--selected &__checkbox {
     filter: brightness(0) invert(1);
   }
 
-  &__dropdown-option:hover &__checkbox {
+  &__dropdown-option:active &__checkbox {
     background-color: rgba(255, 255, 255, 0.1);
   }
 
