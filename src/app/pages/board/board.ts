@@ -9,8 +9,6 @@ import {
   CdkDropListGroup,
   CdkDropList,
   CdkDrag,
-  moveItemInArray,
-  transferArrayItem
 } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../services/task.service';
 import { AvatarService } from '../../services/avatar.service';
@@ -210,21 +208,46 @@ export class Board implements OnInit {
 
   /** Handles the drag and drop event for moving tasks between columns */
   async drop(event: CdkDragDrop<Task[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    const movedTask = event.previousContainer.data[event.previousIndex];
+    const isSameColumn = event.previousContainer === event.container;
+    const newStatus = event.container.id;
+
+    // Work on a mutable copy of the global tasks array
+    const allTasks = [...this.taskService.tasks()];
+    const globalFromIdx = allTasks.findIndex(t => t.id === movedTask.id);
+    if (globalFromIdx === -1) return;
+
+    if (isSameColumn) {
+      // Same column: reorder by finding the target card's global position
+      const targetTask = event.container.data[event.currentIndex];
+      if (!targetTask || targetTask.id === movedTask.id) return;
+
+      const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+      if (globalToIdx === -1) return;
+
+      allTasks.splice(globalFromIdx, 1);
+      const adjustedToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+      // Moving forward → insert after target; moving backward → insert before target
+      allTasks.splice(globalFromIdx < globalToIdx ? adjustedToIdx + 1 : adjustedToIdx, 0, movedTask);
+      this.taskService.tasks.set(allTasks);
     } else {
-      const task = event.previousContainer.data[event.previousIndex];
-      const newStatus = event.container.id;
+      // Cross-column: update status and insert at the exact drop position
+      const [removedTask] = allTasks.splice(globalFromIdx, 1);
+      const updatedTask = { ...removedTask, status: newStatus };
 
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      const targetColumnData = event.container.data;
+      if (event.currentIndex < targetColumnData.length) {
+        // Insert before the card currently at the drop position
+        const targetTask = targetColumnData[event.currentIndex];
+        const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+        allTasks.splice(globalToIdx !== -1 ? globalToIdx : allTasks.length, 0, updatedTask);
+      } else {
+        // Dropped at the end of the column
+        allTasks.push(updatedTask);
+      }
 
-      await this.taskService.updateTaskStatus(task.id, newStatus);
-      await this.taskService.getTasks();
+      this.taskService.tasks.set(allTasks);
+      await this.taskService.updateTaskStatus(movedTask.id, newStatus);
     }
   }
 }
