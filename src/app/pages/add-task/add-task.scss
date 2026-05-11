@@ -9,16 +9,21 @@
   @include fluid-text(16, 20);
 
   &__title {
-    margin: 0 0 48px 0;
+    margin: 0 0 32px 0;
   }
 
   &__form {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-start;
   }
 
   &__grid {
     @include flex;
     gap: 48px;
+    flex: 1 1 100%;
   }
 
   &__column {
@@ -26,11 +31,22 @@
     @include flex(column);
   }
 
+  &__divider {
+    width: 1px;
+    background: $color-gray-form;
+  }
+
+  &__field {
+    width: 100%;
+    padding-top: 16px;
+  }
+
   &__label {
-    margin-top: 24px;
-    margin-bottom: 8px;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
     color: $color-primary;
+    padding-bottom: 8px;
   }
 
   &__required {
@@ -38,13 +54,18 @@
   }
 
   &__required-info {
-    margin-top: 32px;
-    @include flex(row, wrap, flex-start, center);
+    margin-top: 0;
+    @include flex(row, wrap, flex-start, self-end);
     gap: 4px;
     color: $color-primary;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
-  /* #region ERRORS */
+  &__required-info--mobile {
+  display: none;
+}
+
   &__error {
     margin-top: 4px;
     font-size: 16px;
@@ -54,9 +75,7 @@
   &__input--error {
     border: 1px solid $color-error;
   }
-  /* #endregion */
 
-  /* #region INPUTS */
   &__input,
   &__textarea,
   &__select {
@@ -69,6 +88,9 @@
     outline: none;
     box-sizing: border-box;
     transition: border 0.2s ease;
+    margin-bottom: 8px;
+    cursor: pointer;
+   
 
     &:focus {
       border: 1px solid $color-highlight;
@@ -82,15 +104,9 @@
   &__textarea {
     min-height: 120px;
     padding-top: 16px;
-    resize: none;
+    resize: vertical;
   }
 
-  &__select {
-    cursor: pointer;
-  }
-  /* #endregion */
-
-  /* #region PRIORITY */
   &__priority-buttons {
     @include flex;
     gap: 12px;
@@ -105,7 +121,6 @@
     background: $color-white;
     cursor: pointer;
     @include flex(row, nowrap, center, center);
-    gap: 8px;
     white-space: nowrap;
     padding: 0 10px;
     transition: 0.2s ease;
@@ -141,9 +156,7 @@
   &__priority-button--active &__priority-icon {
     filter: brightness(0) invert(1);
   }
-  /* #endregion */
 
-  /* #region ASSIGNED */
   &__assigned,
   &__category {
     position: relative;
@@ -178,9 +191,7 @@
       color: $color-text;
     }
   }
-  /* #endregion */
 
-  /* #region ARROW */
   &__assigned-arrow {
     width: 32px;
     height: 32px;
@@ -201,9 +212,7 @@
       transform: rotate(180deg);
     }
   }
-  /* #endregion */
 
-  /* #region DROPDOWN */
   &__dropdown {
     position: absolute;
     top: 56px;
@@ -258,8 +267,8 @@
     padding: 4px;
     border-radius: 50%;
     transition:
-      background-color 0.2s ease,
-      filter 0.2s ease;
+    background-color 0.2s ease,
+    filter 0.2s ease;
     flex-shrink: 0;
   }
 
@@ -271,9 +280,7 @@
   &__dropdown-option:hover &__checkbox {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  /* #endregion */
 
-  /* #region SELECTED CONTACTS */
   &__selected-contacts {
     @include flex(row, wrap, flex-start, center);
     margin-top: 16px;
@@ -282,9 +289,7 @@
       margin-right: -8px;
     }
   }
-  /* #endregion */
 
-  /* #region MORE CONTACTS */
   &__more-wrapper {
     position: relative;
   }
@@ -304,7 +309,7 @@
     position: absolute;
     top: 40px;
     left: 16px;
-    min-width: 180px;
+    min-width: 230px;
     background: $color-white;
     border-radius: 12px;
     padding: 8px 0;
@@ -322,12 +327,19 @@
       background: #f2f2f2;
     }
   }
-  /* #endregion */
 
-  /* #region ACTIONS */
   &__actions {
-    margin-top: 48px;
-    @include flex(row, wrap, flex-end);
+    @include flex(row, wrap, space-between);
+    margin-top: 130px;
+    padding-bottom: 80px;
+    gap: 16px;
+    flex: 0 1 auto;
+    align-self: center;
+    width: 100%;
+  }
+
+  &__action-buttons {
+    @include flex(row, wrap, flex-end, center);
     gap: 16px;
   }
 
@@ -423,10 +435,6 @@
     height: 32px;
     background: $color-gray-form;
     margin: 0 4px;
-
-    &--small {
-      height: 24px;
-    }
   }
 
   &__subtask-edit-mode {
@@ -453,12 +461,9 @@
 
   &__category-placeholder {
     color: $color-text;
-    opacity: 0.5;
   }
-  /* #endregion */
 }
 
-/* #region Responsive */
 @include tablet-xl {
   .add-task {
     padding: 48px 16px 180px 16px;
@@ -474,8 +479,8 @@
       gap: 0;
     }
 
-    &__label {
-      margin-top: 35px;
+    &__divider {
+      display: none;
     }
 
     &__actions {
@@ -487,6 +492,19 @@
       padding: 12px 16px;
       z-index: 50;
     }
+
+    &__required-info--desktop {
+      display: none;
+    }
+
+    &__required-info--mobile {
+      display: flex;
+      margin-top: 16px;
+    }
+
+    &__textarea {
+    resize: none;
+  }
   }
 }
 
@@ -509,6 +527,19 @@
         padding: 12px;
       }
     }
+
+    &__more-dropdown {
+      left: -32px;
+    }
+
+    &__input,
+    &__assigned-input, 
+    &__category-input {
+      padding: 0 6px;
+    }
+
+    &__textarea {
+      padding: 16px 6px 0 6px;
+    }
   }
 }
-/* #endregion */

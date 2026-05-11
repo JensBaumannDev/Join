@@ -3,296 +3,342 @@
 
   <form class="add-task__form" [formGroup]="taskForm" (ngSubmit)="submit()">
     <div class="add-task__grid">
-      <!-- LEFT -->
-
       <div class="add-task__column">
-        <!-- TITLE -->
+        <div class="add-task__field">
+          <label class="add-task__label" for="title">
+            <span class="add-task__label-text">Title</span>
+            <span class="add-task__required">*</span>
+          </label>
 
-        <label class="add-task__label" for="title">
-          Title
-          <span class="add-task__required">*</span>
-        </label>
+          <input
+            id="title"
+            class="add-task__input"
+            [class.add-task__input--error]="
+              taskForm.get('title')?.invalid && taskForm.get('title')?.touched
+            "
+            formControlName="title"
+            placeholder="Enter a title"
+          />
 
-        <input
-          id="title"
-          class="add-task__input"
-          [class.add-task__input--error]="
-            taskForm.get('title')?.invalid && taskForm.get('title')?.touched
-          "
-          formControlName="title"
-          placeholder="Enter a title"
-        />
-
-        @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
-          <span class="add-task__error"> This field is required </span>
-        }
-
-        <!-- DESCRIPTION -->
-
-        <label class="add-task__label"> Description </label>
-
-        <textarea
-          class="add-task__textarea"
-          formControlName="description"
-          placeholder="Enter a description"
-        >
-        </textarea>
-
-        <!-- DUE DATE -->
-
-        <label class="add-task__label" for="dueDate">
-          Due date
-          <span class="add-task__required">*</span>
-        </label>
-
-        <input
-          id="dueDate"
-          class="add-task__input"
-          type="date"
-          [class.add-task__input--error]="
-            taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched
-          "
-          formControlName="dueDate"
-        />
-
-        @if (taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched) {
-          <span class="add-task__error"> This field is required </span>
-        }
-      </div>
-
-      <!-- RIGHT -->
-
-      <div class="add-task__column">
-        <!-- PRIORITY -->
-
-        <label class="add-task__label"> Priority </label>
-
-        <div class="add-task__priority-buttons">
-          <button
-            type="button"
-            class="add-task__priority-button"
-            [class.add-task__priority-button--active]="taskForm.value.priority === 'Urgent'"
-            [class.add-task__priority-button--urgent]="taskForm.value.priority === 'Urgent'"
-            (click)="setPriority('Urgent')"
-          >
-            Urgent
-
-            <img class="add-task__priority-icon" src="icons/board/prio-urgent.svg" />
-          </button>
-
-          <button
-            type="button"
-            class="add-task__priority-button"
-            [class.add-task__priority-button--active]="taskForm.value.priority === 'Medium'"
-            [class.add-task__priority-button--medium]="taskForm.value.priority === 'Medium'"
-            (click)="setPriority('Medium')"
-          >
-            Medium
-
-            <img class="add-task__priority-icon" src="icons/board/prio-medium.svg" />
-          </button>
-
-          <button
-            type="button"
-            class="add-task__priority-button"
-            [class.add-task__priority-button--active]="taskForm.value.priority === 'Low'"
-            [class.add-task__priority-button--low]="taskForm.value.priority === 'Low'"
-            (click)="setPriority('Low')"
-          >
-            Low
-
-            <img class="add-task__priority-icon" src="icons/board/prio-low.svg" />
-          </button>
+          @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+            <span class="add-task__error"> This field is required </span>
+          }
         </div>
 
-        <!-- ASSIGNED -->
+        <div class="add-task__field">
+          <label class="add-task__label">
+            <span class="add-task__label-text"> Description </span>
+          </label>
 
-        <label class="add-task__label"> Assigned to </label>
+          <textarea
+            class="add-task__textarea"
+            formControlName="description"
+            placeholder="Enter a description"
+          ></textarea>
+        </div>
 
-        <div class="add-task__assigned">
-          <!-- SELECT -->
+        <div class="add-task__field">
+          <label class="add-task__label" for="dueDate">
+            <span class="add-task__label-text"> Due date </span>
+            <span class="add-task__required">*</span>
+          </label>
 
-          <div class="add-task__assigned-input" (click)="dropdownOpen = !dropdownOpen">
-            <input
-              class="add-task__assigned-search"
-              [placeholder]="dropdownOpen ? '' : 'Select contacts to assign'"
-              [value]="contactSearchTerm"
-              (input)="contactSearchTerm = $any($event.target).value; dropdownOpen = true"
-              (click)="$event.stopPropagation(); dropdownOpen = true"
-            />
+          <input
+            id="dueDate"
+            class="add-task__input"
+            type="date"
+            [min]="minDate"
+            [class.add-task__input--error]="
+              taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched
+            "
+            formControlName="dueDate"
+          />
 
-            <img
-              src="icons/other/arrow_drop_down.svg"
-              class="add-task__assigned-arrow"
-              [class.add-task__assigned-arrow--open]="dropdownOpen"
-            />
-          </div>
+          @if (taskForm.get('dueDate')?.touched) {
+            @if (taskForm.get('dueDate')?.errors?.['required']) {
+              <span class="add-task__error"> This field is required </span>
+            }
 
-          <!-- DROPDOWN -->
+            @if (taskForm.get('dueDate')?.errors?.['pastDate']) {
+              <span class="add-task__error"> Past dates are not allowed </span>
+            }
+          }
+        </div>
+      </div>
 
-          @if (dropdownOpen) {
-            <div class="add-task__dropdown">
-              @for (c of filteredContacts; track c.id) {
-            <div
-              class="add-task__dropdown-option"
-              [class.add-task__dropdown-option--selected]="
-                selectedContacts.some((sc) => sc.id === c.id)
-              "
-              (click)="toggleContact(c)"
+      <div class="add-task__divider"></div>
+
+      <div class="add-task__column">
+        <div class="add-task__field">
+          <label class="add-task__label">
+            <span class="add-task__label-text">Priority</span>
+          </label>
+
+          <div class="add-task__priority-buttons">
+            <button
+              type="button"
+              class="add-task__priority-button"
+              [class.add-task__priority-button--active]="taskForm.value.priority === 'Urgent'"
+              [class.add-task__priority-button--urgent]="taskForm.value.priority === 'Urgent'"
+              (click)="setPriority('Urgent')"
             >
-                  <div class="add-task__dropdown-contact">
-                    <app-avatar [name]="c.name" [color]="c.color" [size]="36"> </app-avatar>
+              Urgent
 
-                    <span class="add-task__dropdown-name">
-                      {{ c.name }}
-                    </span>
+              <img class="add-task__priority-icon" src="icons/board/prio-urgent.svg" />
+            </button>
+
+            <button
+              type="button"
+              class="add-task__priority-button"
+              [class.add-task__priority-button--active]="taskForm.value.priority === 'Medium'"
+              [class.add-task__priority-button--medium]="taskForm.value.priority === 'Medium'"
+              (click)="setPriority('Medium')"
+            >
+              Medium
+
+              <img class="add-task__priority-icon" src="icons/board/prio-medium.svg" />
+            </button>
+
+            <button
+              type="button"
+              class="add-task__priority-button"
+              [class.add-task__priority-button--active]="taskForm.value.priority === 'Low'"
+              [class.add-task__priority-button--low]="taskForm.value.priority === 'Low'"
+              (click)="setPriority('Low')"
+            >
+              Low
+
+              <img class="add-task__priority-icon" src="icons/board/prio-low.svg" />
+            </button>
+          </div>
+        </div>
+
+        <div class="add-task__field">
+          <label class="add-task__label">
+            <span class="add-task__label-text"> Assigned to </span>
+          </label>
+
+          <div class="add-task__assigned">
+            <div class="add-task__assigned-input" (click)="dropdownOpen = !dropdownOpen">
+              <input
+                class="add-task__assigned-search"
+                [placeholder]="dropdownOpen ? '' : 'Select contacts to assign'"
+                [value]="contactSearchTerm"
+                (input)="contactSearchTerm = $any($event.target).value; dropdownOpen = true"
+                (click)="$event.stopPropagation(); dropdownOpen = true"
+              />
+
+              <img
+                src="icons/other/arrow_drop_down.svg"
+                class="add-task__assigned-arrow"
+                [class.add-task__assigned-arrow--open]="dropdownOpen"
+              />
+            </div>
+
+            @if (dropdownOpen) {
+              <div class="add-task__dropdown">
+                @for (c of filteredContacts; track c.id) {
+                  <div
+                    class="add-task__dropdown-option"
+                    [class.add-task__dropdown-option--selected]="
+                      selectedContacts.some((sc) => sc.id === c.id)
+                    "
+                    (click)="toggleContact(c)"
+                  >
+                    <div class="add-task__dropdown-contact">
+                      <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+
+                      <span class="add-task__dropdown-name">
+                        {{ c.name }}
+                      </span>
+                    </div>
+
+                    <img
+                      class="add-task__checkbox"
+                      [src]="
+                        selectedContacts.some((sc) => sc.id === c.id)
+                          ? 'icons/board/checkbox_checked.svg'
+                          : 'icons/board/checkbox.svg'
+                      "
+                      alt=""
+                    />
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="add-task__selected-contacts">
+              @for (c of selectedContacts.slice(0, maxVisibleContacts); track c.id) {
+                <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+              }
+              @if (selectedContacts.length > maxVisibleContacts) {
+                <div class="add-task__more-wrapper">
+                  <div class="add-task__more-count" (click)="toggleMoreContacts()">
+                    +{{ selectedContacts.length - maxVisibleContacts }}
                   </div>
 
-                  <img
-                    class="add-task__checkbox"
-                    [src]="
-                      selectedContacts.some((sc) => sc.id === c.id)
-                        ? 'icons/board/checkbox_checked.svg'
-                        : 'icons/board/checkbox.svg'
-                    "
-                    alt=""
-                  />
+                  @if (moreContactsOpen) {
+                    <div class="add-task__more-dropdown">
+                      @for (c of selectedContacts.slice(maxVisibleContacts); track c.id) {
+                        <div class="add-task__more-contact">
+                          <app-avatar [name]="c.name" [color]="c.color" [size]="32"></app-avatar>
+
+                          <span>
+                            {{ c.name }}
+                          </span>
+                        </div>
+                      }
+                    </div>
+                  }
                 </div>
               }
             </div>
-          }
+          </div>
+        </div>
 
-          <!-- SELECTED CONTACTS -->
+        <div class="add-task__field">
+          <label class="add-task__label">
+            <span class="add-task__label-text">Category</span>
+            <span class="add-task__required">*</span>
+          </label>
 
-          <div class="add-task__selected-contacts">
-            @for (c of selectedContacts.slice(0, maxVisibleContacts); track c.id) {
-              <app-avatar [name]="c.name" [color]="c.color" [size]="36"> </app-avatar>
-            }
+          <div class="add-task__category">
+            <div
+              class="add-task__category-input"
+              (click)="categoryDropdownOpen = !categoryDropdownOpen"
+              [class.add-task__input--error]="
+                taskForm.get('category')?.invalid && taskForm.get('category')?.touched
+              "
+            >
+              <span [class.add-task__category-placeholder]="!taskForm.get('category')?.value">
+                {{ taskForm.get('category')?.value || 'Select task category' }}
+              </span>
 
-            @if (selectedContacts.length > maxVisibleContacts) {
-              <div class="add-task__more-wrapper">
-                <div class="add-task__more-count" (click)="toggleMoreContacts()">
-                  +{{ selectedContacts.length - maxVisibleContacts }}
-                </div>
+              <img
+                src="icons/other/arrow_drop_down.svg"
+                class="add-task__assigned-arrow"
+                [class.add-task__assigned-arrow--open]="categoryDropdownOpen"
+              />
+            </div>
 
-                @if (moreContactsOpen) {
-                  <div class="add-task__more-dropdown">
-                    @for (c of selectedContacts.slice(maxVisibleContacts); track c.id) {
-                      <div class="add-task__more-contact">
-                        <app-avatar [name]="c.name" [color]="c.color" [size]="32"> </app-avatar>
-
-                        <span>
-                          {{ c.name }}
-                        </span>
-                      </div>
-                    }
+            @if (categoryDropdownOpen) {
+              <div class="add-task__dropdown">
+                @for (category of categories(); track category) {
+                  <div
+                    class="add-task__dropdown-option"
+                    [class.add-task__dropdown-option--selected]="
+                      taskForm.get('category')?.value === category
+                    "
+                    (click)="
+                      taskForm.patchValue({ category: category }); categoryDropdownOpen = false
+                    "
+                  >
+                    {{ category }}
                   </div>
                 }
               </div>
             }
           </div>
-        </div>
 
-        <!-- CATEGORY -->
-
-        <label class="add-task__label">
-          Category
-          <span class="add-task__required">*</span>
-        </label>
-
-        <div class="add-task__category">
-          <div
-            class="add-task__category-input"
-            (click)="categoryDropdownOpen = !categoryDropdownOpen"
-            [class.add-task__input--error]="
-              taskForm.get('category')?.invalid && taskForm.get('category')?.touched
-            "
-          >
-            <span [class.add-task__category-placeholder]="!taskForm.get('category')?.value">
-              {{ taskForm.get('category')?.value || 'Select task category' }}
-            </span>
-
-            <img
-              src="icons/other/arrow_drop_down.svg"
-              class="add-task__assigned-arrow"
-              [class.add-task__assigned-arrow--open]="categoryDropdownOpen"
-            />
-          </div>
-
-          @if (categoryDropdownOpen) {
-            <div class="add-task__dropdown">
-              @for (category of categories(); track category) {
-                <div
-                  class="add-task__dropdown-option"
-                  [class.add-task__dropdown-option--selected]="
-                    taskForm.get('category')?.value === category
-                  "
-                  (click)="taskForm.patchValue({ category: category }); categoryDropdownOpen = false"
-                >
-                  {{ category }}
-                </div>
-              }
-            </div>
+          @if (taskForm.get('category')?.invalid && taskForm.get('category')?.touched) {
+            <span class="add-task__error"> This field is required </span>
           }
         </div>
 
-        @if (taskForm.get('category')?.invalid && taskForm.get('category')?.touched) {
-          <span class="add-task__error"> This field is required </span>
-        }
+        <div class="add-task__field">
+          <label class="add-task__label">
+            <span class="add-task__label-text">Subtasks</span>
+          </label>
 
-        <label class="add-task__label"> Subtasks </label>
+          <div class="add-task__subtask-input-wrapper">
+            <input
+              #subtaskInput
+              class="add-task__input add-task__input--subtask"
+              formControlName="subtasks"
+              placeholder="Add new subtask"
+              (focus)="subtaskFocus = true"
+              (blur)="subtaskFocus = !!taskForm.get('subtasks')?.value"
+              (keydown.enter)="$event.preventDefault(); addSubtask()"
+            />
 
-        <div class="add-task__subtask-input-wrapper">
-          <input
-            #subtaskInput
-            class="add-task__input add-task__input--subtask"
-            formControlName="subtasks"
-            placeholder="Add new subtask"
-            (focus)="subtaskFocus = true"
-            (blur)="subtaskFocus = !!taskForm.get('subtasks')?.value"
-            (keydown.enter)="$event.preventDefault(); addSubtask()"
-          />
+            <div class="add-task__subtask-buttons">
+              @if (subtaskFocus || taskForm.get('subtasks')?.value) {
+                <button
+                  type="button"
+                  class="add-task__subtask-btn"
+                  (mousedown)="$event.preventDefault()"
+                  (click)="taskForm.patchValue({ subtasks: '' }); subtaskFocus = false"
+                >
+                  <img src="icons/other/close.svg" alt="Clear" />
+                </button>
 
-          <div class="add-task__subtask-buttons">
-            @if (subtaskFocus || taskForm.get('subtasks')?.value) {
-              <button
-                type="button"
-                class="add-task__subtask-btn"
-                (mousedown)="$event.preventDefault()"
-                (click)="taskForm.patchValue({ subtasks: '' }); subtaskFocus = false"
-              >
-                <img src="icons/other/close.svg" alt="Clear" />
-              </button>
-              <div class="add-task__subtask-divider"></div>
-              <button
-                type="button"
-                class="add-task__subtask-btn"
-                (mousedown)="$event.preventDefault()"
-                (click)="addSubtask(); subtaskFocus = false"
-              >
-                <img src="icons/other/check.svg" alt="Confirm" />
-              </button>
-            }
+                <div class="add-task__subtask-divider"></div>
+
+                <button
+                  type="button"
+                  class="add-task__subtask-btn"
+                  (mousedown)="$event.preventDefault()"
+                  (click)="addSubtask(); subtaskFocus = false"
+                >
+                  <img src="icons/other/check.svg" alt="Confirm" />
+                </button>
+              }
+            </div>
           </div>
-        </div>
 
-        <ul class="add-task__subtask-list">
-          @for (subtask of subtaskList; track $index) {
-            <li
-              class="add-task__subtask-item"
-              [class.add-task__subtask-item--editing]="editingIndex === $index"
-            >
-              @if (editingIndex === $index) {
-                <div class="add-task__subtask-edit-mode">
-                  <input
-                    class="add-task__subtask-edit-input"
-                    [value]="editingValue"
-                    autofocus
-                    (input)="editingValue = $any($event.target).value"
-                    (keydown.enter)="saveSubtask($index)"
-                  />
+          <ul class="add-task__subtask-list">
+            @for (subtask of subtaskList; track $index) {
+              <li
+                class="add-task__subtask-item"
+                [class.add-task__subtask-item--editing]="editingIndex === $index"
+              >
+                @if (editingIndex === $index) {
+                  <div class="add-task__subtask-edit-mode">
+                    <input
+                      class="add-task__subtask-edit-input"
+                      [value]="editingValue"
+                      autofocus
+                      (input)="editingValue = $any($event.target).value"
+                      (keydown.enter)="saveSubtask($index)"
+                    />
+
+                    <div class="add-task__subtask-item-buttons">
+                      <button
+                        type="button"
+                        class="add-task__subtask-item-btn"
+                        (click)="removeSubtask($index)"
+                      >
+                        <img src="icons/other/delete.svg" alt="Delete" />
+                      </button>
+
+                      <div class="add-task__subtask-divider"></div>
+
+                      <button
+                        type="button"
+                        class="add-task__subtask-item-btn"
+                        (click)="saveSubtask($index)"
+                      >
+                        <img src="icons/other/check.svg" alt="Save" />
+                      </button>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="add-task__subtask-content">
+                    <span class="add-task__subtask-dot">•</span>
+                    <span>{{ subtask.title }}</span>
+                  </div>
 
                   <div class="add-task__subtask-item-buttons">
+                    <button
+                      type="button"
+                      class="add-task__subtask-item-btn"
+                      (click)="editSubtask($index)"
+                    >
+                      <img src="icons/other/edit.svg" alt="Edit" />
+                    </button>
+
+                    <div class="add-task__subtask-divider"></div>
+
                     <button
                       type="button"
                       class="add-task__subtask-item-btn"
@@ -300,55 +346,26 @@
                     >
                       <img src="icons/other/delete.svg" alt="Delete" />
                     </button>
-
-                    <div class="add-task__subtask-divider--small"></div>
-
-                    <button
-                      type="button"
-                      class="add-task__subtask-item-btn"
-                      (click)="saveSubtask($index)"
-                    >
-                      <img src="icons/other/check.svg" alt="Save" />
-                    </button>
                   </div>
-                </div>
-              } @else {
-                <div class="add-task__subtask-content">
-                  <span class="add-task__subtask-dot">•</span>
-                  <span>{{ subtask.title }}</span>
-                </div>
+                }
+              </li>
+            }
+          </ul>
 
-                <div class="add-task__subtask-item-buttons">
-                  <button
-                    type="button"
-                    class="add-task__subtask-item-btn"
-                    (click)="editSubtask($index)"
-                  >
-                    <img src="icons/other/edit.svg" alt="Edit" />
-                  </button>
-
-                  <div class="add-task__subtask-divider--small"></div>
-
-                  <button
-                    type="button"
-                    class="add-task__subtask-item-btn"
-                    (click)="removeSubtask($index)"
-                  >
-                    <img src="icons/other/delete.svg" alt="Delete" />
-                  </button>
-                </div>
-              }
-            </li>
-          }
-        </ul>
+          <div class="add-task__required-info add-task__required-info--mobile">
+            <span class="add-task__required">*</span>
+            This field is required
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="add-task__required-info">
-      <span class="add-task__required">*</span>
+    <div class="add-task__actions">
+      <div class="add-task__required-info add-task__required-info--desktop">
+        <span class="add-task__required">*</span>
 
-      This field is required
-    </div>
+        This field is requiredee
+      </div>
 
     <div class="add-task__actions">
       @if (taskToEdit) {
@@ -364,9 +381,9 @@
 
         <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
           Create Task
-          <img src="icons/other/check.svg" alt="" />
+          <img src="icons/other/check.svg" alt="check" />
         </button>
-      }
+      </div>
     </div>
   </form>
 </div>
