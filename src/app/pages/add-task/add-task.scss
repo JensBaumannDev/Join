@@ -109,7 +109,7 @@
 
   &__priority-buttons {
     @include flex;
-    gap: 12px;
+    gap: 16px;
     margin-top: 8px;
   }
 
@@ -123,15 +123,20 @@
     @include flex(row, nowrap, center, center);
     white-space: nowrap;
     padding: 0 10px;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
 
-    &:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    &:hover:not(&--active) {
+      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    &:active {
+      box-shadow: none;
     }
 
     &--active {
       border: none;
       color: white;
+      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     }
 
     &--urgent {
@@ -343,6 +348,11 @@
   }
 
   &__action-buttons {
+    @include flex(row, wrap, flex-end, center);
+    gap: 16px;
+  }
+
+  &__buttons {
     @include flex(row, wrap, flex-end, center);
     gap: 16px;
   }
