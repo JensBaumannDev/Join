@@ -13,6 +13,11 @@
     gap: 25px;
     width: 100%;
     margin-top: 48px;
+    align-items: stretch;
+}
+
+.column {
+    @include flex(column, nowrap, flex-start, stretch);
 }
 
 .column-header {
@@ -45,6 +50,8 @@
 
 .task-list {
     min-height: 400px;
+    padding-bottom: 100px;
+    flex-grow: 1;
 }
 
 .task-card {
@@ -142,8 +149,7 @@
 .cdk-drag-preview {
     box-sizing: border-box;
     padding: 16px;
-    display: flex;
-    flex-direction: column;
+    @include flex(column, nowrap, flex-start, stretch);
     gap: 12px;
     border-radius: 24px;
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
@@ -229,8 +235,7 @@
 }
 
 .avatar-popup-row {
-    display: flex;
-    align-items: center;
+    @include flex(row, nowrap, flex-start, center);
     gap: 10px;
 }
 
@@ -277,7 +282,7 @@
         @include flex(row, nowrap);
         overflow-x: auto;
         gap: 16px;
-        padding: 10px 4px;
+        padding: 10px 100px 10px 4px;
         min-height: auto;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
