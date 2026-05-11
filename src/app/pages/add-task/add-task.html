@@ -263,7 +263,7 @@
 
           <app-subtask [(subtasks)]="subtaskList" />
         </div>
-        <div class="add-task__required-info add-task__required-info--mobile">
+        <div class="add-task__required-info add-task__required-info--mobile" [hidden]="taskToEdit">
           <span class="add-task__required" aria-hidden="true">*</span>
           This field is required
         </div>
@@ -271,7 +271,7 @@
     </div>
 
     <div class="add-task__actions">
-      <div class="add-task__required-info add-task__required-info--desktop">
+      <div class="add-task__required-info add-task__required-info--desktop" [hidden]="taskToEdit">
         <span class="add-task__required" aria-hidden="true">*</span>
         This field is required
       </div>

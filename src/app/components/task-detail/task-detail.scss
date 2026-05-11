@@ -14,13 +14,12 @@
   position: relative;
   @include flex(column, nowrap, flex-start, stretch);
   gap: 24px;
-  width: clamp(290px, 80vw, 525px);
+  width: clamp(300px, 80vw, 525px);
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
   overflow-y: auto;
-  overflow-x: hidden;
   padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
   margin: 10px;
 
@@ -67,6 +66,7 @@
       position: sticky;
       bottom: 0;
       background-color: $color-white;
+      justify-content: flex-end;
     }
   }
 }
