@@ -7,11 +7,12 @@ import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
 import { Task } from '../../interfaces/task.interface';
+import { Subtask } from '../../components/subtask/subtask';
 
 @Component({
   selector: 'app-add-task',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AvatarComponent],
+  imports: [CommonModule, ReactiveFormsModule, AvatarComponent, Subtask],
   templateUrl: './add-task.html',
   styleUrl: './add-task.scss',
 })
@@ -36,12 +37,8 @@ export class AddTask implements OnInit {
   dropdownOpen = false;
   categoryDropdownOpen = false;
   moreContactsOpen = false;
-  subtaskFocus = false;
   contactSearchTerm = '';
   isSubmitting = false;
-
-  editingIndex: number | null = null;
-  editingValue = '';
   todayDate: string = new Date().toISOString().split('T')[0];
   taskForm: FormGroup;
 
@@ -65,7 +62,6 @@ export class AddTask implements OnInit {
       priority: [''],
       assignedTo: [[]],
       category: ['', Validators.required],
-      subtasks: [''],
     });
   }
 
@@ -149,36 +145,6 @@ export class AddTask implements OnInit {
     this.taskForm.patchValue({
       assignedTo: this.selectedContacts.map((c) => c.name),
     });
-  }
-
-  addSubtask() {
-    const value = this.taskForm.get('subtasks')?.value;
-    if (value && value.trim()) {
-      this.subtaskList.push({
-        title: value.trim(),
-        completed: false,
-      });
-      this.taskForm.patchValue({ subtasks: '' });
-      this.editingIndex = null;
-    }
-  }
-
-  removeSubtask(index: number) {
-    this.subtaskList.splice(index, 1);
-  }
-
-  editSubtask(index: number) {
-    this.editingIndex = index;
-    this.editingValue = this.subtaskList[index].title;
-  }
-
-  saveSubtask(index: number) {
-    if (this.editingValue.trim()) {
-      this.subtaskList[index].title = this.editingValue.trim();
-    }
-
-    this.editingIndex = null;
-    this.editingValue = '';
   }
 
   setPriority(value: string) {

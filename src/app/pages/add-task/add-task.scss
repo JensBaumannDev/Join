@@ -180,6 +180,7 @@
 
   &__assigned-search {
     flex: 1;
+    min-width: 0;
     border: none;
     outline: none;
     background: transparent;
@@ -341,118 +342,6 @@
   &__buttons {
     @include flex(row, wrap, flex-end, center);
     gap: 16px;
-  }
-
-  &__subtask-input-wrapper {
-    position: relative;
-    width: 100%;
-  }
-
-  &__subtask-buttons {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    @include flex(row, wrap, flex-start, center);
-  }
-
-  &__subtask-btn,
-  &__subtask-item-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    @include flex(row, wrap, center, center);
-    cursor: pointer;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background-color: $color-gray-light;
-    }
-
-    img {
-      width: 18px;
-      height: 18px;
-      object-fit: contain;
-    }
-  }
-
-  &__subtask-list {
-    padding: 0;
-    list-style: none;
-    max-height: 120px;
-    overflow-y: auto;
-  }
-
-  &__subtask-item {
-    @include flex(row, wrap, space-between, center);
-    padding: 4px 16px;
-    min-height: 32px;
-    border-radius: 10px;
-    transition: background 0.2s ease;
-    cursor: default;
-
-    &:hover:not(.add-task__subtask-item--editing) {
-      background: #eeeeee;
-
-      .add-task__subtask-item-buttons {
-        opacity: 1;
-      }
-    }
-
-    &--editing {
-      padding: 0;
-      background: $color-white;
-    }
-  }
-
-  &__subtask-content {
-    @include flex(row, wrap, flex-start, center);
-    gap: 12px;
-  }
-
-  &__subtask-dot {
-    font-size: 16px;
-    line-height: 1;
-  }
-
-  &__subtask-item-buttons {
-    @include flex(row, wrap, flex-start, center);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  &__subtask-divider {
-    width: 1px;
-    height: 32px;
-    background: $color-gray-form;
-    margin: 0 4px;
-  }
-
-  &__subtask-edit-mode {
-    @include flex(row, wrap, space-between, center);
-    padding: 4px 16px;
-    width: 100%;
-    background: $color-white;
-    border-bottom: 1px solid $color-highlight;
-
-    .add-task__subtask-item-buttons {
-      opacity: 1;
-    }
-  }
-
-  &__subtask-edit-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    color: $color-text;
-  }
-
-  &__category-placeholder {
-    color: $color-text;
   }
 }
 
