@@ -35,10 +35,11 @@ export class Board implements OnInit {
   screenWidth = signal(window.innerWidth);
 
   /** State for the avatar hover popup */
-  avatarPopup = signal<{ visible: boolean; x: number; y: number; assignments: any[] }>({
+  avatarPopup = signal<{ visible: boolean; x: number; bottom: number; maxHeight: number; assignments: any[] }>({
     visible: false,
     x: 0,
-    y: 0,
+    bottom: 0,
+    maxHeight: 400,
     assignments: [],
   });
 
@@ -78,14 +79,18 @@ export class Board implements OnInit {
   showAvatarPopup(event: MouseEvent, task: Task) {
     clearTimeout(this.hideTimeout);
     const target = event.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
+    const card = target.closest('.task-card') as HTMLElement;
+    const rect = (card || target).getBoundingClientRect();
     const assignments = this.getTaskAssignments(task);
-    // estimate popup height: 12px padding top/bottom + (42px per row * count)
-    const estimatedHeight = 24 + assignments.length * 42;
+    const headerHeight = 95;
+    const bottom = window.innerHeight - rect.bottom + 20;
+    const availableHeight = rect.top - headerHeight - 8;
+    const maxHeight = Math.min(400, Math.max(50, availableHeight));
     this.avatarPopup.set({
       visible: true,
-      x: rect.left + window.scrollX,
-      y: rect.top + window.scrollY - estimatedHeight - 8,
+      x: rect.left,
+      bottom,
+      maxHeight,
       assignments,
     });
   }
