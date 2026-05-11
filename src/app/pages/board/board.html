@@ -34,19 +34,27 @@
                     <app-subtask [taskId]="task.id" />
 
                     <div class="task-footer">
-                        <div class="contact-list">
-                            @for (assign of getTaskAssignments(task); track $index) {
-                            @if (getContactInfo(assign); as info) {
-                            <div class="avatar" [style.background-color]="info.color">
-                                {{ info.initials }}
-                            </div>
+                        <div class="contact-list" (click)="$event.stopPropagation()"
+                            (mouseenter)="showAvatarPopup($event, task)"
+                            (mouseleave)="hideAvatarPopup()">
+                            @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
+                                @if (getContactInfo(assign); as info) {
+                                <div class="avatar" [style.background-color]="info.color">
+                                    {{ info.initials }}
+                                </div>
+                                }
                             }
+                            @if (getTaskAssignments(task).length > 3) {
+                            <div class="avatar avatar-overflow">
+                                +{{ getTaskAssignments(task).length - 3 }}
+                            </div>
                             }
                         </div>
                         @if (task.priority) {
                         <img [src]="getPriorityIcon(task.priority)" class="prio-icon" [alt]="task.priority">
                         }
                     </div>
+
                 </div>
                 } @empty {
                 <div class="empty-list-placeholder">No tasks {{ col.label }}</div>
@@ -57,3 +65,23 @@
 
     </div>
 </section>
+
+@if (avatarPopup().visible) {
+<div class="avatar-popup"
+    [style.bottom.px]="avatarPopup().bottom"
+    [style.left.px]="avatarPopup().x"
+    [style.max-height.px]="avatarPopup().maxHeight"
+    (mouseenter)="keepAvatarPopup()"
+    (mouseleave)="hideAvatarPopup()">
+    @for (assign of avatarPopup().assignments; track $index) {
+        @if (getContactInfo(assign); as info) {
+        <div class="avatar-popup-row">
+            <div class="avatar avatar-sm" [style.background-color]="info.color">
+                {{ info.initials }}
+            </div>
+            <span class="avatar-popup-name">{{ assign.contact?.name || assign.name }}</span>
+        </div>
+        }
+    }
+</div>
+}

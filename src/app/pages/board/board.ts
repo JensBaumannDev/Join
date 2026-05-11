@@ -9,8 +9,6 @@ import {
   CdkDropListGroup,
   CdkDropList,
   CdkDrag,
-  moveItemInArray,
-  transferArrayItem
 } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../services/task.service';
 import { AvatarService } from '../../services/avatar.service';
@@ -31,9 +29,20 @@ export class Board implements OnInit {
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
   private router = inject(Router);
-  
+
   screenWidth = signal(window.innerWidth);
-  
+
+  /** State for the avatar hover popup */
+  avatarPopup = signal<{ visible: boolean; x: number; bottom: number; maxHeight: number; assignments: any[] }>({
+    visible: false,
+    x: 0,
+    bottom: 0,
+    maxHeight: 400,
+    assignments: [],
+  });
+
+  private hideTimeout: any = null;
+
   @HostListener('window:resize')
   onResize() {
     this.screenWidth.set(window.innerWidth);
@@ -53,6 +62,47 @@ export class Board implements OnInit {
       return;
     }
     this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
+  }
+
+  /** Returns done/total/percentage stats for subtasks of a task */
+  getSubtaskStats(task: Task): { done: number; total: number; percentage: number } | null {
+    const subtasks = (task as any).subtasks;
+    if (!subtasks || subtasks.length === 0) return null;
+    const total = subtasks.length;
+    const done = subtasks.filter((s: any) => s.done || s.completed || s.is_done).length;
+    return { done, total, percentage: Math.round((done / total) * 100) };
+  }
+
+  /** Shows the avatar popup on hover of the overflow indicator */
+  showAvatarPopup(event: MouseEvent, task: Task) {
+    clearTimeout(this.hideTimeout);
+    const target = event.currentTarget as HTMLElement;
+    const card = target.closest('.task-card') as HTMLElement;
+    const rect = (card || target).getBoundingClientRect();
+    const assignments = this.getTaskAssignments(task);
+    const headerHeight = 95;
+    const bottom = window.innerHeight - rect.bottom + 20;
+    const availableHeight = rect.top - headerHeight - 8;
+    const maxHeight = Math.min(400, Math.max(50, availableHeight));
+    this.avatarPopup.set({
+      visible: true,
+      x: rect.left,
+      bottom,
+      maxHeight,
+      assignments,
+    });
+  }
+
+  /** Keeps the popup open when hovering over it */
+  keepAvatarPopup() {
+    clearTimeout(this.hideTimeout);
+  }
+
+  /** Hides the avatar popup with a short delay so the user can move the mouse onto it */
+  hideAvatarPopup() {
+    this.hideTimeout = setTimeout(() => {
+      this.avatarPopup.update(p => ({ ...p, visible: false }));
+    }, 120);
   }
 
   /** All tasks filtered by the search term */
@@ -163,21 +213,46 @@ export class Board implements OnInit {
 
   /** Handles the drag and drop event for moving tasks between columns */
   async drop(event: CdkDragDrop<Task[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    const movedTask = event.previousContainer.data[event.previousIndex];
+    const isSameColumn = event.previousContainer === event.container;
+    const newStatus = event.container.id;
+
+    // Work on a mutable copy of the global tasks array
+    const allTasks = [...this.taskService.tasks()];
+    const globalFromIdx = allTasks.findIndex(t => t.id === movedTask.id);
+    if (globalFromIdx === -1) return;
+
+    if (isSameColumn) {
+      // Same column: reorder by finding the target card's global position
+      const targetTask = event.container.data[event.currentIndex];
+      if (!targetTask || targetTask.id === movedTask.id) return;
+
+      const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+      if (globalToIdx === -1) return;
+
+      allTasks.splice(globalFromIdx, 1);
+      const adjustedToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+      // Moving forward → insert after target; moving backward → insert before target
+      allTasks.splice(globalFromIdx < globalToIdx ? adjustedToIdx + 1 : adjustedToIdx, 0, movedTask);
+      this.taskService.tasks.set(allTasks);
     } else {
-      const task = event.previousContainer.data[event.previousIndex];
-      const newStatus = event.container.id;
+      // Cross-column: update status and insert at the exact drop position
+      const [removedTask] = allTasks.splice(globalFromIdx, 1);
+      const updatedTask = { ...removedTask, status: newStatus };
 
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      const targetColumnData = event.container.data;
+      if (event.currentIndex < targetColumnData.length) {
+        // Insert before the card currently at the drop position
+        const targetTask = targetColumnData[event.currentIndex];
+        const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+        allTasks.splice(globalToIdx !== -1 ? globalToIdx : allTasks.length, 0, updatedTask);
+      } else {
+        // Dropped at the end of the column
+        allTasks.push(updatedTask);
+      }
 
-      await this.taskService.updateTaskStatus(task.id, newStatus);
-      await this.taskService.getTasks();
+      this.taskService.tasks.set(allTasks);
+      await this.taskService.updateTaskStatus(movedTask.id, newStatus);
     }
   }
 }

@@ -367,10 +367,16 @@
         This field is requiredee
       </div>
 
-      <div class="add-task__action-buttons">
-        <button type="button" class="btn btn-secondary" (click)="clear()">
-          Clear
-          <img src="icons/other/close.svg" alt="close" />
+    <div class="add-task__actions">
+      @if (taskToEdit) {
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          Ok
+          <img src="icons/other/check.svg" alt="" />
+        </button>
+      } @else {
+        <button type="button" class="btn btn-secondary" (click)="onCancelOrClear()">
+          {{ isDialog ? 'Cancel' : 'Clear' }}
+          <img src="icons/other/close.svg" alt="" />
         </button>
 
         <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
