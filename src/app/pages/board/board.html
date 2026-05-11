@@ -68,8 +68,9 @@
 
 @if (avatarPopup().visible) {
 <div class="avatar-popup"
-    [style.top.px]="avatarPopup().y"
+    [style.bottom.px]="avatarPopup().bottom"
     [style.left.px]="avatarPopup().x"
+    [style.max-height.px]="avatarPopup().maxHeight"
     (mouseenter)="keepAvatarPopup()"
     (mouseleave)="hideAvatarPopup()">
     @for (assign of avatarPopup().assignments; track $index) {
