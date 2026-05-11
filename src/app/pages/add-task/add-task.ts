@@ -6,6 +6,7 @@ import { Supabase } from '../contacts/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
+import { Task } from '../../interfaces/task.interface';
 
 @Component({
   selector: 'app-add-task',
@@ -17,6 +18,8 @@ import { ToastService } from '../../services/toast.service';
 export class AddTask implements OnInit {
   @Input() isDialog = false;
   @Input() initialStatus = 'To do';
+  @Input() taskToEdit: Task | null = null;
+  @Input() subtasksToEdit: any[] = [];
   @Output() taskCreated = new EventEmitter<void>();
   @Output() cancelClicked = new EventEmitter<void>();
 
@@ -76,6 +79,37 @@ export class AddTask implements OnInit {
 
   async ngOnInit() {
     await Promise.all([this.contactService.getContacts(), this.taskService.getCategories()]);
+    if (this.taskToEdit) {
+      this.prefillForm();
+    }
+  }
+
+  private prefillForm() {
+    const task = this.taskToEdit!;
+    const assignedNames = this.parseAssignedTo(task.assigned_to);
+    this.selectedContacts = this.contactService.contacts().filter(c => assignedNames.includes(c.name));
+    this.subtaskList = this.subtasksToEdit.map(s => ({ title: s.title, completed: s.completed }));
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      dueDate: task.due_date,
+      priority: task.priority,
+      category: task.category,
+      assignedTo: this.selectedContacts.map(c => c.name),
+    });
+  }
+
+  private parseAssignedTo(val: any): string[] {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string') {
+      const trimmed = val.trim();
+      if (trimmed.startsWith('[')) {
+        try { return JSON.parse(trimmed); } catch { }
+      }
+      return trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
+    }
+    return [];
   }
 
   toggleDropdown() {
@@ -144,25 +178,31 @@ export class AddTask implements OnInit {
     try {
       if (this.taskForm.valid) {
         const formValue = this.taskForm.value;
-        const newTask = {
+        const taskData = {
           title: formValue.title,
           description: formValue.description,
           due_date: formValue.dueDate,
           priority: formValue.priority,
           category: formValue.category,
           assigned_to: formValue.assignedTo,
-          status: this.initialStatus,
         };
 
-        await this.taskService.createTask(newTask, this.subtaskList);
-        this.toastService.show('Task added to board', true);
-
-        if (this.isDialog) {
+        if (this.taskToEdit) {
+          await this.taskService.updateTask(String(this.taskToEdit.id), taskData, this.subtaskList);
+          this.toastService.show('Task updated');
           this.taskCreated.emit();
         } else {
-          setTimeout(() => {
-            this.router.navigate(['/board']);
-          }, 1000);
+          const newTask = { ...taskData, status: this.initialStatus };
+          await this.taskService.createTask(newTask, this.subtaskList);
+          this.toastService.show('Task added to board', true);
+
+          if (this.isDialog) {
+            this.taskCreated.emit();
+          } else {
+            setTimeout(() => {
+              this.router.navigate(['/board']);
+            }, 1000);
+          }
         }
       } else {
         this.taskForm.markAllAsTouched();
