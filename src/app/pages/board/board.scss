@@ -9,7 +9,7 @@
 
 .board-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     width: 100%;
     margin-top: 48px;
@@ -217,11 +217,12 @@
     }
 
     &::-webkit-scrollbar-button {
-        display: none; 
+        display: none;
         width: 0;
         height: 0;
     }
 }
+
 @keyframes popup-in {
     from {
         opacity: 0;
@@ -257,6 +258,12 @@
 }
 
 /* #region RESPONSIVE */
+@media (max-width: 1350px) {
+    .board-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @include tablet-lg {
     .board-container {
         padding: 48px 16px 100px 16px;
