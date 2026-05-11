@@ -1,6 +1,8 @@
 @use '../../../styles/abstracts' as *;
 
 .add-task {
+  @include flex(column);
+  gap: clamp(40px, 3.5vw, 50px);
   width: 100%;
   max-width: 1208px;
   padding: 80px 32px 0 100px;
@@ -8,27 +10,22 @@
   box-sizing: border-box;
   @include fluid-text(16, 20);
 
-  &__title {
-    margin: 0 0 32px 0;
-  }
-
   &__form {
+    @include flex(column, nowrap, flex-start, flex-start);
+    gap: 130px;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: flex-start;
   }
 
-  &__grid {
+  &__columns {
     @include flex;
     gap: 48px;
-    flex: 1 1 100%;
+    width: 100%;
   }
 
   &__column {
     flex: 1;
     @include flex(column);
+    gap: 35px;
   }
 
   &__divider {
@@ -37,16 +34,14 @@
   }
 
   &__field {
+    @include flex(column);
+    gap: 8px;
     width: 100%;
-    padding-top: 16px;
   }
 
   &__label {
-    display: flex;
-    align-items: center;
-    font-weight: 400;
+    @include flex(row, wrap, flex-start, center);
     color: $color-primary;
-    padding-bottom: 8px;
   }
 
   &__required {
@@ -54,7 +49,6 @@
   }
 
   &__required-info {
-    margin-top: 0;
     @include flex(row, wrap, flex-start, self-end);
     gap: 4px;
     color: $color-primary;
@@ -63,11 +57,10 @@
   }
 
   &__required-info--mobile {
-  display: none;
-}
+    display: none;
+  }
 
   &__error {
-    margin-top: 4px;
     font-size: 16px;
     color: $color-error;
   }
@@ -88,9 +81,7 @@
     outline: none;
     box-sizing: border-box;
     transition: border 0.2s ease;
-    margin-bottom: 8px;
     cursor: pointer;
-   
 
     &:focus {
       border: 1px solid $color-highlight;
@@ -110,7 +101,6 @@
   &__priority-buttons {
     @include flex;
     gap: 16px;
-    margin-top: 8px;
   }
 
   &__priority-button {
@@ -165,6 +155,8 @@
   &__assigned,
   &__category {
     position: relative;
+    @include flex(column);
+    gap: 16px;
     width: 100%;
   }
 
@@ -223,13 +215,15 @@
     top: 56px;
     left: 0;
     width: 100%;
+    @include flex(column);
+    gap: 4px;
     background: $color-white;
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
     max-height: 240px;
     overflow-y: auto;
     z-index: 100;
-    padding: 8px 0;
+    padding: 8px;
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -248,7 +242,6 @@
     cursor: pointer;
     transition: 0.2s ease;
     border-radius: 10px;
-    margin: 2px 8px;
 
     &:hover {
       background: $color-text-muted;
@@ -292,7 +285,6 @@
 
   &__selected-contacts {
     @include flex(row, wrap, flex-start, center);
-    margin-top: 16px;
 
     app-avatar {
       margin-right: -8px;
@@ -310,6 +302,8 @@
     border-radius: 50%;
     background: $color-primary;
     color: $color-white;
+    border: none;
+    font: inherit;
     @include flex(row, wrap, center, center);
     cursor: pointer;
   }
@@ -339,19 +333,11 @@
 
   &__actions {
     @include flex(row, wrap, space-between);
-    margin-top: 130px;
-    padding-bottom: 80px;
     gap: 16px;
-    flex: 0 1 auto;
-    align-self: center;
     width: 100%;
   }
 
-  &__action-buttons {
-    @include flex(row, wrap, flex-end, center);
-    gap: 16px;
-  }
-
+  &__action-buttons,
   &__buttons {
     @include flex(row, wrap, flex-end, center);
     gap: 16px;
@@ -368,7 +354,6 @@
     right: 12px;
     transform: translateY(-50%);
     @include flex(row, wrap, flex-start, center);
-    gap: 0;
   }
 
   &__subtask-btn,
@@ -394,7 +379,6 @@
   }
 
   &__subtask-list {
-    margin-top: 8px;
     padding: 0;
     list-style: none;
     max-height: 120px;
@@ -420,10 +404,6 @@
     &--editing {
       padding: 0;
       background: $color-white;
-
-      &:hover {
-        background: $color-white;
-      }
     }
   }
 
@@ -439,7 +419,6 @@
 
   &__subtask-item-buttons {
     @include flex(row, wrap, flex-start, center);
-    gap: 0;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
@@ -457,7 +436,6 @@
     width: 100%;
     background: $color-white;
     border-bottom: 1px solid $color-highlight;
-    border-radius: 0;
 
     .add-task__subtask-item-buttons {
       opacity: 1;
@@ -484,13 +462,9 @@
     height: auto;
     min-height: calc(100vh - 80px);
 
-    &__title {
-      margin-bottom: 24px;
-    }
-
-    &__grid {
+    &__columns {
       flex-direction: column;
-      gap: 0;
+      gap: 35px;
     }
 
     &__divider {
@@ -513,12 +487,11 @@
 
     &__required-info--mobile {
       display: flex;
-      margin-top: 16px;
     }
 
     &__textarea {
-    resize: none;
-  }
+      resize: none;
+    }
   }
 }
 
