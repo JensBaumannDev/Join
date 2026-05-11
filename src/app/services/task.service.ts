@@ -154,6 +154,39 @@ export class TaskService {
     }
   }
 
+  /** Updates a task and replaces its subtasks */
+  async updateTask(taskId: string, taskData: any, subtasks: { title: string; completed: boolean }[] = []) {
+    const { error } = await this.supabaseService.supabase
+      .from('task')
+      .update(taskData)
+      .eq('id', taskId);
+    if (error) {
+      console.error('Update task error:', error);
+      return;
+    }
+    await this.supabaseService.supabase
+      .from('subtasks')
+      .delete()
+      .eq('task_id', taskId);
+    if (subtasks.length > 0) {
+      const subtasksWithId = subtasks.map(s => ({
+        task_id: taskId,
+        title: s.title,
+        completed: s.completed ?? false
+      }));
+      const { error: subError } = await this.supabaseService.supabase
+        .from('subtasks')
+        .insert(subtasksWithId);
+      if (subError) {
+        console.error('Update subtasks error:', subError);
+      }
+    }
+    this.tasks.update(tasks =>
+      tasks.map(t => String(t.id) === taskId ? { ...t, ...taskData } : t)
+    );
+    this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
+  }
+
   /** Deletes a task and its subtasks from Supabase */
   async deleteTask(taskId: string) {
     await this.supabaseService.supabase

@@ -1,0 +1,13 @@
+<section class="top-line top-line--edit">
+  <button class="close-button" (click)="closed.emit()">
+    <img src="icons/other/close.svg" alt="close" />
+  </button>
+</section>
+
+<app-add-task
+  [isDialog]="true"
+  [taskToEdit]="task"
+  [subtasksToEdit]="subtasks"
+  (taskCreated)="onSaved()"
+  (cancelClicked)="closed.emit()"
+/>

@@ -26,6 +26,49 @@
 
   font-weight: 400;
   @include fluid-text(16, 20);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-block: 100px;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $color-gray-form;
+  }
+
+  app-task-detail-view {
+    display: contents;
+  }
+
+  app-task-edit {
+    display: contents;
+  }
+
+  .top-line--edit {
+    justify-content: flex-end;
+  }
+
+  app-add-task {
+    .add-task {
+      padding: 0;
+      background: transparent;
+    }
+
+    .add-task__title {
+      display: none;
+    }
+
+    .add-task__actions {
+      position: sticky;
+      bottom: 0;
+      background-color: $color-white;
+    }
+  }
 }
 
 .top-line {
