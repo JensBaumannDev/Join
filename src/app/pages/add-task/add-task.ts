@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Supabase } from '../contacts/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
@@ -38,14 +38,27 @@ export class AddTask implements OnInit {
 
   editingIndex: number | null = null;
   editingValue = '';
+  minDate: string = new Date().toISOString().split('T')[0];
 
   taskForm: FormGroup;
+
+  pastDateValidators(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(control.value);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return selectedDate < today ? { pastDate: true } : null;
+  }
 
   constructor(private fb: FormBuilder) {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      dueDate: ['', Validators.required],
+      dueDate: ['', [Validators.required, this.pastDateValidators.bind(this)]],
       priority: ['Medium'],
       assignedTo: [[]],
       category: ['', Validators.required],
@@ -58,6 +71,7 @@ export class AddTask implements OnInit {
     const target = event.target as HTMLElement;
     const isAssignedClick = target.closest('.add-task__assigned');
     const isCategoryClick = target.closest('.add-task__category');
+    const isMoreClick = target.closest('.add-task__more-wrapper');
 
     if (!isAssignedClick) {
       this.dropdownOpen = false;
@@ -66,6 +80,11 @@ export class AddTask implements OnInit {
     if (!isCategoryClick) {
       this.categoryDropdownOpen = false;
     }
+
+    if (!isMoreClick) {
+      this.moreContactsOpen = false;
+    }
+    
   }
 
   get filteredContacts() {
