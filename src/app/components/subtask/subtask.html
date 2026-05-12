@@ -35,9 +35,9 @@
     </div>
   </div>
 
-  <ul class="subtask__list">
+  <div class="subtask__list">
     @for (subtask of subtasks; track $index) {
-      <li
+      <div
         class="subtask__item"
         [class.subtask__item--editing]="editingIndex === $index"
       >
@@ -75,9 +75,9 @@
             </button>
           </div>
         }
-      </li>
+      </div>
     }
-  </ul>
+  </div>
 } @else if (!isLoading() && total() > 0) {
   <div class="progress-section" [title]="tooltip()">
     <div class="progress-bar-bg">

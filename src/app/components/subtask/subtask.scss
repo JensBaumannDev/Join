@@ -82,7 +82,6 @@
   }
 
   &__list {
-    list-style: none;
     max-height: 120px;
     overflow-y: auto;
     margin-top: 8px;
@@ -90,7 +89,7 @@
   }
 
   &__item {
-    @include flex(row, wrap, space-between, center);
+    @include flex(row, nowrap, space-between, flex-start);
     min-width: 0;
     padding: 4px 16px;
     min-height: 32px;
@@ -113,8 +112,9 @@
   }
 
   &__content {
-    @include flex(row, wrap, flex-start, center);
+    @include flex(row, nowrap, flex-start, flex-start);
     gap: 12px;
+    flex: 1;
     min-width: 0;
     overflow: hidden;
 
@@ -130,7 +130,8 @@
   }
 
   &__item-buttons {
-    @include flex(row, wrap, flex-start, center);
+    @include flex(row, nowrap, flex-start, center);
+    flex-shrink: 0;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
