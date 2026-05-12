@@ -14,32 +14,17 @@
   position: relative;
   @include flex(column, nowrap, flex-start, stretch);
   gap: 24px;
-  width: clamp(290px, 80vw, 525px);
+  width: clamp(300px, 90vw, 525px);
+  max-width: calc(100vw - 20px);
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
+  padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(10px, calc(1.135vw + 6.365px), 20px) clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
   margin: 10px;
 
   font-weight: 400;
   @include fluid-text(16, 20);
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    margin-block: 100px;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: $color-gray-form;
-  }
 
   app-task-detail-view {
     display: contents;
@@ -49,12 +34,24 @@
     display: contents;
   }
 
+  .task-edit-body {
+    @include flex(column);
+    flex: 1;
+    min-height: 0;
+  }
   .top-line--edit {
     justify-content: flex-end;
   }
 
   app-add-task {
+    @include flex(column);
+    flex: 1;
+    min-height: 0;
+
     .add-task {
+      @include flex(column);
+      flex: 1;
+      min-height: 0;
       padding: 0;
       background: transparent;
     }
@@ -63,10 +60,27 @@
       display: none;
     }
 
+    .add-task__form {
+      @include flex(column, nowrap);
+      flex: 1;
+      min-height: 0;
+      gap: 0;
+    }
+
+    .add-task__columns {
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      overflow-y: auto;
+      padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+      @include scrollbar();
+    }
+
     .add-task__actions {
-      position: sticky;
-      bottom: 0;
+      justify-content: flex-end;
       background-color: $color-white;
+      padding-top: 10px;
     }
   }
 }
@@ -94,6 +108,17 @@
       width: 20px;
     }
   }
+}
+
+.detail-content {
+  @include flex(column, nowrap, flex-start, stretch);
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  gap: clamp(16px, calc(1.14vw + 12.36px), 24px);
+  padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+  @include scrollbar();
 }
 
 .dialog-title {
@@ -180,6 +205,7 @@
     cursor: pointer;
 
     .checkbox-icon {
+      flex-shrink: 0;
       width: 24px;
       height: 24px;
       cursor: pointer;
@@ -189,12 +215,21 @@
         border-radius: 50%;
       }
     }
+
+    .subtask-text {
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
   }
 }
 
 .dialog-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: $color-white;
   @include flex(row, nowrap, flex-end, center);
   gap: 10px;
+  padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
 
   .separator {
     width: 1px;

@@ -19,6 +19,28 @@
     #{$maxSize * 1rem});
 }
 
+@mixin scrollbar($width: 6px, $thumb-color: vars.$color-gray-form, $track-margin: 0px) {
+  scrollbar-width: thin;
+  scrollbar-color: #{$thumb-color} transparent;
+
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+    @if $track-margin != 0px {
+      margin-block: $track-margin;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+    border-radius: 10px;
+  }
+}
+
 @mixin flex($flex-direction: row, $flex-wrap: wrap, $justify-content: flex-start, $align-items: stretch) {
   display: flex;
   flex-direction: $flex-direction;

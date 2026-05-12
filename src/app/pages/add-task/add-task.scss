@@ -1,34 +1,31 @@
 @use '../../../styles/abstracts' as *;
 
 .add-task {
+  @include flex(column);
+  gap: clamp(40px, 3.5vw, 50px);
   width: 100%;
   max-width: 1208px;
-  padding: 80px 32px 0 100px;
+  padding: 110px 135px 80px 100px;
   background: $color-bg-content;
   box-sizing: border-box;
   @include fluid-text(16, 20);
 
-  &__title {
-    margin: 0 0 32px 0;
-  }
-
   &__form {
+    @include flex(column, nowrap, flex-start, flex-start);
+    gap: 130px;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: flex-start;
   }
 
-  &__grid {
+  &__columns {
     @include flex;
     gap: 48px;
-    flex: 1 1 100%;
+    width: 100%;
   }
 
   &__column {
     flex: 1;
     @include flex(column);
+    gap: 35px;
   }
 
   &__divider {
@@ -37,16 +34,14 @@
   }
 
   &__field {
+    @include flex(column);
+    gap: 8px;
     width: 100%;
-    padding-top: 16px;
   }
 
   &__label {
-    display: flex;
-    align-items: center;
-    font-weight: 400;
+    @include flex(row, wrap, flex-start, center);
     color: $color-primary;
-    padding-bottom: 8px;
   }
 
   &__required {
@@ -54,7 +49,6 @@
   }
 
   &__required-info {
-    margin-top: 0;
     @include flex(row, wrap, flex-start, self-end);
     gap: 4px;
     color: $color-primary;
@@ -63,11 +57,10 @@
   }
 
   &__required-info--mobile {
-  display: none;
-}
+    display: none;
+  }
 
   &__error {
-    margin-top: 4px;
     font-size: 16px;
     color: $color-error;
   }
@@ -77,7 +70,6 @@
   }
 
   &__input,
-  &__textarea,
   &__select {
     width: 100%;
     height: 48px;
@@ -88,9 +80,7 @@
     outline: none;
     box-sizing: border-box;
     transition: border 0.2s ease;
-    margin-bottom: 8px;
     cursor: pointer;
-   
 
     &:focus {
       border: 1px solid $color-highlight;
@@ -99,18 +89,33 @@
     &.add-task__input--subtask {
       padding-right: 80px;
     }
+
+    &[type='date']::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
   }
 
   &__textarea {
+    width: 100%;
     min-height: 120px;
-    padding-top: 16px;
+    padding: clamp(10px, calc(0.68vw + 7.82px), 16px);
+    border: 1px solid $color-gray-form;
+    border-radius: 10px;
+    background: $color-white;
+    outline: none;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+    cursor: pointer;
     resize: vertical;
+
+    &:focus {
+      border: 1px solid $color-highlight;
+    }
   }
 
   &__priority-buttons {
     @include flex;
     gap: 16px;
-    margin-top: 8px;
   }
 
   &__priority-button {
@@ -135,20 +140,20 @@
 
     &--active {
       border: none;
-      color: white;
+      color: $color-white;
       box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     }
 
     &--urgent {
-      background: #ff3d00;
+      background: $color-priority-urgent;
     }
 
     &--medium {
-      background: #ffa800;
+      background: $color-priority-medium;
     }
 
     &--low {
-      background: #7ae229;
+      background: $color-priority-low;
     }
   }
 
@@ -162,9 +167,20 @@
     filter: brightness(0) invert(1);
   }
 
-  &__assigned,
+  &__assigned {
+    position: relative;
+    @include flex(column);
+    width: 100%;
+
+    &--open {
+      z-index: 120;
+    }
+  }
+
   &__category {
     position: relative;
+    @include flex(column);
+    gap: 16px;
     width: 100%;
   }
 
@@ -180,6 +196,7 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: border 0.2s ease;
+    z-index: 110;
 
     &:hover {
       border-color: $color-highlight;
@@ -188,6 +205,7 @@
 
   &__assigned-search {
     flex: 1;
+    min-width: 0;
     border: none;
     outline: none;
     background: transparent;
@@ -220,48 +238,62 @@
 
   &__dropdown {
     position: absolute;
-    top: 56px;
+    top: 0;
     left: 0;
     width: 100%;
     background: $color-white;
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-    max-height: 240px;
-    overflow-y: auto;
+    padding-top: 48px;
     z-index: 100;
-    padding: 8px 0;
+  }
+
+  &__dropdown-list {
+    @include flex(column, nowrap);
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
 
     &::-webkit-scrollbar {
       width: 6px;
     }
 
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 10px;
+    }
+
     &::-webkit-scrollbar-thumb {
-      background: #ccc;
+      background-color: $color-gray-form;
       border-radius: 10px;
     }
   }
 
   &__dropdown-option {
-    height: 56px;
-    padding: 0 16px;
+    height: 50px;
+    padding: 7px 16px;
     @include flex(row, wrap, space-between, center);
     cursor: pointer;
     transition: 0.2s ease;
     border-radius: 10px;
-    margin: 2px 8px;
 
     &:hover {
-      background: $color-text-muted;
+      background: $color-gray-light;
     }
 
     &:active {
-      background: $color-secondary-hover;
-      color: white;
+      background: $color-primary;
+      color: $color-white;
     }
 
     &--selected {
-      background: $color-primary-dark;
-      color: white;
+      background: $color-secondary-hover;
+      color: $color-white;
+
+      &:hover,
+      &:active {
+        background: $color-primary-hover;
+      }
     }
   }
 
@@ -276,8 +308,8 @@
     padding: 4px;
     border-radius: 50%;
     transition:
-    background-color 0.2s ease,
-    filter 0.2s ease;
+      background-color 0.2s ease,
+      filter 0.2s ease;
     flex-shrink: 0;
   }
 
@@ -293,6 +325,10 @@
   &__selected-contacts {
     @include flex(row, wrap, flex-start, center);
     margin-top: 16px;
+
+    &:empty {
+      margin-top: 0;
+    }
 
     app-avatar {
       margin-right: -8px;
@@ -310,6 +346,8 @@
     border-radius: 50%;
     background: $color-primary;
     color: $color-white;
+    border: none;
+    font: inherit;
     @include flex(row, wrap, center, center);
     cursor: pointer;
   }
@@ -333,164 +371,33 @@
     transition: background 0.2s ease;
 
     &:hover {
-      background: #f2f2f2;
+      background: $color-gray-light;
     }
   }
 
   &__actions {
     @include flex(row, wrap, space-between);
-    margin-top: 130px;
-    padding-bottom: 80px;
     gap: 16px;
-    flex: 0 1 auto;
-    align-self: center;
     width: 100%;
   }
 
-  &__action-buttons {
-    @include flex(row, wrap, flex-end, center);
-    gap: 16px;
-  }
-
+  &__action-buttons,
   &__buttons {
     @include flex(row, wrap, flex-end, center);
-    gap: 16px;
-  }
-
-  &__subtask-input-wrapper {
-    position: relative;
-    width: 100%;
-  }
-
-  &__subtask-buttons {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    @include flex(row, wrap, flex-start, center);
-    gap: 0;
-  }
-
-  &__subtask-btn,
-  &__subtask-item-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    @include flex(row, wrap, center, center);
-    cursor: pointer;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background-color: $color-gray-light;
-    }
-
-    img {
-      width: 18px;
-      height: 18px;
-      object-fit: contain;
-    }
-  }
-
-  &__subtask-list {
-    margin-top: 8px;
-    padding: 0;
-    list-style: none;
-    max-height: 120px;
-    overflow-y: auto;
-  }
-
-  &__subtask-item {
-    @include flex(row, wrap, space-between, center);
-    padding: 4px 16px;
-    min-height: 32px;
-    border-radius: 10px;
-    transition: background 0.2s ease;
-    cursor: default;
-
-    &:hover:not(.add-task__subtask-item--editing) {
-      background: #eeeeee;
-
-      .add-task__subtask-item-buttons {
-        opacity: 1;
-      }
-    }
-
-    &--editing {
-      padding: 0;
-      background: $color-white;
-
-      &:hover {
-        background: $color-white;
-      }
-    }
-  }
-
-  &__subtask-content {
-    @include flex(row, wrap, flex-start, center);
-    gap: 12px;
-  }
-
-  &__subtask-dot {
-    font-size: 16px;
-    line-height: 1;
-  }
-
-  &__subtask-item-buttons {
-    @include flex(row, wrap, flex-start, center);
-    gap: 0;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  &__subtask-divider {
-    width: 1px;
-    height: 32px;
-    background: $color-gray-form;
-    margin: 0 4px;
-  }
-
-  &__subtask-edit-mode {
-    @include flex(row, wrap, space-between, center);
-    padding: 4px 16px;
-    width: 100%;
-    background: $color-white;
-    border-bottom: 1px solid $color-highlight;
-    border-radius: 0;
-
-    .add-task__subtask-item-buttons {
-      opacity: 1;
-    }
-  }
-
-  &__subtask-edit-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    color: $color-text;
-  }
-
-  &__category-placeholder {
-    color: $color-text;
+    gap: 10px;
+    z-index: 130;
   }
 }
 
 @include tablet-xl {
   .add-task {
-    padding: 48px 16px 180px 16px;
+    padding: 48px 14px 100px 14px;
     height: auto;
     min-height: calc(100vh - 80px);
 
-    &__title {
-      margin-bottom: 24px;
-    }
-
-    &__grid {
+    &__columns {
       flex-direction: column;
-      gap: 0;
+      gap: 35px;
     }
 
     &__divider {
@@ -498,13 +405,12 @@
     }
 
     &__actions {
-      position: fixed;
+      position: sticky;
       bottom: 80px;
-      inset-inline: 0;
       justify-content: flex-end;
       background: $color-bg-content;
-      padding: 12px 16px;
-      z-index: 50;
+      padding: 12px 0;
+      z-index: 130;
     }
 
     &__required-info--desktop {
@@ -513,12 +419,15 @@
 
     &__required-info--mobile {
       display: flex;
-      margin-top: 16px;
     }
 
     &__textarea {
-    resize: none;
-  }
+      resize: none;
+    }
+
+    &__form {
+      gap: 20px;
+    }
   }
 }
 
@@ -547,13 +456,9 @@
     }
 
     &__input,
-    &__assigned-input, 
+    &__assigned-input,
     &__category-input {
       padding: 0 6px;
-    }
-
-    &__textarea {
-      padding: 16px 6px 0 6px;
     }
   }
 }

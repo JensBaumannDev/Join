@@ -4,10 +4,12 @@
   </button>
 </section>
 
-<app-add-task
-  [isDialog]="true"
-  [taskToEdit]="task"
-  [subtasksToEdit]="subtasks"
-  (taskCreated)="onSaved()"
-  (cancelClicked)="closed.emit()"
-/>
+<div class="task-edit-body">
+  <app-add-task
+    [isDialog]="true"
+    [taskToEdit]="task"
+    [subtasksToEdit]="subtasks"
+    (taskCreated)="onSaved()"
+    (cancelClicked)="closed.emit()"
+  />
+</div>

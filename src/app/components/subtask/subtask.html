@@ -1,9 +1,95 @@
-@if (!isLoading() && total() > 0) {
-<div class="progress-section" [title]="tooltip()">
-  <div class="progress-bar-bg">
-    <div class="progress-bar-fill" [style.width.%]="percentage()" [attr.aria-valuenow]="percentage()" aria-valuemin="0"
-      aria-valuemax="100" role="progressbar"></div>
+@if (isFormMode) {
+  <div class="subtask__wrapper">
+    <input
+      id="subtaskInput"
+      class="subtask__field"
+      [(ngModel)]="inputValue"
+      placeholder="Add new subtask"
+      (focus)="inputFocus = true"
+      (blur)="inputFocus = !!inputValue"
+      (keydown.enter)="$event.preventDefault(); add()"
+    />
+
+    <div class="subtask__buttons">
+      @if (inputFocus || inputValue) {
+        <button
+          type="button"
+          class="subtask__btn"
+          (mousedown)="$event.preventDefault()"
+          (click)="inputValue = ''; inputFocus = false"
+        >
+          <img src="icons/other/close.svg" alt="Clear" />
+        </button>
+
+        <div class="subtask__divider" aria-hidden="true"></div>
+
+        <button
+          type="button"
+          class="subtask__btn"
+          (mousedown)="$event.preventDefault()"
+          (click)="add(); inputFocus = false"
+        >
+          <img src="icons/other/check.svg" alt="Confirm" />
+        </button>
+      }
+    </div>
   </div>
-  <span class="subtask-label">{{ done() }}/{{ total() }} Subtasks</span>
-</div>
+
+  <div class="subtask__list">
+    @for (subtask of subtasks; track $index) {
+      <div
+        class="subtask__item"
+        [class.subtask__item--editing]="editingIndex === $index"
+      >
+        @if (editingIndex === $index) {
+          <div class="subtask__edit-mode">
+            <input
+              class="subtask__edit-field"
+              [value]="editingValue"
+              autofocus
+              (input)="editingValue = $any($event.target).value"
+              (keydown.enter)="save($index)"
+            />
+            <div class="subtask__item-buttons">
+              <button type="button" class="subtask__item-btn" (click)="remove($index)">
+                <img src="icons/other/delete.svg" alt="Delete" />
+              </button>
+              <div class="subtask__divider" aria-hidden="true"></div>
+              <button type="button" class="subtask__item-btn" (click)="save($index)">
+                <img src="icons/other/check.svg" alt="Save" />
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="subtask__content">
+            <span class="subtask__dot">•</span>
+            <span>{{ subtask.title }}</span>
+          </div>
+          <div class="subtask__item-buttons">
+            <button type="button" class="subtask__item-btn" (click)="edit($index)">
+              <img src="icons/other/edit.svg" alt="Edit" />
+            </button>
+            <div class="subtask__divider" aria-hidden="true"></div>
+            <button type="button" class="subtask__item-btn" (click)="remove($index)">
+              <img src="icons/other/delete.svg" alt="Delete" />
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else if (!isLoading() && total() > 0) {
+  <div class="progress-section" [title]="tooltip()">
+    <div class="progress-bar-bg">
+      <div
+        class="progress-bar-fill"
+        [style.width.%]="percentage()"
+        [attr.aria-valuenow]="percentage()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        role="progressbar"
+      ></div>
+    </div>
+    <span class="subtask-label">{{ done() }}/{{ total() }} Subtasks</span>
+  </div>
 }
