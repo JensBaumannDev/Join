@@ -89,6 +89,10 @@
     &.add-task__input--subtask {
       padding-right: 80px;
     }
+
+    &[type='date']::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
   }
 
   &__textarea {
