@@ -140,20 +140,20 @@
 
     &--active {
       border: none;
-      color: white;
+      color: $color-white;
       box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     }
 
     &--urgent {
-      background: #ff3d00;
+      background: $color-priority-urgent;
     }
 
     &--medium {
-      background: #ffa800;
+      background: $color-priority-medium;
     }
 
     &--low {
-      background: #7ae229;
+      background: $color-priority-low;
     }
   }
 
@@ -371,7 +371,7 @@
     transition: background 0.2s ease;
 
     &:hover {
-      background: #f2f2f2;
+      background: $color-gray-light;
     }
   }
 
@@ -460,6 +460,5 @@
     &__category-input {
       padding: 0 6px;
     }
-
   }
 }

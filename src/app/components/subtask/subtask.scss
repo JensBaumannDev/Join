@@ -98,7 +98,7 @@
     cursor: pointer;
 
     &:hover:not(.subtask__item--editing) {
-      background: #eeeeee;
+      background: $color-gray-light;
 
       .subtask__item-buttons {
         opacity: 1;
