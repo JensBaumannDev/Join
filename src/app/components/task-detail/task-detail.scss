@@ -100,6 +100,12 @@
   }
 }
 
+.detail-content {
+  @include flex(column, nowrap, flex-start, stretch);
+  overflow-y: auto;
+  gap: 24px;
+}
+
 .dialog-title {
   overflow-wrap: anywhere;
   @include fluid-text(30, 60);
