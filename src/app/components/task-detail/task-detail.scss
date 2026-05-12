@@ -14,20 +14,17 @@
   position: relative;
   @include flex(column, nowrap, flex-start, stretch);
   gap: 24px;
-  width: clamp(300px, 80vw, 525px);
+  width: clamp(300px, 90vw, 525px);
   max-width: calc(100vw - 20px);
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
-  overflow-y: auto;
-  padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
+  padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(10px, calc(1.135vw + 6.365px), 20px) clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
   margin: 10px;
 
   font-weight: 400;
   @include fluid-text(16, 20);
-
-  @include scrollbar($track-margin: 100px);
 
   app-task-detail-view {
     display: contents;
@@ -37,6 +34,13 @@
     display: contents;
   }
 
+  .task-edit-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+    @include scrollbar();
+  }
   .top-line--edit {
     justify-content: flex-end;
   }
@@ -61,6 +65,7 @@
       background-color: $color-white;
       justify-content: flex-end;
       z-index: 130;
+      padding-top: 10px;
     }
   }
 }
@@ -92,9 +97,13 @@
 
 .detail-content {
   @include flex(column, nowrap, flex-start, stretch);
+  flex: 1;
+  min-height: 0;
   min-width: 0;
   overflow-y: auto;
   gap: clamp(16px, calc(1.14vw + 12.36px), 24px);
+  padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+  @include scrollbar();
 }
 
 .dialog-title {
@@ -200,8 +209,12 @@
 }
 
 .dialog-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: $color-white;
   @include flex(row, nowrap, flex-end, center);
   gap: 10px;
+  padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
 
   .separator {
     width: 1px;
