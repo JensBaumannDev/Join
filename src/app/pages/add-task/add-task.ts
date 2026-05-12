@@ -59,7 +59,7 @@ export class AddTask implements OnInit {
       title: ['', Validators.required],
       description: [''],
       dueDate: ['', [Validators.required, this.pastDateValidators.bind(this)]],
-      priority: [''],
+      priority: ['Medium'],
       assignedTo: [[]],
       category: ['', Validators.required],
     });
@@ -207,7 +207,7 @@ export class AddTask implements OnInit {
 
   clear() {
     this.taskForm.reset({
-      priority: '',
+      priority: 'Medium',
     });
 
     this.selectedContacts = [];
