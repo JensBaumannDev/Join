@@ -127,6 +127,15 @@ export class AddTask implements OnInit {
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
+    if (this.dropdownOpen) this.categoryDropdownOpen = false;
+  }
+
+  toggleCategoryDropdown() {
+    this.categoryDropdownOpen = !this.categoryDropdownOpen;
+    if (this.categoryDropdownOpen) {
+      this.dropdownOpen = false;
+      this.contactSearchTerm = '';
+    }
   }
 
   toggleMoreContacts() {

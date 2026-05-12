@@ -128,7 +128,7 @@
             <span class="add-task__label-text"> Assigned to </span>
           </label>
 
-          <div class="add-task__assigned">
+          <div class="add-task__assigned" [class.add-task__assigned--open]="dropdownOpen">
             <div class="add-task__assigned-input" (click)="dropdownOpen = !dropdownOpen">
               <input
                 id="assignedSearch"
@@ -214,7 +214,7 @@
           <div class="add-task__category">
             <div
               class="add-task__category-input"
-              (click)="categoryDropdownOpen = !categoryDropdownOpen"
+              (click)="toggleCategoryDropdown()"
               [class.add-task__input--error]="
                 taskForm.get('category')?.invalid && taskForm.get('category')?.touched
               "

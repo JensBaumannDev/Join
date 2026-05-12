@@ -86,10 +86,12 @@
     max-height: 120px;
     overflow-y: auto;
     margin-top: 8px;
+    min-width: 0;
   }
 
   &__item {
     @include flex(row, wrap, space-between, center);
+    min-width: 0;
     padding: 4px 16px;
     min-height: 32px;
     border-radius: 10px;
@@ -113,6 +115,13 @@
   &__content {
     @include flex(row, wrap, flex-start, center);
     gap: 12px;
+    min-width: 0;
+    overflow: hidden;
+
+    span:last-child {
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
   }
 
   &__dot {

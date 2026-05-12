@@ -156,6 +156,10 @@
     position: relative;
     @include flex(column);
     width: 100%;
+
+    &--open {
+      z-index: 120;
+    }
   }
 
   &__category {
@@ -177,6 +181,7 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: border 0.2s ease;
+    z-index: 110;
 
     &:hover {
       border-color: $color-highlight;
@@ -218,21 +223,24 @@
 
   &__dropdown {
     position: absolute;
-    top: 56px;
+    padding-top: 48px;
     left: 0;
     width: 100%;
-    @include flex(column);
-    gap: 4px;
+    @include flex(column, nowrap);
     background: $color-white;
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
     max-height: 240px;
     overflow-y: auto;
     z-index: 100;
-    padding: 8px;
 
     &::-webkit-scrollbar {
       width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      margin-top: 50px;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -242,25 +250,30 @@
   }
 
   &__dropdown-option {
-    height: 56px;
-    padding: 0 16px;
+    height: 48px;
+    padding: 9px 16px;
     @include flex(row, wrap, space-between, center);
     cursor: pointer;
     transition: 0.2s ease;
     border-radius: 10px;
 
     &:hover {
-      background: $color-text-muted;
+      background: $color-gray-light;
     }
 
     &:active {
-      background: $color-secondary-hover;
-      color: white;
+      background: $color-primary;
+      color: $color-white;
     }
 
     &--selected {
-      background: $color-primary-dark;
-      color: white;
+      background: $color-secondary-hover;
+      color: $color-white;
+
+      &:hover,
+      &:active {
+        background: $color-primary-hover;
+      }
     }
   }
 

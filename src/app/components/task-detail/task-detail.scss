@@ -15,6 +15,7 @@
   @include flex(column, nowrap, flex-start, stretch);
   gap: 24px;
   width: clamp(300px, 80vw, 525px);
+  max-width: calc(100vw - 20px);
   height: auto;
   max-height: 95dvh;
   background-color: $color-white;
@@ -102,8 +103,9 @@
 
 .detail-content {
   @include flex(column, nowrap, flex-start, stretch);
+  min-width: 0;
   overflow-y: auto;
-  gap: 24px;
+  gap: clamp(16px, calc(1.14vw + 12.36px), 24px);
 }
 
 .dialog-title {
@@ -190,6 +192,7 @@
     cursor: pointer;
 
     .checkbox-icon {
+      flex-shrink: 0;
       width: 24px;
       height: 24px;
       cursor: pointer;
@@ -198,6 +201,11 @@
         background-color: $color-hover-check;
         border-radius: 50%;
       }
+    }
+
+    .subtask-text {
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
   }
 }
