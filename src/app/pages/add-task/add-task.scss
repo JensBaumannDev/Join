@@ -70,7 +70,6 @@
   }
 
   &__input,
-  &__textarea,
   &__select {
     width: 100%;
     height: 48px;
@@ -93,9 +92,21 @@
   }
 
   &__textarea {
+    width: 100%;
     min-height: 120px;
-    padding-top: 16px;
+    padding: clamp(10px, calc(0.68vw + 7.82px), 16px);
+    border: 1px solid $color-gray-form;
+    border-radius: 10px;
+    background: $color-white;
+    outline: none;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+    cursor: pointer;
     resize: vertical;
+
+    &:focus {
+      border: 1px solid $color-highlight;
+    }
   }
 
   &__priority-buttons {
@@ -369,14 +380,14 @@
   &__action-buttons,
   &__buttons {
     @include flex(row, wrap, flex-end, center);
-    gap: 16px;
+    gap: 10px;
     z-index: 130;
   }
 }
 
 @include tablet-xl {
   .add-task {
-    padding: 48px 16px 180px 16px;
+    padding: 48px 14px 100px 14px;
     height: auto;
     min-height: calc(100vh - 80px);
 
@@ -408,6 +419,10 @@
 
     &__textarea {
       resize: none;
+    }
+
+    &__form {
+      gap: 20px;
     }
   }
 }
@@ -442,8 +457,5 @@
       padding: 0 6px;
     }
 
-    &__textarea {
-      padding: 16px 6px 0 6px;
-    }
   }
 }

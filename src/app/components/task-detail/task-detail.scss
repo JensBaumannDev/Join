@@ -35,18 +35,26 @@
   }
 
   .task-edit-body {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
-    padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
-    @include scrollbar();
   }
   .top-line--edit {
     justify-content: flex-end;
   }
 
   app-add-task {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+
     .add-task {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
       padding: 0;
       background: transparent;
     }
@@ -56,15 +64,26 @@
     }
 
     .add-task__form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
       gap: 0;
     }
 
+    .add-task__columns {
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      overflow-y: auto;
+      padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+      @include scrollbar();
+    }
+
     .add-task__actions {
-      position: sticky;
-      bottom: 0;
-      background-color: $color-white;
       justify-content: flex-end;
-      z-index: 130;
+      background-color: $color-white;
       padding-top: 10px;
     }
   }
