@@ -20,7 +20,7 @@
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
-  padding: clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(10px, calc(1.135vw + 6.365px), 20px) clamp(30px, calc(2.27vw + 22.73px), 50px) clamp(20px, calc(2.27vw + 12.73px), 40px);
+  padding: 50px 40px 50px 40px;
   margin: 10px;
 
   font-weight: 400;
@@ -39,6 +39,7 @@
     flex: 1;
     min-height: 0;
   }
+
   .top-line--edit {
     justify-content: flex-end;
   }
@@ -73,7 +74,10 @@
       flex-direction: column;
       flex-wrap: nowrap;
       overflow-y: auto;
-      padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+      padding-right: 20px;
+      margin-right: -20px;
+      width: auto;
+      align-self: stretch;
       @include scrollbar();
     }
 
@@ -117,7 +121,8 @@
   min-width: 0;
   overflow-y: auto;
   gap: clamp(16px, calc(1.14vw + 12.36px), 24px);
-  padding-right: clamp(10px, calc(1.135vw + 6.365px), 20px);
+  padding-right: 20px;
+  margin-right: -20px;
   @include scrollbar();
 }
 

@@ -210,6 +210,7 @@
     outline: none;
     background: transparent;
     cursor: pointer;
+
     &::placeholder {
       color: $color-text;
     }
@@ -386,6 +387,12 @@
     @include flex(row, wrap, flex-end, center);
     gap: 10px;
     z-index: 130;
+  }
+}
+
+@media (max-width: 1350px) {
+  .add-task {
+    padding: 80px 40px;
   }
 }
 

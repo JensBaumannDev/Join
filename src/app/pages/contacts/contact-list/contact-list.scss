@@ -151,7 +151,7 @@
     width: 100%;
     @include flex(column, nowrap, flex-start, stretch);
     transition: transform 125ms ease-in-out;
-    padding: 110px 100px 0 100px;
+    padding: 80px 65px 0 65px;
 
     @include tablet-xl {
       padding: 0;

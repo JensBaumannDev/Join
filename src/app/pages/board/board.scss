@@ -2,7 +2,7 @@
 @use '../../../styles/base/' as *;
 
 .board-container {
-    padding: 80px 32px 0 100px;
+    padding: 80px 65px 0 65px;
     max-width: 1208px;
     width: 100%;
 }
@@ -264,6 +264,7 @@
 
     .column-header {
         margin-bottom: 12px;
+        width: 250px;
     }
 
     .task-list {
