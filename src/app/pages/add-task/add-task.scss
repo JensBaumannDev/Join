@@ -223,35 +223,40 @@
 
   &__dropdown {
     position: absolute;
-    padding-top: 48px;
+    top: 0;
     left: 0;
     width: 100%;
-    @include flex(column, nowrap);
     background: $color-white;
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
-    max-height: 240px;
-    overflow-y: auto;
+    padding-top: 48px;
     z-index: 100;
+  }
+
+  &__dropdown-list {
+    @include flex(column, nowrap);
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
 
     &::-webkit-scrollbar {
       width: 6px;
     }
 
     &::-webkit-scrollbar-track {
-      margin-top: 50px;
+      background: transparent;
+      border-radius: 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #ccc;
+      background-color: $color-gray-form;
       border-radius: 10px;
     }
   }
 
   &__dropdown-option {
-    height: 48px;
-    padding: 9px 16px;
+    height: 50px;
+    padding: 7px 16px;
     @include flex(row, wrap, space-between, center);
     cursor: pointer;
     transition: 0.2s ease;

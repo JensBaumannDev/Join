@@ -148,6 +148,7 @@
 
             @if (dropdownOpen) {
               <div class="add-task__dropdown">
+                <div class="add-task__dropdown-list">
                 @for (c of filteredContacts; track c.id) {
                   <div
                     class="add-task__dropdown-option"
@@ -174,6 +175,7 @@
                     />
                   </div>
                 }
+                </div>
               </div>
             }
 

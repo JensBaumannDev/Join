@@ -36,29 +36,7 @@
     overflow-x: hidden;
     margin: 10px 0;
 
-    scrollbar-width: thin;
-    scrollbar-color: #a8a8a8 transparent;
-
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #a8a8a8;
-      border-radius: 20px;
-      border: 3px solid transparent;
-      background-clip: content-box;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #888888;
-      border: 2px solid transparent;
-      background-clip: content-box;
-    }
+    @include scrollbar($width: 8px, $thumb-color: #a8a8a8);
   }
 
   &__add-btn {
