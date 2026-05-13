@@ -16,6 +16,7 @@ export class DialogService {
       enterAnimationDuration: '0',
       exitAnimationDuration: '0',
       disableClose: true,
+      autoFocus: false,
       ...options
     });
   }

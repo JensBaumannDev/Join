@@ -20,8 +20,12 @@
   max-height: 95dvh;
   background-color: $color-white;
   border-radius: 30px;
-  padding: 50px 40px 50px 40px;
+  padding: 50px 40px;
   margin: 10px;
+
+  @include mobile-md {
+    padding: 30px 20px;
+  }
 
   font-weight: 400;
   @include fluid-text(16, 20);
@@ -79,12 +83,24 @@
       width: auto;
       align-self: stretch;
       @include scrollbar();
+
+      @include mobile-md {
+        padding-right: 10px;
+        margin-right: -10px;
+      }
     }
 
     .add-task__actions {
       justify-content: flex-end;
       background-color: $color-white;
       padding-top: 10px;
+    }
+
+    @include tablet-xl {
+      .add-task__actions {
+        position: static;
+        bottom: unset;
+      }
     }
   }
 }
@@ -109,7 +125,7 @@
     }
 
     img {
-      width: 20px;
+      width: 26px;
     }
   }
 }
@@ -124,6 +140,11 @@
   padding-right: 20px;
   margin-right: -20px;
   @include scrollbar();
+
+  @include mobile-md {
+    padding-right: 5px;
+    margin-right: -5px;
+  }
 }
 
 .dialog-title {
@@ -135,6 +156,7 @@
   margin: 0;
   font-weight: 400;
   @include fluid-text(16, 20);
+  margin-right: 6px;
 }
 
 .meta-label,
