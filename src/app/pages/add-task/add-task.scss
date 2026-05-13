@@ -273,7 +273,7 @@
   &__dropdown-option {
     height: 50px;
     padding: 7px 16px;
-    @include flex(row, wrap, space-between, center);
+    @include flex(row, nowrap, space-between, center);
     cursor: pointer;
     transition: 0.2s ease;
     border-radius: 10px;
@@ -299,8 +299,18 @@
   }
 
   &__dropdown-contact {
-    @include flex(row, wrap, flex-start, center);
+    @include flex(row, nowrap, flex-start, center);
     gap: 12px;
+    min-width: 0;
+
+    span {
+      flex: 1;
+      min-width: 0;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   &__checkbox {
@@ -343,11 +353,10 @@
   &__more-count {
     width: 36px;
     height: 36px;
-    margin-left: 12px;
     border-radius: 50%;
     background: $color-primary;
     color: $color-white;
-    border: none;
+    border: 2px solid $color-white;
     font: inherit;
     @include flex(row, wrap, center, center);
     cursor: pointer;
@@ -356,24 +365,60 @@
   &__more-dropdown {
     position: absolute;
     top: 40px;
-    left: 16px;
-    min-width: 230px;
+    width: max-content;
+    min-width: 282px;
+    max-width: min(280px, 90vw);
+    max-height: 250px;
+    overflow-y: auto;
     background: $color-white;
     border-radius: 12px;
     padding: 8px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 200;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-gray-form;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 
   &__more-contact {
-    @include flex(row, wrap, flex-start, center);
-    gap: 10px;
+    @include flex(row, nowrap, flex-start, center);
+    gap: 20px;
     padding: 8px 12px;
     transition: background 0.2s ease;
 
     &:hover {
       background: $color-gray-light;
     }
+
+    span {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      line-height: 1.3;
+    }
+  }
+
+  &__subtask-item-buttons {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  &__subtask-item:hover &__subtask-item-buttons {
+    opacity: 1;
+    pointer-events: all;
   }
 
   &__actions {
@@ -401,6 +446,12 @@
     padding: 48px 14px 100px 14px;
     height: auto;
     min-height: calc(100vh - 80px);
+
+    &__subtask-item-buttons {
+      opacity: 1;
+      pointer-events: all;
+    }
+
 
     &__columns {
       flex-direction: column;
@@ -447,6 +498,15 @@
         flex: none;
       }
     }
+    &__more-dropdown {
+      left: -84px;
+    }
+
+    &__input,
+    &__assigned-input,
+    &__category-input {
+      padding: 0 6px;
+    }
   }
 }
 
@@ -459,7 +519,7 @@
     }
 
     &__more-dropdown {
-      left: -32px;
+      left: -84px;
     }
 
     &__input,

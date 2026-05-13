@@ -101,6 +101,7 @@
 
       .subtask__item-buttons {
         opacity: 1;
+        pointer-events: all;
       }
     }
 
@@ -132,6 +133,7 @@
     @include flex(row, nowrap, flex-start, center);
     flex-shrink: 0;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.2s ease;
   }
 
@@ -161,5 +163,14 @@
     background: transparent;
     font-family: inherit;
     color: $color-text;
+  }
+}
+
+@include tablet-xl {
+  .subtask {
+    &__item-buttons {
+      opacity: 1;
+      pointer-events: all;
+    }
   }
 }
