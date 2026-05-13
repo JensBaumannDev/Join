@@ -47,7 +47,8 @@ export class TaskService {
   async getTasks() {
     const { data, error } = await this.supabaseService.supabase
       .from('task')
-      .select('*');
+      .select('*')
+      .order('position', { ascending: true, nullsFirst: false });
 
     if (error) {
       console.error('Task loading error:', error);
@@ -123,6 +124,17 @@ export class TaskService {
     if (error) {
       console.error('Update error:', error);
     }
+  }
+
+  /** Persists the position of all tasks based on their current signal order */
+  async updateTaskPositions(tasks: Task[]) {
+    const updates = tasks.map((task, index) =>
+      this.supabaseService.supabase
+        .from('task')
+        .update({ position: index })
+        .eq('id', task.id)
+    );
+    await Promise.all(updates);
   }
 
   /** Fetches subtasks for a given taskId from Supabase */

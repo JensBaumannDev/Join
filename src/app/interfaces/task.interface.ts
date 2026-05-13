@@ -6,6 +6,7 @@ export interface Task {
   category: string;
   status: string;
   priority: string;
+  position?: number;
   subtasks?: any[];
   assigned_to: string[]
   task_assignments?: any[];
