@@ -235,6 +235,7 @@ export class Board implements OnInit {
       // Moving forward → insert after target; moving backward → insert before target
       allTasks.splice(globalFromIdx < globalToIdx ? adjustedToIdx + 1 : adjustedToIdx, 0, movedTask);
       this.taskService.tasks.set(allTasks);
+      await this.taskService.updateTaskPositions(allTasks);
     } else {
       // Cross-column: update status and insert at the exact drop position
       const [removedTask] = allTasks.splice(globalFromIdx, 1);
@@ -252,7 +253,10 @@ export class Board implements OnInit {
       }
 
       this.taskService.tasks.set(allTasks);
-      await this.taskService.updateTaskStatus(movedTask.id, newStatus);
+      await Promise.all([
+        this.taskService.updateTaskStatus(movedTask.id, newStatus),
+        this.taskService.updateTaskPositions(allTasks),
+      ]);
     }
   }
 }
