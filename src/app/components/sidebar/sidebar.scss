@@ -118,7 +118,7 @@
     top: auto;
     padding: 0;
     z-index: $z-index-sticky;
-    overflow: hidden;
+    overflow: clip;
   }
 
   .sidebar-nav {

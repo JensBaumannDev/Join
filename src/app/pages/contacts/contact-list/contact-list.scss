@@ -10,7 +10,7 @@
 .contacts {
   @include flex(row, nowrap, flex-start, stretch);
   height: 100%;
-  overflow: hidden;
+  overflow: clip;
 
   &__sidebar {
     width: 460px;
@@ -22,7 +22,7 @@
     background: $color-white;
     box-shadow: 4px 0 4px rgba(0, 0, 0, 0.08);
     z-index: $z-index-base;
-    overflow: hidden;
+    overflow: clip;
     position: relative;
     transition: transform 125ms ease-in-out;
 
@@ -104,7 +104,7 @@
 
   &__info {
     @include flex(column, nowrap, flex-start, stretch);
-    overflow: hidden;
+    overflow: clip;
     gap: 10px;
   }
 
@@ -253,7 +253,7 @@
         @include flex(column, nowrap, flex-start, stretch);
         flex: 1;
         min-height: 0;
-        overflow: hidden;
+        overflow: clip;
       }
     }
   }

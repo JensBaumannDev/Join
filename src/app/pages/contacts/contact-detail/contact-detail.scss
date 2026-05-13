@@ -183,7 +183,7 @@
       display: block;
       font-weight: 700;
       height: 0;
-      overflow: hidden;
+      overflow: clip;
       visibility: hidden;
       user-select: none;
       pointer-events: none;

@@ -116,7 +116,7 @@
     gap: 12px;
     flex: 1;
     min-width: 0;
-    overflow: hidden;
+    overflow: clip;
 
     span:last-child {
       overflow-wrap: anywhere;

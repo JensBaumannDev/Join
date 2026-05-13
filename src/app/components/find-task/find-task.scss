@@ -26,7 +26,7 @@
   padding: 8px 16px;
   height: 48px;
   width: 312px;
-  overflow: hidden;
+  overflow: clip;
 
   &:focus-within {
     border-color: $button-bg-hover;
