@@ -32,30 +32,83 @@ export class Board implements OnInit {
 
   screenWidth = signal(window.innerWidth);
 
-  /** State for the avatar hover popup */
-  avatarPopup = signal<{ visible: boolean; x: number; bottom: number; maxHeight: number; assignments: any[] }>({
+  /** State for the avatar popup */
+  avatarPopup = signal<{ visible: boolean; x: number; bottom?: number; top?: number; maxHeight: number; assignments: any[] }>({
     visible: false,
     x: 0,
-    bottom: 0,
     maxHeight: 400,
     assignments: [],
   });
 
-  private hideTimeout: any = null;
+  /** Shows the avatar popup on click of the contact list */
+  toggleAvatarPopup(event: MouseEvent, task: Task) {
+    event.stopPropagation();
+    if (this.avatarPopup().visible) {
+      this.avatarPopup.update(p => ({ ...p, visible: false }));
+      return;
+    }
+    
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const assignments = this.getTaskAssignments(task);
+    const headerHeight = 95;
+    const margin = 12;
+    
+    // Check space above
+    const spaceAbove = rect.top - headerHeight - margin;
+    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    
+    let bottom: number | undefined;
+    let top: number | undefined;
+    let maxHeight: number;
 
+    if (spaceAbove > 150 || spaceAbove > spaceBelow) {
+      // Show above
+      bottom = window.innerHeight - rect.top + 8;
+      maxHeight = Math.min(400, spaceAbove);
+    } else {
+      // Show below
+      top = rect.bottom + 8;
+      maxHeight = Math.min(400, spaceBelow);
+    }
+    
+    this.avatarPopup.set({
+      visible: true,
+      x: Math.max(12, Math.min(rect.left, window.innerWidth - 262)),
+      bottom: bottom as number,
+      top: top as number,
+      maxHeight,
+      assignments,
+    });
+  }
+
+  /** Closes the avatar popup when clicking anywhere else on the document */
+  @HostListener('document:click')
+  closeAvatarPopup() {
+    if (this.avatarPopup().visible) {
+      this.avatarPopup.update(p => ({ ...p, visible: false }));
+    }
+  }
+
+  /** Updates the screenWidth signal when the window is resized */
   @HostListener('window:resize')
   onResize() {
     this.screenWidth.set(window.innerWidth);
   }
 
+  /** Computed property determining if columns should be displayed horizontally (mobile) or vertically (desktop) */
   listOrientation = computed(() => this.screenWidth() <= 1024 ? 'horizontal' : 'vertical');
+
+  /** Computed property adding a delay to drag start on mobile to allow for page scrolling */
   dragDelay = computed(() => this.screenWidth() <= 1024 ? 150 : 0);
 
+  /** Opens the detail dialog for a specific task */
   async openTaskDetailDialog(task: any) {
     const subtasks = await this.taskService.getSubtasksForTask(task.id);
     this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
   }
 
+  /** Navigates to the add-task page on mobile or opens the add-task dialog on desktop */
   openAddTaskDialog(status: string) {
     if (this.screenWidth() <= 1200) {
       this.router.navigate(['/add-task']);
@@ -73,37 +126,7 @@ export class Board implements OnInit {
     return { done, total, percentage: Math.round((done / total) * 100) };
   }
 
-  /** Shows the avatar popup on hover of the overflow indicator */
-  showAvatarPopup(event: MouseEvent, task: Task) {
-    clearTimeout(this.hideTimeout);
-    const target = event.currentTarget as HTMLElement;
-    const card = target.closest('.task-card') as HTMLElement;
-    const rect = (card || target).getBoundingClientRect();
-    const assignments = this.getTaskAssignments(task);
-    const headerHeight = 95;
-    const bottom = window.innerHeight - rect.bottom + 20;
-    const availableHeight = rect.top - headerHeight - 8;
-    const maxHeight = Math.min(400, Math.max(50, availableHeight));
-    this.avatarPopup.set({
-      visible: true,
-      x: rect.left,
-      bottom,
-      maxHeight,
-      assignments,
-    });
-  }
 
-  /** Keeps the popup open when hovering over it */
-  keepAvatarPopup() {
-    clearTimeout(this.hideTimeout);
-  }
-
-  /** Hides the avatar popup with a short delay so the user can move the mouse onto it */
-  hideAvatarPopup() {
-    this.hideTimeout = setTimeout(() => {
-      this.avatarPopup.update(p => ({ ...p, visible: false }));
-    }, 120);
-  }
 
   /** All tasks filtered by the search term */
   filteredTasks = computed(() => {

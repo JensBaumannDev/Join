@@ -35,8 +35,7 @@
                         <app-subtask [taskId]="task.id" />
 
                         <div class="task-footer">
-                            <div class="contact-list" (click)="$event.stopPropagation()"
-                                (mouseenter)="showAvatarPopup($event, task)" (mouseleave)="hideAvatarPopup()">
+                            <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
                                 @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
                                 @if (getContactInfo(assign); as info) {
                                 <div class="avatar" [style.background-color]="info.color">
@@ -69,10 +68,10 @@
 @if (avatarPopup().visible) {
 <div class="avatar-popup"
     [style.bottom.px]="avatarPopup().bottom"
+    [style.top.px]="avatarPopup().top"
     [style.left.px]="avatarPopup().x"
     [style.max-height.px]="avatarPopup().maxHeight"
-    (mouseenter)="keepAvatarPopup()"
-    (mouseleave)="hideAvatarPopup()">
+    (click)="$event.stopPropagation()">
     @for (assign of avatarPopup().assignments; track $index) {
         @if (getContactInfo(assign); as info) {
         <div class="avatar-popup-row">
