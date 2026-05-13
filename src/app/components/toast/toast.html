@@ -1,5 +1,7 @@
 @if (toastService.message()) {
   <div class="toast-container" 
+       #toastContainer
+       popover="manual"
        [class.show]="toastService.isVisible()" 
        [class.hide]="toastService.isHiding()">
     <div class="toast-content">
