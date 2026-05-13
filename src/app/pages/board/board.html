@@ -24,37 +24,37 @@
             <div class="task-list" [id]="col.id" cdkDropList [cdkDropListData]="col.tasks()"
                 (cdkDropListDropped)="drop($event)" [cdkDropListOrientation]="listOrientation()">
                 @for (task of col.tasks(); track task.id) {
-                <div class="task-card" cdkDrag (click)="openTaskDetailDialog(task)" [cdkDragStartDelay]="dragDelay()">
-                    @if (task.category) {
-                    <app-category-badge [category]="task.category" />
-                    }
-                    <h4 class="task-title">{{ task.title }}</h4>
-                    <p class="task-desc">{{ task.description }}</p>
+                <div class="outer-drag" cdkDrag (click)="openTaskDetailDialog(task)" [cdkDragStartDelay]="dragDelay()">
+                    <div class="inner-drag task-card">
+                        @if (task.category) {
+                        <app-category-badge [category]="task.category" />
+                        }
+                        <h4 class="task-title">{{ task.title }}</h4>
+                        <p class="task-desc">{{ task.description }}</p>
 
-                    <app-subtask [taskId]="task.id" />
+                        <app-subtask [taskId]="task.id" />
 
-                    <div class="task-footer">
-                        <div class="contact-list" (click)="$event.stopPropagation()"
-                            (mouseenter)="showAvatarPopup($event, task)"
-                            (mouseleave)="hideAvatarPopup()">
-                            @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
+                        <div class="task-footer">
+                            <div class="contact-list" (click)="$event.stopPropagation()"
+                                (mouseenter)="showAvatarPopup($event, task)" (mouseleave)="hideAvatarPopup()">
+                                @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
                                 @if (getContactInfo(assign); as info) {
                                 <div class="avatar" [style.background-color]="info.color">
                                     {{ info.initials }}
                                 </div>
                                 }
-                            }
-                            @if (getTaskAssignments(task).length > 3) {
-                            <div class="avatar avatar-overflow">
-                                +{{ getTaskAssignments(task).length - 3 }}
+                                }
+                                @if (getTaskAssignments(task).length > 3) {
+                                <div class="avatar avatar-overflow">
+                                    +{{ getTaskAssignments(task).length - 3 }}
+                                </div>
+                                }
                             </div>
+                            @if (task.priority) {
+                            <img [src]="getPriorityIcon(task.priority)" class="prio-icon" [alt]="task.priority">
                             }
                         </div>
-                        @if (task.priority) {
-                        <img [src]="getPriorityIcon(task.priority)" class="prio-icon" [alt]="task.priority">
-                        }
                     </div>
-
                 </div>
                 } @empty {
                 <div class="empty-list-placeholder">No tasks {{ col.label }}</div>
