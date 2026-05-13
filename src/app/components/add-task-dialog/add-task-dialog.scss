@@ -12,8 +12,7 @@
 
 .add-task-dialog-content {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  @include flex(column);
   background-color: $color-white;
   border-radius: 30px;
   width: clamp(290px, 95vw, 1100px);
