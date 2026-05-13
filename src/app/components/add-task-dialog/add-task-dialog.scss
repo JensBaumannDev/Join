@@ -12,14 +12,19 @@
 
 .add-task-dialog-content {
   position: relative;
+  @include flex(column);
   background-color: $color-white;
   border-radius: 30px;
   width: clamp(290px, 95vw, 1100px);
   max-height: 95dvh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 
   app-add-task {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    @include scrollbar();
+
     .add-task {
       padding: 60px 70px;
       background: transparent;
