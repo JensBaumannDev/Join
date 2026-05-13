@@ -25,6 +25,17 @@ $breakpoint-desktop: 1024px;
 $breakpoint-tablet-lg: 1200px;
 $breakpoint-large: 1440px;
 
+// Z-Index Layers
+$z-index-below: -1;
+$z-index-base: 1;
+$z-index-header-sidebar: 10;
+$z-index-dropdown: 20;
+$z-index-dropdown-top: 21;
+$z-index-sticky: 30;
+$z-index-overlay: 40;
+$z-index-modal: 50;
+$z-index-toast: 60;
+
 $user-colors: (
   rgba(255, 122, 0, 1),
   rgba(255, 94, 179, 1),

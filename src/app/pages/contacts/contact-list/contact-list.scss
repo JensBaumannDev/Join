@@ -21,7 +21,7 @@
     height: 100%;
     background: $color-white;
     box-shadow: 4px 0 4px rgba(0, 0, 0, 0.08);
-    z-index: 2;
+    z-index: $z-index-base;
     overflow: hidden;
     position: relative;
     transition: transform 125ms ease-in-out;
@@ -193,7 +193,7 @@
       width: auto;
       margin: 0;
       border-radius: 46px;
-      z-index: 100;
+      z-index: $z-index-sticky;
     }
 
     .contacts__add-text {
@@ -267,7 +267,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: $z-index-header-sidebar;
   flex-shrink: 0;
 
   @include tablet-xl {

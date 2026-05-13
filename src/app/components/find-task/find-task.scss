@@ -94,8 +94,8 @@
   justify-content: center;
 
  .btn-icon-mobile {
-    width: 20px !important;
-    height: 20px !important;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -108,16 +108,16 @@
  
   }
   .btn-icon-mobile {
-    width: 20px !important;
-    height: 20px !important;
+    width: 20px;
+    height: 20px;
   }
 
   .add-task-btn {
-    display: none !important;
+    display: none;
   }
 
   .add-task-btn-mobile {
-    display: flex !important;
+    display: flex;
   }
 
   .board-actions {
