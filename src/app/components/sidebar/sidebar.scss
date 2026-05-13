@@ -8,14 +8,17 @@
   width: 232px;
   flex-shrink: 0;
   background-color: $sidebar-bg;
-  @include flex(column, wrap, center, center);
+  @include flex(column, nowrap, flex-start, center);
   height: 100vh;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-logo {
   @include flex($justify-content: center, $align-items: center);
   padding: 64px 0px 0px;
+  flex-shrink: 0;
 
   img {
     height: 120px;
@@ -24,17 +27,18 @@
 }
 
 .sidebar-nav {
-  @include flex(column, wrap, stretch);
+  @include flex(column, nowrap, stretch);
   gap: 15px;
   padding: 0;
   padding-top: 110px;
   flex: 1;
-  width: 100%;
+  flex-shrink: 0;
+  width: 232px;
 }
 
 .nav-item {
   @include flex($justify-content: flex-start, $align-items: center);
-  width: 100%;
+  width: 232px;
   gap: 16px;
   padding: 8px 56px 8px 56px;
   color: $sidebar-text;
@@ -54,20 +58,19 @@
   &.active {
     background-color: $color-primary-hover;
     color: $sidebar-active-text;
-    
-     img {
-      filter: brightness(0) invert(1); 
+
+    img {
+      filter: brightness(0) invert(1);
     }
   }
-
- 
 }
 
 .sidebar-footer {
   @include flex(column, nowrap, center, center);
   gap: 0;
   padding: 100px 0 60px 0;
-  width: 100%;
+  flex-shrink: 0;
+  width: 232px;
 }
 
 .footer-link {
@@ -91,7 +94,7 @@
     background-color: $color-primary-hover;
   }
 
-  &>a {
+  & > a {
     text-align: start;
   }
 }
@@ -104,7 +107,7 @@
   }
 
   .sidebar {
-    @include flex($flex-direction: row);
+    @include flex($flex-direction: row, $flex-wrap: nowrap);
     width: 100%;
     height: 80px;
     min-height: 80px;
@@ -124,6 +127,7 @@
     gap: 0;
     width: 100%;
     flex: unset;
+    flex-shrink: unset;
     padding-top: 0;
   }
 
@@ -139,8 +143,5 @@
       width: 24px;
       height: 24px;
     }
-
-
-
   }
 }
