@@ -4,7 +4,7 @@
 .sidebar {
   top: 0;
   left: 0;
-  z-index: 20;
+  z-index: $z-index-header-sidebar;
   width: 232px;
   flex-shrink: 0;
   background-color: $sidebar-bg;
@@ -117,7 +117,7 @@
     right: 0;
     top: auto;
     padding: 0;
-    z-index: 130;
+    z-index: $z-index-sticky;
     overflow: hidden;
   }
 

@@ -173,7 +173,7 @@
     width: 100%;
 
     &--open {
-      z-index: 120;
+      z-index: $z-index-dropdown + 2;
     }
   }
 
@@ -196,7 +196,7 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: border 0.2s ease;
-    z-index: 110;
+    z-index: $z-index-dropdown-top;
 
     &:hover {
       border-color: $color-highlight;
@@ -246,7 +246,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
     padding-top: 48px;
-    z-index: 100;
+    z-index: $z-index-dropdown;
   }
 
   &__dropdown-list {
@@ -374,7 +374,7 @@
     border-radius: 12px;
     padding: 8px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 200;
+    z-index: $z-index-dropdown;
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -431,7 +431,7 @@
   &__buttons {
     @include flex(row, wrap, flex-end, center);
     gap: 10px;
-    z-index: 130;
+    z-index: $z-index-dropdown + 3;
   }
 }
 
@@ -467,7 +467,7 @@
       bottom: 80px;
       justify-content: flex-end;
       background: $color-bg-content;
-      z-index: 130;
+      z-index: $z-index-dropdown + 3;
       padding-block: 6px;
     }
 

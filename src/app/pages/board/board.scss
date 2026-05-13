@@ -177,7 +177,7 @@
 
 
 .avatar-overflow {
-    background-color: $color-find-task-border !important;
+    background-color: $color-find-task-border;
     color: $color-primary;
     font-size: 16px;
     font-weight: 600;
@@ -188,7 +188,7 @@
 .avatar-popup {
     @include flex(column, nowrap, flex-start, stretch);
     position: fixed;
-    z-index: 9999;
+    z-index: $z-index-dropdown;
     background: $color-white;
     border-radius: 16px;
     padding: 12px 16px;

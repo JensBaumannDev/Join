@@ -26,7 +26,7 @@
     position: absolute;
     inset-block-start: 50px;
     inset-inline-end: 50px;
-    z-index: 10;
+    z-index: $z-index-base;
     transition:
       background-color 125ms ease,
       border-radius 125ms ease;
@@ -118,7 +118,7 @@
         display: block;
         inset-block-start: 20px;
         inset-inline-end: 20px;
-        z-index: 10;
+        z-index: $z-index-base;
       }
 
       &:hover,
