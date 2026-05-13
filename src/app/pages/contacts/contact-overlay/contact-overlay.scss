@@ -151,7 +151,7 @@
         font-size: 50px;
         border: 3px solid $color-white;
         box-shadow: 0 0 4px 0 #0000001a;
-        overflow: hidden;
+        overflow: clip;
         margin-block-end: 70px;
 
         @include tablet-lg {

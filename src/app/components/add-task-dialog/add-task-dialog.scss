@@ -17,17 +17,39 @@
   border-radius: 30px;
   width: clamp(290px, 95vw, 1100px);
   max-height: 95dvh;
-  overflow: hidden;
+  overflow: clip;
 
   app-add-task {
+    @include flex(column);
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
-    @include scrollbar();
 
     .add-task {
+      @include flex(column, nowrap);
+      flex: 1;
+      min-height: 0;
       padding: 60px 70px;
       background: transparent;
+    }
+
+    .add-task__form {
+      flex: 1;
+      min-height: 0;
+      width: auto;
+      align-self: stretch;
+      overflow-y: auto;
+      padding-right: 35px;
+      margin-right: -35px;
+      @include scrollbar();
+    }
+
+    .add-task__actions {
+      position: sticky;
+      bottom: 0;
+      justify-content: flex-end;
+      background-color: $color-white;
+      padding-top: 10px;
+      z-index: $z-index-dropdown-top + 1;
     }
   }
 
