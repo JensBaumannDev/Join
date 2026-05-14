@@ -269,7 +269,7 @@
 
 @include tablet-lg {
     .board-container {
-        padding: 48px 16px 100px 16px;
+        padding: 48px 0 100px 0;
         max-width: 100%;
     }
 
@@ -286,7 +286,9 @@
 
     .column-header {
         margin-bottom: 12px;
-        width: 250px;
+        width: 252px;
+        margin-left: 16px;
+        padding: 0;
     }
 
     .task-list {
