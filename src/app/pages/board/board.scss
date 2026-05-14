@@ -291,7 +291,7 @@
         padding: 0;
     }
 
-    .task-list {
+    :host ::ng-deep .task-list {
         @include flex(row, nowrap);
         overflow-x: auto;
         gap: 16px;
@@ -300,7 +300,7 @@
         -webkit-overflow-scrolling: touch;
         touch-action: auto;
 
-        @include scrollbar($width: 5px, $thumb-color: $color-find-task-border);
+        @include scrollbar($width: 8px, $thumb-color: $color-find-task-border);
 
         &.cdk-drop-list-dragging {
             padding-right: 100px;
