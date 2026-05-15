@@ -82,13 +82,15 @@
   }
 
   &__list {
+    max-height: 120px;
     overflow-y: auto;
+    overflow-x: hidden;
     margin-top: 8px;
     min-width: 0;
   }
 
   &__item {
-    @include flex(row, nowrap, space-between, flex-start);
+    @include flex(row, nowrap, space-between, center);
     min-width: 0;
     padding: 4px 16px;
     min-height: 32px;
@@ -112,7 +114,7 @@
   }
 
   &__content {
-    @include flex(row, nowrap, flex-start, flex-start);
+    @include flex(row, nowrap, flex-start, center);
     gap: 12px;
     flex: 1;
     min-width: 0;
@@ -145,24 +147,56 @@
   }
 
   &__edit-mode {
-    @include flex(row, wrap, space-between, center);
-    padding: 4px 16px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
     width: 100%;
     background: $color-white;
     border-bottom: 1px solid $color-highlight;
+    gap: 8px;
 
     .subtask__item-buttons {
       opacity: 1;
+      pointer-events: all;
+      margin-left: auto;
+      height: 48px;
+      @include flex(row, nowrap, flex-start, center);
     }
   }
 
-  &__edit-field {
+  &__edit-grid {
+    display: grid;
     flex: 1;
+    min-width: 120px;
+  }
+
+  &__mirror,
+  &__edit-field {
+    grid-area: 1 / 1 / 2 / 2;
+    padding: 14px 0;
+    line-height: 1.2;
+    font-size: 16px;
+    font-family: inherit;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+  }
+
+  &__mirror {
+    visibility: hidden;
+    white-space: pre-wrap;
+    min-height: 48px;
+  }
+
+  &__edit-field {
+    width: 100%;
     border: none;
     outline: none;
     background: transparent;
-    font-family: inherit;
     color: $color-text;
+    resize: none;
+    overflow: hidden;
   }
 }
 

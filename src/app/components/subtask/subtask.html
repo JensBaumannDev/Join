@@ -43,13 +43,16 @@
       >
         @if (editingIndex === $index) {
           <div class="subtask__edit-mode">
-            <input
-              class="subtask__edit-field"
-              [value]="editingValue"
-              autofocus
-              (input)="editingValue = $any($event.target).value"
-              (keydown.enter)="save($index)"
-            />
+            <div class="subtask__edit-grid">
+              <div class="subtask__mirror" aria-hidden="true">{{ editingValue }}</div>
+              <textarea
+                class="subtask__edit-field"
+                [(ngModel)]="editingValue"
+                autofocus
+                rows="1"
+                (keydown.enter)="$event.preventDefault(); save($index)"
+              ></textarea>
+            </div>
             <div class="subtask__item-buttons">
               <button type="button" class="subtask__item-btn" (click)="remove($index)">
                 <img src="icons/other/delete.svg" alt="Delete" />
