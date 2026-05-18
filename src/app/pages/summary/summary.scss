@@ -1,0 +1,128 @@
+@use '../../../styles/abstracts' as *;
+
+.summary_container {
+    @include flex($flex-direction: column);
+    width: 100%;
+    padding: 110px 0 0 100px;
+}
+
+.summary_headline {
+    @include flex($align-items: center);
+    gap: 30px;
+
+    &__separator {
+        background-color: $color-accent;
+        height: 60px;
+        width: 3px;
+    }
+}
+
+.summary_card_content {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
+    max-width: 560px;
+    gap: 30px;
+    padding-top: 55px;
+}
+
+.summary-card {
+    @include flex($justify-content: center, $align-items: center);
+    background-color: $color-white;
+    box-shadow: 0 0 4px rgba($color-text, 0.1);
+    height: 170px;
+    border-radius: 30px;
+    transition: all 100ms ease-in-out;
+    cursor: pointer;
+    gap: 20px;
+
+    &:hover {
+        background-color: $color-primary;
+        transform: scale(1.08);
+
+        .summary-card__icon-container:not(.summary-card__icon-container--urgent) {
+            background-color: $color-white;
+
+            img {
+                filter: none;
+            }
+        }
+
+        .summary-card__counter {
+            color: $color-white;
+        }
+    }
+
+    &__counter {
+        @include flex($flex-direction: column, $align-items: center);
+        text-align: center;
+
+    }
+
+    &__separator {
+        background-color: $color-gray-form;
+        height: 100px;
+        width: 2px;
+    }
+
+    &__deadline {
+        @include flex($flex-direction: column);
+        gap: 15px;
+
+        span {
+            font-weight: 700;
+        }
+    }
+
+
+    &--todo,
+    &--done {
+        grid-column: span 3;
+    }
+
+    &--urgency {
+        grid-column: span 6;
+        gap: 60px;
+
+
+        &__left {
+            @include flex(row, nowrap, center, center);
+            gap: 20px;
+        }
+
+    }
+
+    &--task-counter,
+    &--task-progress,
+    &--await-feedback {
+        grid-column: span 2;
+
+    }
+
+    &__icon-container {
+        @include flex(row, nowrap, center, center);
+        background-color: $color-primary;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+
+        img {
+            height: 30px;
+            width: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        &--urgent {
+            background-color: $color-priority-urgent;
+            width: 60px;
+            height: 60px;
+
+            img {
+                width: 35px;
+                height: 25px;
+            }
+        }
+
+
+    }
+}
