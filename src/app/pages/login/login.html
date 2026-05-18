@@ -1,3 +1,48 @@
 <section class="login-container">
+  <section class="login-content">
+    <div class="header">
+      <div class="singup-line">
+        <p>Not a Join user?</p>
+        <button class="btn-primary">Sing up</button>
+      </div>
+    </div>
 
+    <div class="login-form-box">
+      <div class="headline">
+        <h2>Log in</h2>
+        <div class="separator"></div>
+      </div>
+
+      <form [formGroup]="form" class="form">
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input matInput formControlName="email" type="email" placeholder="Email" />
+          <img matSuffix src="icons/form/mail.svg" alt="mail" />
+          @if (form.get('email')?.hasError('required')) {
+            <mat-error>Field is required</mat-error>
+          }
+          @if (form.get('email')?.hasError('pattern')) {
+            <mat-error>Email is invalid</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'" placeholder="Password" />
+          <img
+            matSuffix
+            [src]="showPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
+            alt="toggle password visibility"
+            (click)="togglePassword()"
+            style="cursor: pointer"
+          />
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+      </form>
+      <div class="btns-container">
+        <button class="btn-primary" type="submit">Login</button>
+        <button class="btn-secondary">Guest Log in</button>
+      </div>
+    </div>
+  </section>
 </section>
