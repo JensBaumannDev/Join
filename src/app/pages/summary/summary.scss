@@ -48,7 +48,8 @@
             }
         }
 
-        .summary-card__counter {
+        .summary-card__counter,
+        .summary-card__deadline {
             color: $color-white;
         }
     }
