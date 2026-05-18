@@ -4,6 +4,7 @@ import { Sidebar } from './components/sidebar/sidebar';
 import { Header } from './components/header/header';
 import { Toast } from './components/toast/toast';
 import { filter } from 'rxjs';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { filter } from 'rxjs';
 export class App {
   protected readonly title = signal('join');
   private router = inject(Router);
+  readonly authService = inject(AuthService);
   isFullBleed = signal(false);
 
   constructor() {
