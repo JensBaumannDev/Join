@@ -1,6 +1,8 @@
 <div class="contacts">
-  <!-- LEFT: SIDEBAR -->
-  <div class="contacts__sidebar" [class.contacts__sidebar--hidden]="contactService.selectedContact()">
+  <div
+    class="contacts__sidebar"
+    [class.contacts__sidebar--hidden]="contactService.selectedContact()"
+  >
     <div class="btn-container">
       <button class="btn-primary contacts__add-btn" (click)="openContactDialog('add')">
         <span class="contacts__add-text">Add new contact</span>
@@ -14,9 +16,11 @@
             <div class="contacts__group-letter">{{ group.letter }}</div>
 
             @for (c of group.contacts; track c.id) {
-              <div class="contacts__item" 
-                   (click)="selectContact(c)"
-                   [class.contacts__item--active]="contactService.selectedContact()?.id === c.id">
+              <div
+                class="contacts__item"
+                (click)="selectContact(c)"
+                [class.contacts__item--active]="contactService.selectedContact()?.id === c.id"
+              >
                 <app-avatar [name]="c.name" [color]="c.color"></app-avatar>
 
                 <div class="contacts__info">
@@ -31,23 +35,24 @@
     </div>
   </div>
 
-  <!-- RIGHT: CONTENT -->
-  <div class="contacts__content" [class.contacts__content--visible]="contactService.selectedContact()">
+  <div
+    class="contacts__content"
+    [class.contacts__content--visible]="contactService.selectedContact()"
+  >
     <div class="contacts__header">
-      <div class="contacts__title">Contacts</div>
+      <h2>Contacts</h2>
       <div class="contacts__divider"></div>
-      <div class="contacts__subtitle">Better with a team</div>
+      <h4>Better with a team</h4>
     </div>
 
     @if (contactService.selectedContact(); as contact) {
-      <app-contact-detail 
-        [contact]="contact" 
+      <app-contact-detail
+        [contact]="contact"
         (edit)="openContactDialog('edit', contact)"
         (delete)="contact.id && deleteContact(contact.id)"
-        (back)="contactService.selectedContact.set(null)">
+        (back)="contactService.selectedContact.set(null)"
+      >
       </app-contact-detail>
     }
   </div>
 </div>
-
-<!-- <p> {{ contactService.contacts() | json}} </p> -->

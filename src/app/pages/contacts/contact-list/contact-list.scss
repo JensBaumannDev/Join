@@ -25,7 +25,6 @@
     overflow: clip;
     position: relative;
     transition: transform 125ms ease-in-out;
-
   }
 
   &__sidebar-inner {
@@ -42,8 +41,6 @@
   &__add-btn {
     width: 350px;
     flex-shrink: 0;
-    font-size: 21px;
-    font-weight: 700;
 
     .contacts__add-icon {
       width: 32px;
@@ -136,16 +133,6 @@
     background-color: $color-highlight;
   }
 
-  &__title {
-    font-size: 61px;
-    font-weight: 700;
-  }
-
-  &__subtitle {
-    font-size: 27px;
-    color: $color-text;
-  }
-
   &__content {
     background: $content-bg;
     width: 100%;
@@ -235,14 +222,6 @@
 
     &__divider {
       height: 42px;
-    }
-
-    &__title {
-      font-size: 42px;
-    }
-
-    &__subtitle {
-      font-size: 20px;
     }
 
     &__content {
