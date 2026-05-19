@@ -46,7 +46,6 @@ export class Login implements OnInit {
     const { email, password } = this.form.value;
     try {
       await this.authService.login(email!, password!);
-      console.log('Login successful');
       this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
