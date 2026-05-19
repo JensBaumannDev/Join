@@ -46,7 +46,6 @@ export class Login implements OnInit {
     const { email, password } = this.form.value;
     try {
       await this.authService.login(email!, password!);
-      console.log('Login successful');
       this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
@@ -67,5 +66,14 @@ export class Login implements OnInit {
         ctrl.setErrors(null);
       }
     });
+  }
+
+  async guestLogin(): Promise<void> {
+    try {
+      await this.authService.login('guest@join.com', 'guest123');
+      this.router.navigate(['/summary']);
+    } catch {
+      this.loginError.set(true);
+    }
   }
 }
