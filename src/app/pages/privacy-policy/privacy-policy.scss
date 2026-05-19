@@ -3,6 +3,7 @@
 .privacy-policy-container {
     padding: 110px 100px 0 100px;
     color: var.$color-text;
+    max-width: 1208px;
 
     .header {
         @include var.flex($justify-content: space-between, $align-items: center);
