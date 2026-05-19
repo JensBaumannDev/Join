@@ -16,10 +16,11 @@
       outlined-container-shape: 10px,
       outlined-outline-color: $color-gray-form,
       outlined-focus-outline-color: $color-highlight,
-      outlined-hover-outline-color: #a0a0a0,
+      outlined-hover-outline-color: $color-highlight,
       outlined-input-text-placeholder-color: $color-gray-form,
       container-vertical-padding: 10px,
-      
+      outlined-outline-width: 1px,
+      outlined-focus-outline-width: 1px,
       outlined-error-outline-color: $color-error,
       outlined-error-hover-outline-color: $color-error,
       outlined-error-focus-outline-color: $color-error,
@@ -59,8 +60,8 @@
     }
 
     img[matSuffix] {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       opacity: 0.7;
       margin-left: 10px;
     }

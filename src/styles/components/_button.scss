@@ -14,7 +14,7 @@
 
   &:disabled {
     background-color: $color-text-muted;
-    cursor: not-allowed;
+    cursor: default;
   }
 
   img,
@@ -48,7 +48,7 @@
   &.disabled {
     background-color: $color-text-muted;
     color: $button-text;
-    cursor: not-allowed;
+    cursor: default;
     box-shadow: none;
   }
 

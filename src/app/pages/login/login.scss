@@ -6,10 +6,7 @@
 
 .login-content {
   max-width: 1440px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  @include flex(column, nowrap, flex-start, center);
   gap: 170px;
   height: 100dvh;
 }
@@ -19,33 +16,27 @@
   margin: 70px 120px 0 0;
 
   .singup-line {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    @include flex(row, nowrap, flex-end, center);
     gap: 35px;
 
     p {
-      @include fluid-text(16, 20);
+      font-size: 20px;
     }
   }
 }
 
 .login-form-box {
   width: clamp(300px, 90vw, 650px);
-  height: 450px;
+  height: auto;
   background: $color-white;
   border-radius: 30px;
   box-shadow: 0px 0px 14px 3px #0000000a;
-  padding: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
+  padding: 48px;
+  @include flex(column, nowrap, flex-start, center);
+  gap: 32px;
 
   .headline {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    @include flex(column, nowrap, flex-start, center);
     gap: 16px;
   }
 
@@ -57,12 +48,15 @@
 
   .form {
     max-width: 420px;
+    gap: 12px;
   }
-}
 
-.btns-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 35px;
+  .btns-container {
+    @include flex(row, nowrap, center, center);
+    gap: 35px;
+
+    .btn-secondary, .btn-primary{
+      padding: 12px 24px;
+    }
+  }
 }

@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +13,11 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class Login {
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   showPassword = signal(false);
+  loginError = signal(false);
 
   form = this.fb.group({
     email: [
@@ -28,5 +33,18 @@ export class Login {
 
   togglePassword(): void {
     this.showPassword.update((v) => !v);
+  }
+
+  async submit(): Promise<void> {
+    if (this.form.invalid) return;
+    this.loginError.set(false);
+
+    const { email, password } = this.form.value;
+    try {
+      await this.authService.login(email!, password!);
+      this.router.navigate(['/']);
+    } catch {
+      this.loginError.set(true);
+    }
   }
 }
