@@ -3,7 +3,7 @@
 .summary_container {
     @include flex($flex-direction: column);
     width: 100%;
-    padding: 110px 0 0 100px;
+    padding: 110px 0 150px 100px;
 }
 
 .summary_headline {
@@ -39,6 +39,7 @@
     &:hover {
         background-color: $color-primary;
         transform: scale(1.08);
+        box-shadow: 0 4px 4px rgba($color-text, 0.25);
 
         .summary-card__icon-container:not(.summary-card__icon-container--urgent) {
             background-color: $color-white;
@@ -54,10 +55,27 @@
         }
     }
 
+    &:active {
+        background-color: $color-white;
+        box-shadow: 0 4px 4px rgba($color-text, 0.25);
+
+        .summary-card__icon-container:not(.summary-card__icon-container--urgent) {
+            background-color: $color-primary;
+
+            img {
+                filter: brightness(0) invert(1);
+            }
+        }
+
+        .summary-card__counter,
+        .summary-card__deadline {
+            color: $color-primary;
+        }
+    }
+
     &__counter {
         @include flex($flex-direction: column, $align-items: center);
         text-align: center;
-
     }
 
     &__separator {
@@ -84,20 +102,19 @@
     &--urgency {
         grid-column: span 6;
         gap: 60px;
-
+        flex-wrap: wrap;
+        justify-content: center;
 
         &__left {
             @include flex(row, nowrap, center, center);
             gap: 20px;
         }
-
     }
 
     &--task-counter,
     &--task-progress,
     &--await-feedback {
         grid-column: span 2;
-
     }
 
     &__icon-container {
@@ -127,3 +144,56 @@
 
     }
 }
+
+/* #region RESPONSIVE */
+@media (max-width: $breakpoint-tablet) {
+    .summary_container {
+        padding: 50px 16PX 150px 16px;
+
+        .summary-card__icon-container {
+            width: 40px;
+            height: 40px;
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+
+            &--urgent {
+                width: 40px;
+                height: 40px;
+
+                img {
+                    width: 18px;
+                    height: 13px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-mobile) {
+    .summary_container {
+        padding: 50px 8PX 150px 8px;
+    }
+
+    .summary-card--urgency {
+        flex-direction: column;
+        height: auto;
+        min-height: 140px;
+        padding: 16px;
+        gap: 12px;
+
+        .summary-card__separator {
+            display: none;
+        }
+
+        .summary-card__deadline {
+            align-items: center;
+            text-align: center;
+            gap: 4px;
+        }
+    }
+}
+
+/* #endregion */
