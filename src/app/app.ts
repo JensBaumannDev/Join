@@ -18,12 +18,14 @@ export class App {
   private router = inject(Router);
   readonly authService = inject(AuthService);
   isFullBleed = signal(false);
+  isLoginPage = signal(false);
 
   constructor() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.isFullBleed.set(false);
+      this.isLoginPage.set(event.urlAfterRedirects === '/login');
     });
   }
 }

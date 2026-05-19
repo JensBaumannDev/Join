@@ -1,12 +1,15 @@
 <div class="layout">
- <app-sidebar></app-sidebar>
+  @if (!isLoginPage()) {
+    <app-sidebar></app-sidebar>
+  }
 
-
-<div class="right-side">
-  <app-header></app-header>
-  <main class="content" [class.content--full-bleed]="isFullBleed()">
+  <div class="right-side">
+    @if (!isLoginPage()) {
+      <app-header></app-header>
+    }
+    <main class="content" [class.content--full-bleed]="isFullBleed()">
       <router-outlet></router-outlet>
-  </main>
-</div>
+    </main>
+  </div>
 <app-toast></app-toast>
 </div>

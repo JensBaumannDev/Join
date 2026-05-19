@@ -9,7 +9,7 @@ import { Help } from './pages/help/help';
 import { Login } from './pages/login/login';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'board', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'summary', component: Summary },
   { path: 'board', component: Board },

@@ -1,0 +1,187 @@
+@use '../../../styles/abstracts' as *;
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: $color-bg-content;
+  z-index: $z-index-modal;
+  pointer-events: none;
+  animation: splash-fade-out 0.5s ease both 0.4s;
+}
+
+.login-container {
+  background: $color-bg-content;
+  height: 100dvh;
+  position: relative;
+
+  .login-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    z-index: $z-index-modal + 1;
+    animation: logo-from-center 700ms ease-in-out both 0.2s;
+  }
+}
+
+.login-content {
+  max-width: 1440px;
+  @include flex(column, nowrap, space-between, center);
+  gap: 0;
+  height: 100%;
+  padding: 0 0 40px 0;
+  height: 100dvh;
+  animation: content-fade-in 0.4s ease both 0.4s;
+
+  .login-main {
+    @include flex(column, nowrap, flex-start, center);
+    gap: 170px;
+    width: 100%;
+  }
+}
+
+.login-header {
+  width: 100%;
+  margin: 70px 120px 0 0;
+
+  .signup-line {
+    @include flex(row, nowrap, flex-end, center);
+    gap: 35px;
+
+    p {
+      font-size: 20px;
+    }
+  }
+}
+
+.login-form-box {
+  width: clamp(300px, 90vw, 650px);
+  height: auto;
+  background: $color-white;
+  border-radius: 30px;
+  box-shadow: 0px 0px 14px 3px #0000000a;
+  padding: 48px;
+  @include flex(column, nowrap, flex-start, center);
+  gap: 32px;
+
+  .headline {
+    @include flex(column, nowrap, flex-start, center);
+    gap: 16px;
+  }
+
+  .separator {
+    width: 150px;
+    height: 3px;
+    background-color: $color-highlight;
+  }
+
+  .form {
+    max-width: 420px;
+    gap: 12px;
+  }
+
+  .btns-container {
+    @include flex(row, nowrap, center, center);
+    gap: 35px;
+    margin-top: 24px;
+
+    .btn-secondary,
+    .btn-primary {
+      padding: 12px 24px;
+    }
+  }
+}
+
+.login-footer {
+  @include flex(row, nowrap, center, center);
+  gap: 16px;
+  width: 100%;
+
+  .footer-link {
+    color: $color-text-muted;
+    text-decoration: none;
+    transition:
+      background-color 125ms,
+      color 125ms;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-highlight;
+      font-weight: 700;
+    }
+    &.active {
+      background-color: $color-primary-hover;
+    }
+
+    & > a {
+      text-align: start;
+    }
+  }
+}
+
+@include mobile {
+  .login-container {
+    .login-logo {
+      width: 60px;
+      animation-name: logo-from-center-mobile;
+    }
+  }
+
+  .login-content {
+    max-width: 1440px;
+    @include flex(column, nowrap, space-between, flex-start);
+
+    .login-main {
+      @include flex(column-reverse, nowrap, center, center);
+      gap: 80px;
+      margin-top: 180px;
+      width: 100%;
+    }
+  }
+
+  .login-header {
+    margin: 0;
+
+    .signup-line {
+      @include flex(row, nowrap, center, center);
+    }
+  }
+
+  .login-form-box {
+    padding: 32px 16px;
+
+    .btns-container {
+      @include flex(column, nowrap, center, center);
+      gap: 21px;
+      margin-top: 24px;
+
+      .btn-secondary,
+      .btn-primary {
+        padding: 16px;
+        width: 180px;
+      }
+    }
+  }
+}
+
+// Animations
+
+@keyframes logo-from-center {
+  from { transform: translate(-50%, -50%) scale(2.74); }
+  to   { transform: translate(calc(80px - 50vw), calc(80px - 50vh)); }
+}
+
+@keyframes logo-from-center-mobile {
+  from { transform: translate(-50%, -50%) scale(2.74); }
+  to   { transform: translate(calc(40px - 50vw), calc(40px - 50vh)); }
+}
+
+@keyframes splash-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes content-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
