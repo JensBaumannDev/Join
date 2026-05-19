@@ -49,6 +49,9 @@ export class Summary implements OnInit {
       if (!task.due_date || task.priority?.toLowerCase() !== 'urgent') {
         return false;
       }
+      if (task.status?.toLowerCase() === 'done') {
+        return false;
+      }
 
       const taskDate = new Date(task.due_date);
       return taskDate >= today;
