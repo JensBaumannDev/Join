@@ -61,14 +61,14 @@
 }
 
 .task-card {
+    @include flex(column, nowrap, flex-start, stretch);
     width: 100%;
     min-width: 250px;
-    @include flex(column, nowrap, flex-start, stretch);
     box-sizing: border-box;
     background: $color-white;
     border-radius: 24px;
     padding: 16px;
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.06);
     cursor: grab;
     gap: 12px;
 
@@ -123,12 +123,12 @@
             cursor: pointer;
 
             .avatar {
+                @include flex(row, nowrap, center, center);
                 width: 32px;
                 height: 32px;
                 border-radius: 50%;
-                border: 2px solid $color-white;
+                box-shadow: 0 0 0 2px $color-white;
                 margin-right: -8px;
-                @include flex(row, nowrap, center, center);
                 color: $color-white;
                 font-size: 16px;
                 font-weight: 400;
@@ -148,12 +148,12 @@
 }
 
 .empty-list-placeholder {
+    @include flex(row, nowrap, center, center);
     height: 56px;
     border: 1px dashed $color-text-muted;
     border-radius: 10px;
     background-color: $color-gray-light;
     color: $color-text-muted;
-    @include flex(row, nowrap, center, center);
     font-size: 16px;
 }
 
