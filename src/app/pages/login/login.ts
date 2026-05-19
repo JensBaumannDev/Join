@@ -68,4 +68,13 @@ export class Login implements OnInit {
       }
     });
   }
+
+  async guestLogin(): Promise<void> {
+    try {
+      await this.authService.login('guest@join.com', '12345');
+      this.router.navigate(['/summary']);
+    } catch {
+      this.loginError.set(true);
+    }
+  }
 }
