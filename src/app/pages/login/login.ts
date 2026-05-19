@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -11,13 +11,18 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   showPassword = signal(false);
   loginError = signal(false);
+  splashDone = signal(false);
+
+  ngOnInit(): void {
+    setTimeout(() => this.splashDone.set(true), 1000);
+  }
 
   form = this.fb.group({
     email: [
@@ -42,7 +47,7 @@ export class Login {
     try {
       await this.authService.login(email!, password!);
       console.log('Login successful');
-      this.router.navigate(['/']);
+      this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
       ['email', 'password'].forEach(controlName => {

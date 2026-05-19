@@ -1,9 +1,27 @@
 @use '../../../styles/abstracts' as *;
 
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: $color-bg-content;
+  z-index: $z-index-modal;
+  pointer-events: none;
+  animation: splash-fade-out 0.5s ease both 0.4s;
+}
+
 .login-container {
   background: $color-bg-content;
   height: 100dvh;
   position: relative;
+
+  .login-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    z-index: $z-index-modal + 1;
+    animation: logo-from-center 700ms ease-in-out both 0.2s;
+  }
 }
 
 .login-content {
@@ -13,13 +31,7 @@
   height: 100%;
   padding: 0 0 40px 0;
   height: 100dvh;
-
-  .login-logo {
-    position: absolute;
-    top: 80px;
-    left: 80px;
-    width: 100px;
-  }
+  animation: content-fade-in 0.4s ease both 0.4s;
 
   .login-main {
     @include flex(column, nowrap, flex-start, center);
@@ -28,7 +40,7 @@
   }
 }
 
-.header {
+.login-header {
   width: 100%;
   margin: 70px 120px 0 0;
 
@@ -80,7 +92,7 @@
   }
 }
 
-.footer {
+.login-footer {
   @include flex(row, nowrap, center, center);
   gap: 16px;
   width: 100%;
@@ -108,25 +120,26 @@
 }
 
 @include mobile {
+  .login-container {
+    .login-logo {
+      width: 60px;
+      animation-name: logo-from-center-mobile;
+    }
+  }
+
   .login-content {
     max-width: 1440px;
     @include flex(column, nowrap, space-between, flex-start);
 
-    .login-logo {
-      position: static;
-      margin: 40px 0 0 40px;
-      width: 80px;
-    }
-
     .login-main {
       @include flex(column-reverse, nowrap, center, center);
       gap: 80px;
-      margin-top: 32px;
+      margin-top: 180px;
       width: 100%;
     }
   }
 
-  .header {
+  .login-header {
     margin: 0;
 
     .signup-line {
@@ -149,4 +162,26 @@
       }
     }
   }
+}
+
+// Animations
+
+@keyframes logo-from-center {
+  from { transform: translate(-50%, -50%) scale(2.74); }
+  to   { transform: translate(calc(80px - 50vw), calc(80px - 50vh)); }
+}
+
+@keyframes logo-from-center-mobile {
+  from { transform: translate(-50%, -50%) scale(2.74); }
+  to   { transform: translate(calc(40px - 50vw), calc(40px - 50vh)); }
+}
+
+@keyframes splash-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes content-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
