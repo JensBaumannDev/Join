@@ -2,20 +2,37 @@
 
 .login-container {
   background: $color-bg-content;
+  height: 100dvh;
+  position: relative;
 }
 
 .login-content {
   max-width: 1440px;
-  @include flex(column, nowrap, flex-start, center);
-  gap: 170px;
+  @include flex(column, nowrap, space-between, center);
+  gap: 0;
+  height: 100%;
+  padding: 0 0 40px 0;
   height: 100dvh;
+
+  .login-logo {
+    position: absolute;
+    top: 80px;
+    left: 80px;
+    width: 100px;
+  }
+
+  .login-main {
+    @include flex(column, nowrap, flex-start, center);
+    gap: 170px;
+    width: 100%;
+  }
 }
 
 .header {
   width: 100%;
   margin: 70px 120px 0 0;
 
-  .singup-line {
+  .signup-line {
     @include flex(row, nowrap, flex-end, center);
     gap: 35px;
 
@@ -54,9 +71,82 @@
   .btns-container {
     @include flex(row, nowrap, center, center);
     gap: 35px;
+    margin-top: 24px;
 
-    .btn-secondary, .btn-primary{
+    .btn-secondary,
+    .btn-primary {
       padding: 12px 24px;
+    }
+  }
+}
+
+.footer {
+  @include flex(row, nowrap, center, center);
+  gap: 16px;
+  width: 100%;
+
+  .footer-link {
+    color: $color-text-muted;
+    text-decoration: none;
+    transition:
+      background-color 125ms,
+      color 125ms;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-highlight;
+      font-weight: 700;
+    }
+    &.active {
+      background-color: $color-primary-hover;
+    }
+
+    & > a {
+      text-align: start;
+    }
+  }
+}
+
+@include mobile {
+  .login-content {
+    max-width: 1440px;
+    @include flex(column, nowrap, space-between, flex-start);
+
+    .login-logo {
+      position: static;
+      margin: 40px 0 0 40px;
+      width: 80px;
+    }
+
+    .login-main {
+      @include flex(column-reverse, nowrap, center, center);
+      gap: 80px;
+      margin-top: 32px;
+      width: 100%;
+    }
+  }
+
+  .header {
+    margin: 0;
+
+    .signup-line {
+      @include flex(row, nowrap, center, center);
+    }
+  }
+
+  .login-form-box {
+    padding: 32px 16px;
+
+    .btns-container {
+      @include flex(column, nowrap, center, center);
+      gap: 21px;
+      margin-top: 24px;
+
+      .btn-secondary,
+      .btn-primary {
+        padding: 16px;
+        width: 180px;
+      }
     }
   }
 }

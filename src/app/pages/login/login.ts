@@ -24,7 +24,6 @@ export class Login {
       '',
       [
         Validators.required,
-        Validators.email,
         Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
       ],
     ],
@@ -42,9 +41,25 @@ export class Login {
     const { email, password } = this.form.value;
     try {
       await this.authService.login(email!, password!);
+      console.log('Login successful');
       this.router.navigate(['/']);
     } catch {
       this.loginError.set(true);
+      ['email', 'password'].forEach(controlName => {
+        const ctrl = this.form.get(controlName);
+        ctrl?.setErrors({ loginError: true });
+        ctrl?.markAsTouched();
+      });
     }
+  }
+
+  clearLoginError(): void {
+    this.loginError.set(false);
+    ['email', 'password'].forEach(controlName => {
+      const ctrl = this.form.get(controlName);
+      if (ctrl?.hasError('loginError')) {
+        ctrl.setErrors(null);
+      }
+    });
   }
 }

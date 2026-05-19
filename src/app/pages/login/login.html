@@ -1,13 +1,15 @@
 <section class="login-container">
   <section class="login-content">
-    <div class="header">
-      <div class="singup-line">
-        <p>Not a Join user?</p>
-        <button class="btn-primary">Sing up</button>
-      </div>
-    </div>
+    <img src="logo/join-mobile.svg" alt="logo join" class="login-logo">
+    <div class="login-main">
+      <header class="header">
+        <div class="signup-line">
+          <p>Not a Join user?</p>
+          <button class="btn-primary">Sign up</button>
+        </div>
+      </header>
 
-    <div class="login-form-box">
+      <div class="login-form-box">
       <div class="headline">
         <h2>Log in</h2>
         <div class="separator"></div>
@@ -15,12 +17,24 @@
 
       <form [formGroup]="form" class="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline" class="custom-input">
-          <input matInput formControlName="email" type="email" placeholder="Email" (input)="loginError.set(false)" />
+          <input
+            matInput
+            formControlName="email"
+            type="email"
+            placeholder="Email"
+            (input)="clearLoginError()"
+          />
           <img matSuffix src="icons/form/mail.svg" alt="mail" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="custom-input">
-          <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'" placeholder="Password" (input)="loginError.set(false)" />
+          <input
+            matInput
+            formControlName="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="Password"
+            (input)="clearLoginError()"
+          />
           <img
             matSuffix
             [src]="showPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
@@ -28,16 +42,22 @@
             (click)="togglePassword()"
             style="cursor: pointer"
           />
+          @if (form.get('password')?.hasError('loginError')) {
+            <mat-error>Check your email and password. Please try again.</mat-error>
+          }
         </mat-form-field>
 
-        @if (loginError()) {
-          <p>Check your email and password. Please try again.</p>
-        }
+        <div class="btns-container">
+          <button class="btn-primary" type="submit" [disabled]="form.invalid">Login</button>
+          <button class="btn-secondary">Guest Log in</button>
+        </div>
       </form>
-      <div class="btns-container">
-        <button class="btn-primary" type="submit" [disabled]="form.invalid">Login</button>
-        <button class="btn-secondary">Guest Log in</button>
       </div>
     </div>
+
+    <footer class="footer">
+    <a routerLink="/privacy-policy" routerLinkActive="active" class="footer-link">Privacy Policy</a>
+    <a routerLink="/legal-notice" routerLinkActive="active" class="footer-link">Legal Notice</a>
+  </footer>
   </section>
 </section>
