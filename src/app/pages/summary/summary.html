@@ -1,76 +1,77 @@
 <main class="summary_container" [class.mobile-intro-active]="showMobileGreeting()">
     <div class="summary_headline">
-        <h2>Join 360</h2>
-        <div class="summary_headline__separator"></div>
-        <h4>Key Metrics at a Glance</h4>
+        <div class="summary_headline--content">
+            <h2>Join 360</h2>
+            <div class="summary_headline__separator"></div>
+            <h4>Key Metrics at a Glance</h4>
+        </div>
     </div>
-   <div class="summary_content_bottom">
-    <section class="summary_content_left">
-
-        <div class="summary_card_content">
-            <div class="summary-card summary-card--todo" routerLink="/board">
-                <div class="summary-card__icon-container">
-                    <img src="icons/other/edit2.svg" alt="Stift Icon">
-                </div>
-                <div class="summary-card__counter">
-                    <h2>{{todoCount()}}</h2>
-                    <span>To-do</span>
-                </div>
-            </div>
-            <div class="summary-card summary-card--done" routerLink="/board">
-                <div class="summary-card__icon-container">
-                    <img src="icons/other/check2.svg" alt="Haken Icon">
-                </div>
-                <div class="summary-card__counter">
-                    <h2>{{doneCount()}}</h2>
-                    <span>Done</span>
-                </div>
-            </div>
-            <div class="summary-card summary-card--urgency" routerLink="/board">
-                <div class="summary-card--urgency__left">
-                    <div class="summary-card__icon-container summary-card__icon-container--urgent">
-                        <img src="icons/board/prio-urgent_white.svg" alt="Urgent Icon">
+    <div class="summary_content_bottom">
+        <section class="summary_content_left">
+            <div class="summary_card_content">
+                <div class="summary-card summary-card--todo" routerLink="/board">
+                    <div class="summary-card__icon-container">
+                        <img src="icons/other/edit2.svg" alt="Stift Icon">
                     </div>
                     <div class="summary-card__counter">
-                        <h2>{{urgentCount()}}</h2>
-                        <span>Urgent</span>
+                        <h2>{{todoCount()}}</h2>
+                        <span>To-do</span>
                     </div>
                 </div>
-                <div class="summary-card__separator"></div>
-                <div class="summary-card__deadline">
-                    @if(upcomingDeadline()){
-                    <div><span>{{upcomingDeadline()}}</span></div>
-                    <div>
-                        <p>Upcoming Deadline</p>
+                <div class="summary-card summary-card--done" routerLink="/board">
+                    <div class="summary-card__icon-container">
+                        <img src="icons/other/check2.svg" alt="Haken Icon">
                     </div>
-                    } @else {
-                    <div><span>No urgent deadlines</span></div>
-                    }
+                    <div class="summary-card__counter">
+                        <h2>{{doneCount()}}</h2>
+                        <span>Done</span>
+                    </div>
                 </div>
-            </div>
+                <div class="summary-card summary-card--urgency" routerLink="/board">
+                    <div class="summary-card--urgency__left">
+                        <div class="summary-card__icon-container summary-card__icon-container--urgent">
+                            <img src="icons/board/prio-urgent_white.svg" alt="Urgent Icon">
+                        </div>
+                        <div class="summary-card__counter">
+                            <h2>{{urgentCount()}}</h2>
+                            <span>Urgent</span>
+                        </div>
+                    </div>
+                    <div class="summary-card__separator"></div>
+                    <div class="summary-card__deadline">
+                        @if(upcomingDeadline()){
+                        <div><span>{{upcomingDeadline()}}</span></div>
+                        <div>
+                            <p>Upcoming Deadline</p>
+                        </div>
+                        } @else {
+                        <div><span>No urgent deadlines</span></div>
+                        }
+                    </div>
+                </div>
 
-            <div class="summary-card summary-card--task-counter" routerLink="/board">
-                <div class="summary-card__counter">
-                    <h2>{{taskInBoardCount()}}</h2>
-                    <span>Tasks in<br>Board</span>
+                <div class="summary-card summary-card--task-counter" routerLink="/board">
+                    <div class="summary-card__counter">
+                        <h2>{{taskInBoardCount()}}</h2>
+                        <span>Tasks in<br>Board</span>
+                    </div>
+                </div>
+                <div class="summary-card summary-card--task-progress" routerLink="/board">
+                    <div class="summary-card__counter">
+                        <h2>{{inPorgressCount()}}</h2>
+                        <span>Tasks in<br>Progress</span>
+                    </div>
+                </div>
+                <div class="summary-card summary-card--await-feedback" routerLink="/board">
+                    <div class="summary-card__counter">
+                        <h2>{{awaitingFeedbackCount()}}</h2>
+                        <span>Awaiting<br>Feedback</span>
+                    </div>
                 </div>
             </div>
-            <div class="summary-card summary-card--task-progress" routerLink="/board">
-                <div class="summary-card__counter">
-                    <h2>{{inPorgressCount()}}</h2>
-                    <span>Tasks in<br>Progress</span>
-                </div>
-            </div>
-            <div class="summary-card summary-card--await-feedback" routerLink="/board">
-                <div class="summary-card__counter">
-                    <h2>{{awaitingFeedbackCount()}}</h2>
-                    <span>Awaiting<br>Feedback</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="summary_content_right">
-        <app-greetings></app-greetings>
-    </section>
+        </section>
+        <section class="summary_content_right">
+            <app-greetings></app-greetings>
+        </section>
     </div>
 </main>

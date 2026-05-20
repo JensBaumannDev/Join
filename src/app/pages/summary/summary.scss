@@ -27,11 +27,24 @@
     @include flex($align-items: center);
     gap: 30px;
 
+    h2,
+    h4 {
+        line-height: 1;
+    }
+
+    &--content {
+        display: flex;
+        align-items: center;
+        gap: 30px
+    }
+
     &__separator {
-        background-color: $color-accent;
+        background-color: $color-highlight;
         height: 60px;
         width: 3px;
     }
+
+
 }
 
 .summary_card_content {
@@ -168,18 +181,26 @@
 }
 
 @media (max-width:$breakpoint-desktop) {
+    .summary_container {
+        padding: 80px 0 150px 0px;
+    }
+
     .summary_content_right {
         display: none;
+    }
+
+    .summary_content_bottom {
+        justify-content: center;
+    }
+
+    .summary_headline {
+        justify-content: center;
     }
 }
 
 @media (max-width: $breakpoint-tablet) {
     .summary_container {
         padding: 50px 16px 150px 16px;
-    }
-
-    .summary-card {
-        max-height: 115px;
     }
 
     .summary-card__icon-container {
@@ -204,82 +225,102 @@
 
     .summary_headline {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 10px;
 
-        h2 {
-            order: 1;
+        &--content {
+            gap: 20px;
+            justify-content: center;
         }
 
-        h4 {
-            order: 2;
-        }
+        .summary_container.mobile-intro-active {
 
-        &__separator {
-            order: 3;
-            width: 90px;
-            height: 3px;
-            margin-top: 16px;
+            .summary_headline,
+            .summary_content_left {
+                display: none;
+            }
+
+            .summary_content_right {
+                @include flex($justify-content: center, $align-items: center);
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: calc(100vh - 80px);
+                background-color: $color-white;
+                z-index: $z-index-overlay;
+            }
         }
     }
 
-    .summary_container.mobile-intro-active {
-
-        .summary_headline,
-        .summary_content_left {
-            display: none;
+    @media (max-width: $breakpoint-mobile) {
+        .summary_container {
+            padding: 50px 16px 100px 16px;
         }
 
-        .summary_content_right {
-            @include flex($justify-content: center, $align-items: center);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: calc(100vh - 80px);
-            background-color: $color-white;
-            z-index: $z-index-overlay;
+        .summary_content_bottom {
+            flex-direction: column;
         }
+
+        .summary_headline {
+            align-items: flex-start;
+
+            &--content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+              
+            }
+
+            h2 {
+                order: 1;
+            }
+
+            h4 {
+                order: 2;
+            }
+
+            &__separator {
+                order: 3;
+                width: 90px;
+                height: 3px;
+            }
+        }
+
+        .summary-card {
+            max-height: 115px;
+        }
+
+        .summary-card--urgency {
+            flex-direction: column;
+            height: auto;
+            min-height: 140px;
+            padding: 16px;
+            gap: 12px;
+
+            .summary-card__separator {
+                display: none;
+            }
+
+            .summary-card__deadline {
+                align-items: center;
+                text-align: center;
+                gap: 4px;
+            }
+        }
+    }
+
+    @media(max-width: 390px) {
+        .summary_container {
+            padding: 50px 8px 100px 8px;
+        }
+
+        .summary_card_content {
+            gap: 15px;
+        }
+
     }
 }
 
-@media (max-width: $breakpoint-mobile) {
-    .summary_container {
-        padding: 50px 16px 100px 16px;
-    }
-
-    .summary_content_bottom {
-        flex-direction: column;
-    }
-
-    .summary-card--urgency {
-        flex-direction: column;
-        height: auto;
-        min-height: 140px;
-        padding: 16px;
-        gap: 12px;
-
-        .summary-card__separator {
-            display: none;
-        }
-
-        .summary-card__deadline {
-            align-items: center;
-            text-align: center;
-            gap: 4px;
-        }
-    }
-}
-
-@media(max-width: 390px) {
-    .summary_container {
-        padding: 50px 8px 100px 8px;
-    }
-
-    .summary_card_content {
-        gap: 15px;
-    }
-
-}
 
 /* #endregion */
