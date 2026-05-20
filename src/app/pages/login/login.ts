@@ -3,11 +3,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth.service';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, RouterModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, RouterLink, RouterLinkActive],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -49,7 +49,6 @@ export class Login implements OnInit {
       this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
-      this.showPassword.set(true);
       ['email', 'password'].forEach(controlName => {
         const ctrl = this.form.get(controlName);
         ctrl?.setErrors({ loginError: true });

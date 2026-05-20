@@ -3,9 +3,8 @@
 }
 
 <section class="login-container">
-  <img src="logo/join-mobile.svg" alt="logo join" class="login-logo">
+  <img src="logo/join-mobile.svg" alt="logo join" class="login-logo" />
   <section class="login-content">
-    <div class="login-main">
       <header class="login-header">
         <div class="signup-line">
           <p>Not a Join user?</p>
@@ -14,54 +13,59 @@
       </header>
 
       <div class="login-form-box">
-      <div class="headline">
-        <h2>Log in</h2>
-        <div class="separator"></div>
-      </div>
-
-      <form [formGroup]="form" class="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline" class="custom-input">
-          <input
-            matInput
-            formControlName="email"
-            type="email"
-            placeholder="Email"
-            (input)="clearLoginError()"
-          />
-          <img matSuffix src="icons/form/mail.svg" alt="mail" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="custom-input">
-          <input
-            matInput
-            formControlName="password"
-            [type]="showPassword() ? 'text' : 'password'"
-            placeholder="Password"
-            (input)="clearLoginError()"
-          />
-          <img
-            matSuffix
-            [src]="showPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
-            alt="toggle password visibility"
-            (click)="togglePassword()"
-            style="cursor: pointer"
-          />
-          @if (form.get('password')?.hasError('loginError')) {
-            <mat-error>Check your email and password. Please try again.</mat-error>
-          }
-        </mat-form-field>
-
-        <div class="btns-container">
-          <button class="btn-primary" type="submit" [disabled]="form.invalid">Login</button>
-          <button class="btn-secondary" type="button" (click)="guestLogin()">Guest Log in</button>
+        <div class="headline">
+          <h2>Log in</h2>
+          <div class="separator"></div>
         </div>
-      </form>
-      </div>
-    </div>
 
+        <form [formGroup]="form" class="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline" class="custom-input">
+            <input
+              matInput
+              formControlName="email"
+              type="email"
+              placeholder="Email"
+              (input)="clearLoginError()"
+            />
+            <img matSuffix src="icons/form/mail.svg" alt="mail" />
+            @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
+              <mat-error>Email is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="custom-input">
+            <input
+              matInput
+              formControlName="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              placeholder="Password"
+              (input)="clearLoginError()"
+            />
+            <img
+              matSuffix
+              [src]="showPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
+              alt="toggle password visibility"
+              (click)="togglePassword()"
+              style="cursor: pointer"
+            />
+            @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+              <mat-error>Password is required.</mat-error>
+            }
+            @if (form.get('password')?.hasError('loginError')) {
+              <mat-error>Check your email and password. Please try again.</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="btns-container">
+            <button class="btn-primary" type="submit" [disabled]="form.invalid">Login</button>
+            <button class="btn-secondary" type="button" (click)="guestLogin()">Guest Log in</button>
+          </div>
+        </form>
+      </div>
+      
     <footer class="login-footer">
-    <a routerLink="/privacy-policy" routerLinkActive="active" class="footer-link">Privacy Policy</a>
-    <a routerLink="/legal-notice" routerLinkActive="active" class="footer-link">Legal Notice</a>
-  </footer>
+      <a routerLink="/privacy-policy" routerLinkActive="active" class="footer-link">Privacy Policy</a>
+      <a routerLink="/legal-notice" routerLinkActive="active" class="footer-link">Legal Notice</a>
+    </footer>
   </section>
 </section>
