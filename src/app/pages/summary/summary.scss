@@ -1,7 +1,7 @@
 @use '../../../styles/abstracts' as *;
 
 .summary_container {
-    @include flex($flex-wrap: nowrap);
+    @include flex($flex-wrap: nowrap, $flex-direction: column);
     max-width: 1208px;
     width: 100%;
     padding: 110px 0 150px 100px;
@@ -13,10 +13,14 @@
 
 .summary_content_right {
     @include flex($align-items: center);
-    padding-left: 80px;
     height: fit-content;
-    max-width: 400px;
     align-self: center;
+}
+
+.summary_content_bottom {
+    display: flex;
+    gap: 80px;
+    padding-top: 55px;
 }
 
 .summary_headline {
@@ -36,7 +40,6 @@
     width: 100%;
     max-width: 560px;
     gap: 30px;
-    padding-top: 55px;
 }
 
 .summary-card {
@@ -114,9 +117,8 @@
 
     &--urgency {
         grid-column: span 6;
-        gap: 60px;
-        flex-wrap: wrap;
-        justify-content: center;
+        padding: 0 65px;
+        flex-wrap: nowrap;
 
         &__left {
             @include flex(row, nowrap, center, center);
@@ -163,72 +165,91 @@
     .summary_container {
         padding: 80px 0 150px 64px;
     }
-
-    .summary_content_right {
-        padding-left: 30px;
-    }
-
 }
 
-@media (max-width: $breakpoint-tablet-lg) {
+@media (max-width:$breakpoint-desktop) {
     .summary_content_right {
         display: none;
-    }
-    .summary_content_left {
-        width: 100%;
     }
 }
 
 @media (max-width: $breakpoint-tablet) {
     .summary_container {
-        padding: 50px 16PX 150px 16px;
+        padding: 50px 16px 150px 16px;
+    }
 
-        .summary-card__icon-container {
+    .summary-card {
+        max-height: 115px;
+    }
+
+    .summary-card__icon-container {
+        width: 40px;
+        height: 40px;
+
+        img {
+            width: 18px;
+            height: 18px;
+        }
+
+        &--urgent {
             width: 40px;
             height: 40px;
 
             img {
                 width: 18px;
-                height: 18px;
-            }
-
-            &--urgent {
-                width: 40px;
-                height: 40px;
-
-                img {
-                    width: 18px;
-                    height: 13px;
-                }
+                height: 13px;
             }
         }
+    }
 
-        .summary_headline {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+    .summary_headline {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
 
-            h2 {
-                order: 1;
-            }
+        h2 {
+            order: 1;
+        }
 
-            h4 {
-                order: 2;
-            }
+        h4 {
+            order: 2;
+        }
 
-            &__separator {
-                order: 3;
-                width: 90px;
-                height: 3px;
-                margin-top: 16px;
-            }
+        &__separator {
+            order: 3;
+            width: 90px;
+            height: 3px;
+            margin-top: 16px;
+        }
+    }
+
+    .summary_container.mobile-intro-active {
+
+        .summary_headline,
+        .summary_content_left {
+            display: none;
+        }
+
+        .summary_content_right {
+            @include flex($justify-content: center, $align-items: center);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: calc(100vh - 80px);
+            background-color: $color-white;
+            z-index: $z-index-overlay;
         }
     }
 }
 
 @media (max-width: $breakpoint-mobile) {
     .summary_container {
-        padding: 50px 8PX 150px 8px;
+        padding: 50px 16px 100px 16px;
+    }
+
+    .summary_content_bottom {
+        flex-direction: column;
     }
 
     .summary-card--urgency {
@@ -248,6 +269,17 @@
             gap: 4px;
         }
     }
+}
+
+@media(max-width: 390px) {
+    .summary_container {
+        padding: 50px 8px 100px 8px;
+    }
+
+    .summary_card_content {
+        gap: 15px;
+    }
+
 }
 
 /* #endregion */

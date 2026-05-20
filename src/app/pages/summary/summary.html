@@ -1,10 +1,12 @@
-<main class="summary_container" [class.mobile-intro-active]="showMobileGreeting">
+<main class="summary_container" [class.mobile-intro-active]="showMobileGreeting()">
+    <div class="summary_headline">
+        <h2>Join 360</h2>
+        <div class="summary_headline__separator"></div>
+        <h4>Key Metrics at a Glance</h4>
+    </div>
+   <div class="summary_content_bottom">
     <section class="summary_content_left">
-        <div class="summary_headline">
-            <h2>Join 360</h2>
-            <div class="summary_headline__separator"></div>
-            <h4>Key Metrics at a Glance</h4>
-        </div>
+
         <div class="summary_card_content">
             <div class="summary-card summary-card--todo" routerLink="/board">
                 <div class="summary-card__icon-container">
@@ -70,4 +72,5 @@
     <section class="summary_content_right">
         <app-greetings></app-greetings>
     </section>
+    </div>
 </main>
