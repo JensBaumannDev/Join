@@ -14,7 +14,59 @@ export class AuthService {
   currentUser = signal<User | null>(null);
 
   constructor() {
-    this.loadSession();
+    void this.loadSession();
+  }
+
+  getDisplayName(user: User | null = this.currentUser()): string {
+    if (!user) return 'Guest';
+    if (user.email === 'guest@join.com') return 'Guest';
+    return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || 'Guest';
+  }
+
+  async syncCurrentUserContact(): Promise<void> {
+    const user = this.currentUser();
+    if (!user?.email) return;
+
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .select('*')
+      .eq('email', user.email)
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Contact sync failed:', error);
+      return;
+    }
+
+    const name = this.getDisplayName(user);
+
+    if (data) {
+      if (data.name !== name) {
+        const { error: updateError } = await this.supabase
+          .from('contacts')
+          .update({ name })
+          .eq('id', data.id);
+
+        if (updateError) {
+          console.error('Contact name sync failed:', updateError);
+        }
+      }
+
+      await this.supabaseService.getContacts();
+      return;
+    }
+
+    const { error: insertError } = await this.supabase
+      .from('contacts')
+      .insert([{ name, email: user.email, phone: '0000000000' }]);
+
+    if (insertError) {
+      console.error('Contact create failed:', insertError);
+      return;
+    }
+
+    await this.supabaseService.getContacts();
   }
 
   /**
@@ -25,6 +77,7 @@ export class AuthService {
   async loadSession(): Promise<void> {
     const { data } = await this.supabase.auth.getSession();
     this.currentUser.set(data.session?.user ?? null);
+    await this.syncCurrentUserContact();
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -39,6 +92,7 @@ export class AuthService {
     }
 
     this.currentUser.set(data.user);
+    await this.syncCurrentUserContact();
   }
 
   async logout(): Promise<void> {
@@ -50,6 +104,7 @@ export class AuthService {
     }
 
     this.currentUser.set(null);
+    sessionStorage.removeItem('greetingShown');
   }
 
   isLoggedIn(): boolean {

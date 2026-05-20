@@ -5,23 +5,25 @@
       <img src="logo/join-mobile.svg" alt="Join Logo" />
     </div>
 
-    <div class="header-actions">
-      <a routerLink="/help" class="header-icon">
-        <img src="icons/header/help-icon.svg" alt="Help" />
-      </a>
+    @if (authService.isLoggedIn()) {
+      <div class="header-actions">
+        <a routerLink="/help" class="header-icon">
+          <img src="icons/header/help-icon.svg" alt="Help" />
+        </a>
 
-      <div class="avatar-wrapper" #menuWrapper>
-        <app-avatar [name]="userName" [size]="55" [isHeader]="true" (click)="toggleMenu()" tabindex="0"></app-avatar>
+        <div class="avatar-wrapper" #menuWrapper>
+          <app-avatar [name]="userName" [size]="55" [isHeader]="true" (click)="toggleMenu()" tabindex="0"></app-avatar>
 
-        @if (menuOpen || isClosing) {
-        <div class="user-menu" [class.closing]="isClosing">
-          <a routerLink="/help" class="user-menu-item header-help-mobile">Help</a>
-          <a routerLink="/legal-notice" class="user-menu-item" (click)="closeMenu()">Legal Notice</a>
-          <a routerLink="/privacy-policy" class="user-menu-item" (click)="closeMenu()">Privacy Policy</a>
-          <span class="user-menu-item" (click)="logout()">Log out</span>
+          @if (menuOpen || isClosing) {
+          <div class="user-menu" [class.closing]="isClosing">
+            <a routerLink="/help" class="user-menu-item header-help-mobile">Help</a>
+            <a routerLink="/legal-notice" class="user-menu-item" (click)="closeMenu()">Legal Notice</a>
+            <a routerLink="/privacy-policy" class="user-menu-item" (click)="closeMenu()">Privacy Policy</a>
+            <span class="user-menu-item" (click)="logout()">Log out</span>
+          </div>
+          }
         </div>
-        }
       </div>
-    </div>
+    }
   </div>
 </header>

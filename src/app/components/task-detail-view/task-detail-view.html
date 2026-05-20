@@ -33,6 +33,9 @@
       <div class="assignee-item">
         <app-avatar [name]="item.name" [color]="item.color" [size]="38" />
         <span>{{ item.name }}</span>
+        @if (item.isYou) {
+          <span class="assignee-you">(You)</span>
+        }
       </div>
     }
   </div>

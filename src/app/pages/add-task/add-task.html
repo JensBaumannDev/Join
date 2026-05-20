@@ -160,7 +160,7 @@
                     <div class="add-task__dropdown-contact">
                       <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
                       <span class="add-task__dropdown-name">
-                        {{ c.name }}
+                        {{ getContactLabel(c) }}
                       </span>
                     </div>
 
@@ -181,7 +181,9 @@
 
             <div class="add-task__selected-contacts">
               @for (c of selectedContacts.slice(0, maxVisibleContacts); track c.id) {
-                <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+                <div title="{{ getContactLabel(c) }}">
+                  <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+                </div>
               }
               @if (selectedContacts.length > maxVisibleContacts) {
                 <div class="add-task__more-wrapper">
@@ -195,7 +197,7 @@
                         <div class="add-task__more-contact">
                           <app-avatar [name]="c.name" [color]="c.color" [size]="32"></app-avatar>
                           <span>
-                            {{ c.name }}
+                            {{ getContactLabel(c) }}
                           </span>
                         </div>
                       }

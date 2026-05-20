@@ -15,8 +15,10 @@ export class Header {
   isClosing = false;
   private router = inject(Router);
 
-  private authService = inject(AuthService);
+  /** Injects the AuthService to handle authentication related tasks. */
+  protected authService = inject(AuthService);
 
+  /** GETS THE USER NAME*/
   get userName(): string {
     const user = this.authService.currentUser();
     if (!user) return 'Guest';
@@ -24,8 +26,11 @@ export class Header {
     return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || '';
   }
 
+  
+  /** Reference to the menu wrapper element in the template. */
   @ViewChild('menuWrapper') menuWrapper!: ElementRef;
 
+  /** TOGGLES THE MENU VISIBILITY*/
   toggleMenu() {
     if (this.menuOpen) {
       this.closeMenu();
@@ -34,6 +39,7 @@ export class Header {
     }
   }
 
+  /** CLOSES THE MENU*/
   closeMenu() {
     this.isClosing = true;
     setTimeout(() => {
@@ -42,11 +48,13 @@ export class Header {
     }, 250);
   }
 
+  /** LOGS OUT THE USER*/
    async logout() {
     await this.authService.logout();
     this.router.navigate(['/login']);
   }
 
+  /** HANDLES OUTSIDE CLICK*/
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.menuOpen && !this.isClosing && this.menuWrapper && !this.menuWrapper.nativeElement.contains(event.target)) {

@@ -5,25 +5,32 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a routerLink="/summary" routerLinkActive="active" class="nav-item">
-      <img src="icons/sidebar/Summary-icon.svg" alt="" />
-      <p>Summary</p>
-    </a>
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/summary" routerLinkActive="active" class="nav-item">
+        <img src="icons/sidebar/Summary-icon.svg" alt="" />
+        <p>Summary</p>
+      </a>
 
-    <a routerLink="/add-task" routerLinkActive="active" class="nav-item">
-      <img src="icons/sidebar/add-task-icon.svg" alt="" />
-      <p>Add Task</p>
-    </a>
+      <a routerLink="/add-task" routerLinkActive="active" class="nav-item">
+        <img src="icons/sidebar/add-task-icon.svg" alt="" />
+        <p>Add Task</p>
+      </a>
 
-    <a routerLink="/board" routerLinkActive="active" class="nav-item">
-      <img src="icons/sidebar/board-icon.svg" alt="" />
-      <p>Board</p>
-    </a>
-    <a routerLink="/contacts" routerLinkActive="active" class="nav-item">
-      <img src="icons/sidebar/contacts-icon.svg" alt="" />
-      <p>Contacts</p>
-    </a>
+      <a routerLink="/board" routerLinkActive="active" class="nav-item">
+        <img src="icons/sidebar/board-icon.svg" alt="" />
+        <p>Board</p>
+      </a>
 
+      <a routerLink="/contacts" routerLinkActive="active" class="nav-item">
+        <img src="icons/sidebar/contacts-icon.svg" alt="" />
+        <p>Contacts</p>
+      </a>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active" class="nav-item">
+        <img src="icons/sidebar/Log-In-icon.svg" alt="" />
+        <p>Login</p>
+      </a>
+    }
   </nav>
 
   <div class="sidebar-footer">

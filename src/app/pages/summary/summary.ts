@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { RouterLink } from '@angular/router';
 import { Greetings } from "../../components/greetings/greetings";
@@ -11,6 +11,8 @@ import { Greetings } from "../../components/greetings/greetings";
 })
 export class Summary implements OnInit {
   private taskService = inject(TaskService);
+  /** MOBILE GREETING OVERLAY TOGGLE */
+  showMobileGreeting = signal(false);
 
   /** TO DO COUNTER */
   todoCount = computed(() =>
@@ -53,7 +55,6 @@ export class Summary implements OnInit {
       if (task.status?.toLowerCase() === 'done') {
         return false;
       }
-
       const taskDate = new Date(task.due_date);
       return taskDate >= today;
     });
@@ -92,9 +93,16 @@ export class Summary implements OnInit {
     ).length
   );
 
-  showMobileGreeting = true;
+  /** INITIALIZES GREETING INTRO AND LOADS TASKS */
+  ngOnInit() {
+    const alreadySeen = sessionStorage.getItem('greetingShown');
 
-  async ngOnInit() {
-    await this.taskService.getTasks();
+    if (!alreadySeen) {
+      this.showMobileGreeting.set(true);
+      sessionStorage.setItem('greetingShown', 'true');
+
+      setTimeout(() => this.showMobileGreeting.set(false), 3000);
+    }
+    this.taskService.getTasks();
   }
 }
