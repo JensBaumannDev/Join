@@ -6,6 +6,7 @@ import { Supabase } from '../contacts/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../services/auth.service';
 import { Task } from '../../interfaces/task.interface';
 import { Subtask } from '../../components/subtask/subtask';
 
@@ -25,6 +26,7 @@ export class AddTask implements OnInit {
   @Output() cancelClicked = new EventEmitter<void>();
 
   contactService = inject(Supabase);
+  protected authService = inject(AuthService);
   taskService = inject(TaskService);
   private router = inject(Router);
 
@@ -154,6 +156,14 @@ export class AddTask implements OnInit {
     this.taskForm.patchValue({
       assignedTo: this.selectedContacts.map((c) => c.name),
     });
+  }
+
+  isCurrentUserContact(contact: any): boolean {
+    return this.authService.currentUser()?.email === contact?.email;
+  }
+
+  getContactLabel(contact: any): string {
+    return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
   setPriority(value: string) {
