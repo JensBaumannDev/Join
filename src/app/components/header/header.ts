@@ -15,7 +15,7 @@ export class Header {
   isClosing = false;
   private router = inject(Router);
 
-  private authService = inject(AuthService);
+  protected authService = inject(AuthService);
 
   get userName(): string {
     const user = this.authService.currentUser();

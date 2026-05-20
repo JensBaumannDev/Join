@@ -1,3 +1,4 @@
+@use '../../../styles/components/' as *;
 @use '../../../styles/abstracts/' as *;
 
 .avatar-circle {
@@ -12,7 +13,9 @@
   flex-shrink: 0;
   transform: translateZ(0);
   -webkit-font-smoothing: antialiased;
+
 }
+
 
 .header-variant {
   background-color: $color-white;
@@ -23,6 +26,8 @@
   font-weight: 700;
 
   &:hover {
-    background-color: $color-gray-light;
+    background-color: $color-avatar-hover;
+    box-shadow: inset 0 0 0 2px $color-bg-content;
+
   }
 }
