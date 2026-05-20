@@ -334,7 +334,7 @@
   }
 
   &__selected-contacts {
-    @include flex(row, wrap, flex-start, center);
+    @include flex(row, wrap, flex-start);
     margin-top: 16px;
 
     &:empty {

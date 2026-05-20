@@ -24,7 +24,7 @@
                 <app-avatar [name]="c.name" [color]="c.color"></app-avatar>
 
                 <div class="contacts__info">
-                  <div class="contacts__name">{{ c.name }}</div>
+                  <div class="contacts__name">{{ getContactLabel(c) }}</div>
                   <div class="contacts__email">{{ c.email }}</div>
                 </div>
               </div>
