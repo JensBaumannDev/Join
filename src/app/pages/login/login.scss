@@ -26,6 +26,7 @@
 
 .login-content {
   max-width: 1440px;
+  margin: 0 auto;
   @include flex(column, nowrap, space-between, center);
   gap: 0;
   height: 100%;
@@ -168,7 +169,7 @@
 
 @keyframes logo-from-center {
   from { transform: translate(-50%, -50%) scale(2.74); }
-  to   { transform: translate(calc(80px - 50vw), calc(80px - 50vh)); }
+  to   { transform: translate(max(calc(80px - 50vw), -640px), calc(80px - 50vh)); }
 }
 
 @keyframes logo-from-center-mobile {
