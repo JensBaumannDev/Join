@@ -1,7 +1,8 @@
 
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { Contact } from '../../../interfaces/interface';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-contact-detail',
@@ -31,6 +32,12 @@ export class ContactDetail {
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();
+
+  private authService = inject(AuthService);
+
+  get isCurrentUserContact(): boolean {
+    return this.authService.currentUser()?.email === this.contact.email;
+  }
  
   /** Formats a raw phone number into a standardized display format: +49 1234 123 12 1 */
   formatPhone(phone: any): string {

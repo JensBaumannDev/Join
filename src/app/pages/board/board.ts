@@ -4,6 +4,7 @@ import { DialogService } from '../../services/dialog.service';
 import { TaskDetail } from '../../components/task-detail/task-detail';
 import { AddTaskDialog } from '../../components/add-task-dialog/add-task-dialog';
 import { NgTemplateOutlet } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 import {
   CdkDragDrop,
   CdkDropListGroup,
@@ -29,6 +30,7 @@ export class Board implements OnInit {
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   screenWidth = signal(window.innerWidth);
 
@@ -195,6 +197,23 @@ export class Board implements OnInit {
     return this.avatarService.getAvatarData(name, color);
   }
 
+  private get currentUserContactName(): string | null {
+    const user = this.authService.currentUser();
+    if (!user?.email) return null;
+    const contact = this.taskService.contacts().find((c) => c.email === user.email);
+    return contact?.name || this.authService.getDisplayName(user);
+  }
+
+  private isCurrentUserAssignment(assign: any): boolean {
+    const name = assign.contact?.name || assign.name;
+    return !!name && name === this.currentUserContactName;
+  }
+
+  getAssignmentLabel(assign: any): string {
+    const name = assign.contact?.name || assign.name || 'Unknown';
+    return this.isCurrentUserAssignment(assign) ? `${name} (You)` : name;
+  }
+
   /** Returns assignments for a task, prioritizing task_assignments but falling back to assigned_to names */
   getTaskAssignments(task: Task): any[] {
     if (task.task_assignments && task.task_assignments.length > 0) {
@@ -226,10 +245,14 @@ export class Board implements OnInit {
 
     return names.map(name => {
       const contact = allContacts.find(c => c.name === name);
-      return {
+      const assignment = {
         name: name,
         color: contact?.color,
-        contact: contact
+        contact: contact,
+      };
+      return {
+        ...assignment,
+        isYou: this.isCurrentUserAssignment(assignment),
       };
     });
   }

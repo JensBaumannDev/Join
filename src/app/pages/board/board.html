@@ -38,7 +38,7 @@
                             <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
                                 @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
                                 @if (getContactInfo(assign); as info) {
-                                <div class="avatar" [style.background-color]="info.color">
+                                <div class="avatar" [style.background-color]="info.color" [attr.title]="getAssignmentLabel(assign)">
                                     {{ info.initials }}
                                 </div>
                                 }
@@ -78,7 +78,7 @@
             <div class="avatar avatar-sm" [style.background-color]="info.color">
                 {{ info.initials }}
             </div>
-            <span class="avatar-popup-name">{{ assign.contact?.name || assign.name }}</span>
+            <span class="avatar-popup-name">{{ getAssignmentLabel(assign) }}</span>
         </div>
         }
     }

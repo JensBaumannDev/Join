@@ -4,6 +4,7 @@ import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
 import { TaskService } from '../../services/task.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-task-detail-view',
@@ -21,8 +22,16 @@ export class TaskDetailView {
   @Output() subtaskToggled = new EventEmitter<any>();
 
   private taskService = inject(TaskService);
+  private authService = inject(AuthService);
 
-  get assignees(): { name: string; color?: string }[] {
+  private get currentUserContactName(): string | null {
+    const user = this.authService.currentUser();
+    if (!user?.email) return null;
+    const contact = this.taskService.contacts().find((c) => c.email === user.email);
+    return contact?.name || this.authService.getDisplayName(user);
+  }
+
+  get assignees(): { name: string; color?: string; isYou?: boolean }[] {
     const val: any = this.task.assigned_to;
     if (!val) return [];
 
@@ -45,9 +54,13 @@ export class TaskDetailView {
     }
 
     const allContacts = this.taskService.contacts();
-    return names.map(name => ({
-      name,
-      color: allContacts.find(c => c.name === name)?.color,
-    }));
+    return names.map(name => {
+      const color = allContacts.find(c => c.name === name)?.color;
+      return {
+        name,
+        color,
+        isYou: name === this.currentUserContactName,
+      };
+    });
   }
 }
