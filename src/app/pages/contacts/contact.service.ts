@@ -16,6 +16,22 @@ export class Supabase {
 
   selectedContact = signal<Contact | null>(null)
 
+  async findContactByEmail(email: string) {
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .select('*')
+      .eq('email', email)
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Contact lookup error:', error)
+      return null
+    }
+
+    return data as Contact | null
+  }
+
   private channel: any = null
 
   async getContacts() {
@@ -74,6 +90,23 @@ export class Supabase {
 
     if (error) {
       console.error('Fehler beim Updaten:', error);
+      return;
+    }
+
+    this.contacts.update((list) =>
+      list.map((c) =>
+        c.id === id ? { ...c, name, email, phone, color } : c
+      )
+    );
+
+    if (this.selectedContact()?.id === id) {
+      this.selectedContact.set({
+        ...this.selectedContact()!,
+        name,
+        email,
+        phone,
+        color,
+      });
     }
   }
 
@@ -85,6 +118,13 @@ export class Supabase {
 
     if (error) {
       console.error('Fehler beim Löschen:', error);
+      return;
+    }
+
+    this.contacts.update((list) => list.filter((c) => c.id !== id));
+
+    if (this.selectedContact()?.id === id) {
+      this.selectedContact.set(null);
     }
   }
 }
