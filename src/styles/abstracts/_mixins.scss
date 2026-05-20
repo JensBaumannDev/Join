@@ -75,6 +75,20 @@
   }
 }
 
+/* src/styles.scss */
+
+@mixin clean-autofill($color-white, $color-text) {
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:focus, 
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: $color-text;
+    -webkit-box-shadow: 0 0 0px 1000px $color-white inset;
+    box-shadow: 0 0 0px 1000px $color-white inset;
+    font-family: inherit;
+  }
+}
+
 /* #region responsive-mixins */
 
 // Up to 370px
