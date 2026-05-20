@@ -50,6 +50,7 @@ export class AuthService {
     }
 
     this.currentUser.set(null);
+    sessionStorage.removeItem('greetingShown');
   }
 
   isLoggedIn(): boolean {
