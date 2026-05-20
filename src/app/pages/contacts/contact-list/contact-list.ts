@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactDialogComponent } from '../contact-overlay/contact-overlay';
 import { ToastService } from '../../../services/toast.service';
 import { AvatarService } from '../../../services/avatar.service';
+import { AuthService } from '../../../services/auth.service';
 import { Contact } from '../../../interfaces/interface';
 
 @Component({
@@ -17,9 +18,20 @@ import { Contact } from '../../../interfaces/interface';
 })
 export class ContactList implements OnInit {
   contactService = inject(Supabase);
+  protected authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private toastService = inject(ToastService);
   private avatarService = inject(AvatarService);
+
+  isCurrentUserContact(contact: Contact): boolean {
+    const user = this.authService.currentUser();
+    if (!user) return false;
+    return user.email === contact.email;
+  }
+
+  getContactLabel(contact: Contact): string {
+    return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
+  }
 
   openContactDialog(mode: 'add' | 'edit', contact?: Contact) {
     const dialogRef = this.dialog.open(ContactDialogComponent, {
