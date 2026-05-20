@@ -1,10 +1,11 @@
 import { Component, OnInit, inject, computed } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { RouterLink } from '@angular/router';
+import { Greetings } from "../../components/greetings/greetings";
 
 @Component({
   selector: 'app-summary',
-  imports: [RouterLink],
+  imports: [RouterLink, Greetings],
   templateUrl: './summary.html',
   styleUrl: './summary.scss',
 })
@@ -91,10 +92,9 @@ export class Summary implements OnInit {
     ).length
   );
 
+  showMobileGreeting = true;
+
   async ngOnInit() {
     await this.taskService.getTasks();
   }
-
-
-
 }

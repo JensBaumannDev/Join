@@ -42,6 +42,11 @@ span {
   font-weight: 400;
 }
 
+h1 {
+  @include mx.fluid-text(40, 64);
+  font-weight: 700;
+}
+
 h2 {
   @include mx.fluid-text(38, 60);
   font-weight: 700;
