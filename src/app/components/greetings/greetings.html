@@ -1,0 +1,8 @@
+<section class="greetings_container">
+    @if (userName === 'Guest') {
+    <p>{{ greetingText }}!</p>
+    } @else {
+    <p>{{ greetingText }},</p>
+    <h1>{{ userName }}</h1>
+    }
+</section>

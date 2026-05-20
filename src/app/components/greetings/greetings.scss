@@ -1,0 +1,21 @@
+@use '../../../styles/abstracts/' as *;
+
+.greetings_container {
+    @include flex($flex-direction: column);
+    gap: 10px;
+    height: auto;
+}
+
+p {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 500;
+    margin: 0;
+}
+
+h1 {
+    color: $color-highlight;
+    margin: 0;
+    line-height: 1;
+    word-break: break-word;
+    hyphens: auto;
+}

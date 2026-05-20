@@ -1,9 +1,22 @@
 @use '../../../styles/abstracts' as *;
 
 .summary_container {
-    @include flex($flex-direction: column);
+    @include flex($flex-wrap: nowrap);
+    max-width: 1208px;
     width: 100%;
     padding: 110px 0 150px 100px;
+}
+
+.summary_content_left {
+    @include flex($flex-direction: column);
+}
+
+.summary_content_right {
+    @include flex($align-items: center);
+    padding-left: 80px;
+    height: fit-content;
+    max-width: 400px;
+    align-self: center;
 }
 
 .summary_headline {
@@ -146,6 +159,26 @@
 }
 
 /* #region RESPONSIVE */
+@media (max-width: 1389px) {
+    .summary_container {
+        padding: 80px 0 150px 64px;
+    }
+
+    .summary_content_right {
+        padding-left: 30px;
+    }
+
+}
+
+@media (max-width: $breakpoint-tablet-lg) {
+    .summary_content_right {
+        display: none;
+    }
+    .summary_content_left {
+        width: 100%;
+    }
+}
+
 @media (max-width: $breakpoint-tablet) {
     .summary_container {
         padding: 50px 16PX 150px 16px;
@@ -167,6 +200,27 @@
                     width: 18px;
                     height: 13px;
                 }
+            }
+        }
+
+        .summary_headline {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+
+            h2 {
+                order: 1;
+            }
+
+            h4 {
+                order: 2;
+            }
+
+            &__separator {
+                order: 3;
+                width: 90px;
+                height: 3px;
+                margin-top: 16px;
             }
         }
     }

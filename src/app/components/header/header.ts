@@ -1,6 +1,7 @@
-import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, HostListener, ViewChild, ElementRef, inject } from '@angular/core';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router  } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,16 @@ import { RouterModule } from '@angular/router';
 export class Header {
   menuOpen = false;
   isClosing = false;
+  private router = inject(Router);
+
+  private authService = inject(AuthService);
+
+  get userName(): string {
+    const user = this.authService.currentUser();
+    if (!user) return 'Guest';
+    if (user.email === 'guest@join.com') return 'Guest';
+    return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || '';
+  }
 
   @ViewChild('menuWrapper') menuWrapper!: ElementRef;
 
@@ -31,7 +42,9 @@ export class Header {
     }, 250);
   }
 
-  logout() {
+   async logout() {
+    await this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   @HostListener('document:click', ['$event'])
