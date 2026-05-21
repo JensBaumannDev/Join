@@ -25,7 +25,7 @@ export class App {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.isFullBleed.set(false);
-      this.isLoginPage.set(event.urlAfterRedirects === '/login');
+      this.isLoginPage.set(event.urlAfterRedirects === '/login' || event.urlAfterRedirects === '/signup');
     });
   }
 }

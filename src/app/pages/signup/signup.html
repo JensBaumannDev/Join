@@ -1,0 +1,111 @@
+<section class="signup-container">
+  <section class="signup-content">
+    <header class="signup-header">
+      <img src="logo/join-mobile.svg" alt="logo join" class="login-logo" />
+    </header>
+
+    <main class="signup-form-container">
+      <button class="back-button" type="button" routerLink="/login">
+        <img src="icons/other/arrow.svg" alt="Back" />
+      </button>
+      <div class="headline">
+        <h2>Sign up</h2>
+        <div class="separator"></div>
+      </div>
+
+      <form [formGroup]="form" class="form">
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input matInput formControlName="name" placeholder="Name" />
+          <img matSuffix src="icons/form/person.svg" alt="user" />
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>Field is required</mat-error>
+          }
+          @if (form.get('name')?.hasError('pattern')) {
+            <mat-error>First &amp; last name required (no numbers)</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input matInput formControlName="email" type="email" placeholder="Email" />
+          <img matSuffix src="icons/form/mail.svg" alt="mail" />
+          @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
+            <mat-error>Email is required.</mat-error>
+          }
+          @if (form.get('email')?.hasError('pattern')) {
+            <mat-error>Email is invalid</mat-error>
+          }
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input
+            matInput
+            formControlName="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="Password"
+          />
+          @if (!form.get('password')?.value) {
+            <img matSuffix src="icons/form/lock.svg" alt="lock" />
+          } @else {
+            <img
+              matSuffix
+              [src]="showPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
+              alt="toggle password visibility"
+              (click)="togglePassword()"
+              style="cursor: pointer"
+            />
+          }
+          @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+            <mat-error>Password is required.</mat-error>
+          }
+          @if (form.get('password')?.hasError('minlength')) {
+            <mat-error>Password must be at least 6 characters.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
+          <input
+            matInput
+            formControlName="confirmPassword"
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            placeholder="Confirm Password"
+          />
+          @if (!form.get('confirmPassword')?.value) {
+            <img matSuffix src="icons/form/lock.svg" alt="lock" />
+          } @else {
+            <img
+              matSuffix
+              [src]="showConfirmPassword() ? 'icons/form/visibility.svg' : 'icons/form/visibility_off.svg'"
+              alt="toggle password visibility"
+              (click)="toggleConfirmPassword()"
+              style="cursor: pointer"
+            />
+          }
+          @if (
+            form.get('confirmPassword')?.touched &&
+            form.get('confirmPassword')?.hasError('required')
+          ) {
+            <mat-error>Confirm Password is required.</mat-error>
+          }
+
+          @if (
+            form.get('confirmPassword')?.touched &&
+            form.get('confirmPassword')?.hasError('passwordMismatch')
+          ) {
+            <mat-error>Your passwords don't match. Please try again.</mat-error>
+          }
+        </mat-form-field>
+
+
+        <button class="btn-primary" type="submit" [disabled]="form.invalid">Sign up</button>
+      </form>
+    </main>
+
+    <footer class="signup-footer">
+      <a routerLink="/privacy-policy" routerLinkActive="active" class="footer-link"
+        >Privacy Policy</a
+      >
+      <a routerLink="/legal-notice" routerLinkActive="active" class="footer-link">Legal Notice</a>
+    </footer>
+  </section>
+</section>
