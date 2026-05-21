@@ -63,3 +63,8 @@ h4 {
   @include mx.fluid-text(19, 27);
   font-weight: 400;
 }
+
+h5 {
+  @include mx.fluid-text(16, 20);
+  font-weight: 700;
+}
