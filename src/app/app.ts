@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Sidebar } from './components/sidebar/sidebar';
 import { Header } from './components/header/header';
@@ -17,6 +17,7 @@ export class App {
   protected readonly title = signal('join');
   private router = inject(Router);
   readonly authService = inject(AuthService);
+  isAuthResolved = computed(() => this.authService.isAuthResolved());
   isFullBleed = signal(false);
   isLoginPage = signal(false);
 

@@ -71,6 +71,10 @@
   .form {
     max-width: 420px;
     gap: 24px;
+
+    .checkbox-container{
+      @include flex(row, nowrap, center, center);
+    }
   }
 
   .btn-primary {

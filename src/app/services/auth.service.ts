@@ -12,6 +12,7 @@ export class AuthService {
   }
 
   currentUser = signal<User | null>(null);
+  isAuthResolved = signal(false);
 
   constructor() {
     void this.loadSession();
@@ -78,6 +79,7 @@ export class AuthService {
     const { data } = await this.supabase.auth.getSession();
     this.currentUser.set(data.session?.user ?? null);
     await this.syncCurrentUserContact();
+    this.isAuthResolved.set(true);
   }
 
   async login(email: string, password: string): Promise<void> {

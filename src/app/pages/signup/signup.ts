@@ -4,10 +4,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-signup',
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, RouterLink, RouterLinkActive],
+    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, RouterLink, RouterLinkActive, MatCheckboxModule],
     standalone: true,
     templateUrl: './signup.html',
     styleUrls: ['./signup.scss']
@@ -31,6 +32,7 @@ export class Signup {
         ],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
+        acceptTerms: [false, Validators.requiredTrue],
     }, { validators: Signup.passwordMatchValidator });
 
     static passwordMatchValidator(form: AbstractControl) {
