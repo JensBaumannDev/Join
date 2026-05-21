@@ -6,16 +6,17 @@
   max-width: 1208px;
 
   .header {
-    @include var.flex($justify-content: space-between, $align-items: center);
+    @include var.flex($flex-wrap: nowrap, $justify-content: space-between, $align-items: center);
     margin-bottom: 30px;
   }
 
   section {
-    margin-bottom: 24px;
+    margin-bottom: 35px;
 
     h3 {
       color: var.$color-text;
       margin-bottom: 10px;
+      font-size: 27px;
     }
 
     p {
@@ -33,13 +34,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: background-color 125ms;
-
-    &:hover {
-      background-color: var.$color-gray-light;
-    }
 
     img {
       width: 40px;
