@@ -7,14 +7,15 @@ import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
 import { LegalNotice } from './pages/legal-notice/legal-notice';
 import { Help } from './pages/help/help';
 import { Login } from './pages/login/login';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
-  { path: 'summary', component: Summary },
-  { path: 'board', component: Board },
-  { path: 'add-task', component: AddTask },
-  { path: 'contacts', component: Contacts },
+  { path: 'summary', component: Summary, canActivate: [authGuard] },
+  { path: 'board', component: Board, canActivate: [authGuard] },
+  { path: 'add-task', component: AddTask, canActivate: [authGuard] },
+  { path: 'contacts', component: Contacts, canActivate: [authGuard] },
   { path: 'privacy-policy', component: PrivacyPolicy },
   { path: 'legal-notice', component: LegalNotice },
   { path: 'help', component: Help },
