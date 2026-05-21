@@ -7,9 +7,11 @@
 
     @if (authService.isLoggedIn()) {
       <div class="header-actions">
+        @if (!isHelpPage) {
         <a routerLink="/help" class="header-icon">
           <img src="icons/header/help-icon.svg" alt="Help" />
         </a>
+        }
 
         <div class="avatar-wrapper" #menuWrapper>
           <app-avatar [name]="userName" [size]="55" [isHeader]="true" (click)="toggleMenu()" tabindex="0"></app-avatar>
