@@ -1,33 +1,55 @@
 @use '../../../styles/abstracts' as var;
 
 .privacy-policy-container {
-    padding: 110px 100px 0 100px;
-    color: var.$color-text;
-    max-width: 1208px;
+  padding: 110px 100px 100px 100px;
+  color: var.$color-text;
+  max-width: 1208px;
 
-    .header {
-        @include var.flex($justify-content: space-between, $align-items: center);
-        margin-bottom: 30px;
+  .header {
+    @include var.flex($justify-content: space-between, $align-items: center);
+    margin-bottom: 30px;
+  }
 
+  section {
+    margin-bottom: 24px;
+
+    h3 {
+      color: var.$color-text;
+      margin-bottom: 10px;
     }
 
-    section {
-        margin-bottom: 24px;
-
-        h3 {
-            color: var.$color-text;
-            margin-bottom: 10px;
-        }
-
-        p {
-            margin-bottom: 16px;
-            color: var.$color-text;
-        }
+    p {
+      margin-bottom: 16px;
+      color: var.$color-text;
     }
+  }
+}
+
+.privacy-policy-container .header .back-button {
+  display: none;
+
+  @include var.tablet-xl {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 125ms;
+
+    &:hover {
+      background-color: var.$color-gray-light;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
 }
 
 @include var.mobile {
-    .privacy-policy-container {
-        padding: 50px 16px 0 16px;
-    }
+  .privacy-policy-container {
+    padding: 50px 16px 90px 16px;
+  }
 }
