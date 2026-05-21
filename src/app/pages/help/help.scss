@@ -1,7 +1,7 @@
-@use "../../../styles/abstracts/" as *;
+@use '../../../styles/abstracts/' as *;
 
 .help-section {
-  padding: 80px 65px 0 65px;
+  padding: 80px 65px 80px 65px;
   color: $color-primary;
   max-width: 1208px;
 }
@@ -40,24 +40,24 @@
   p {
     font-size: 16px;
     font-weight: 400;
-    line-height: 1.5;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     color: $color-text;
 
     span {
       color: $color-highlight;
+      font-size: 16px;
     }
   }
 
   h2 {
     font-size: 27px;
     font-weight: 700;
-    margin: 32px 0 16px;
+    margin: 24px 0 16px;
     color: $color-text;
   }
 
   .content-block {
-    margin-bottom: 48px;
+    margin-bottom: 24px;
   }
 
   .help-list {
@@ -66,13 +66,13 @@
     counter-reset: help-counter;
 
     li {
-      margin-bottom: 32px;
+      margin-bottom: 16px;
       padding-left: 48px;
       position: relative;
 
       &::before {
         counter-increment: help-counter;
-        content: counter(help-counter) ".";
+        content: counter(help-counter) '.';
         position: absolute;
         left: 0;
         top: 0;
@@ -81,9 +81,8 @@
       }
 
       h3 {
-        font-size: 27px;
+        font-size: 20px;
         font-weight: 700;
-        margin: 0 0 8px;
         color: $color-text;
       }
 
@@ -91,19 +90,19 @@
         margin: 0;
       }
     }
-  }
-
-  .help-footer {
-    margin-top: 64px;
 
     a {
-      color: $color-highlight;
+      color: $color-text;
       text-decoration: none;
 
       &:hover {
         text-decoration: underline;
       }
     }
+  }
+
+  .help-footer {
+    margin-top: 32px;
 
     .enjoy {
       font-size: 27px;
@@ -114,6 +113,6 @@
 
 @include mobile {
   .help-section {
-    padding: 50px 16px 0 16px;
+    padding: 50px 16px 80px 16px;
   }
 }
