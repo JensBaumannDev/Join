@@ -271,7 +271,6 @@
   }
 
   &__dropdown-option {
-    height: 50px;
     padding: 7px 16px;
     @include flex(row, nowrap, space-between, center);
     cursor: pointer;
@@ -352,12 +351,13 @@
   }
 
   &__more-count {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: $color-primary;
     color: $color-white;
-    border: 2px solid $color-white;
+    border: none;
+    box-shadow: 0 0 0 2px $color-white;
     font: inherit;
     @include flex(row, wrap, center, center);
     cursor: pointer;
@@ -485,6 +485,7 @@
         flex: none;
       }
     }
+
     &__more-dropdown {
       left: -138px;
     }
