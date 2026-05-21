@@ -2,85 +2,92 @@
 
 .legal-notice-container,
 .privacy-policy-container {
-    padding: 110px 100px 0 100px;
-    color: var.$color-primary;
-    max-width: 1208px;
+  padding: 110px 100px 100px 100px;
+  color: var.$color-primary;
+  max-width: 1208px;
 
-    .header {
-        @include var.flex($justify-content: space-between, $align-items: center);
-        margin-bottom: 30px;
+  .header {
+    @include var.flex($justify-content: space-between, $align-items: center);
+    margin-bottom: 30px;
 
-        h2 {
-            color: var.$color-text;
-        }
+    h2 {
+      color: var.$color-text;
+    }
+  }
 
-        .back-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background-color 125ms;
+  .header .back-button{
+    display: none;
+  }
 
-            &:hover {
-                background-color: var.$color-gray-light;
-            }
+  section {
+    margin-bottom: 24px;
 
-            img {
-                width: 32px;
-                height: 32px;
-            }
-        }
+    h3 {
+      color: var.$color-text;
+      margin-bottom: 16px;
     }
 
-    section {
-        margin-bottom: 24px;
-
-        h3 {
-            color: var.$color-text;
-            margin-bottom: 16px;
-        }
-
-        p {
-            color: var.$color-text;
-            margin-bottom: 16px;
-        }
-
-        ul {
-            list-style: disc;
-            margin-left: 24px;
-            margin-bottom: 16px;
-
-            li {
-                font-size: 16px;
-                line-height: 1.5;
-                margin-bottom: 8px;
-            }
-        }
-
-        a {
-            color: var.$color-highlight;
-            text-decoration: none;
-
-            &.text-accent {
-                color: var.$color-accent;
-            }
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
+    p {
+      color: var.$color-text;
+      margin-bottom: 16px;
     }
 
-    .text-accent {
+    ul {
+      list-style: disc;
+      margin-left: 24px;
+      margin-bottom: 16px;
+
+      li {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+    }
+
+    a {
+      color: var.$color-highlight;
+      text-decoration: none;
+
+      &.text-accent {
         color: var.$color-accent;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
+  }
+
+  .text-accent {
+    color: var.$color-accent;
+  }
 }
 
 @include var.mobile {
+  .legal-notice-container,
+  .privacy-policy-container {
+    padding: 50px 16px 90px 16px;
+  }
+}
 
-    .legal-notice-container,
-    .privacy-policy-container {
-        padding: 50px 16px 0 16px;
+.legal-notice-container .header .back-button,
+.privacy-policy-container .header .back-button {
+  @include var.tablet-xl {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 125ms;
+
+    &:hover {
+      background-color: var.$color-gray-light;
     }
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
 }
