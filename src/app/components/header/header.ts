@@ -15,6 +15,11 @@ export class Header {
   isClosing = false;
   private router = inject(Router);
 
+  /** Checks if the current route is the help page */
+  get isHelpPage(): boolean {
+    return this.router.url === '/help';
+  }
+
   /** Injects the AuthService to handle authentication related tasks. */
   protected authService = inject(AuthService);
 
