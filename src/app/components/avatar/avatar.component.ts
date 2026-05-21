@@ -29,8 +29,8 @@ export class AvatarComponent {
 
   /** Font size computed based on the avatar size */
   fontSize = computed(() => {
-    return Math.floor(this.size() * 0.4);
+    return this.isHeader() ? 24 : 16;
   });
 
-  constructor(private avatarService: AvatarService) {}
+  constructor(private avatarService: AvatarService) { }
 }

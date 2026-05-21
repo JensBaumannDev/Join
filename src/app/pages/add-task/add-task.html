@@ -158,7 +158,7 @@
                     (click)="toggleContact(c)"
                   >
                     <div class="add-task__dropdown-contact">
-                      <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+                      <app-avatar [name]="c.name" [color]="c.color" [size]="42"></app-avatar>
                       <span class="add-task__dropdown-name">
                         {{ getContactLabel(c) }}
                       </span>
@@ -182,7 +182,7 @@
             <div class="add-task__selected-contacts">
               @for (c of selectedContacts.slice(0, maxVisibleContacts); track c.id) {
                 <div title="{{ getContactLabel(c) }}">
-                  <app-avatar [name]="c.name" [color]="c.color" [size]="36"></app-avatar>
+                  <app-avatar [name]="c.name" [color]="c.color" [size]="42"></app-avatar>
                 </div>
               }
               @if (selectedContacts.length > maxVisibleContacts) {
@@ -195,7 +195,7 @@
                     <div class="add-task__more-dropdown">
                       @for (c of selectedContacts.slice(maxVisibleContacts); track c.id) {
                         <div class="add-task__more-contact">
-                          <app-avatar [name]="c.name" [color]="c.color" [size]="32"></app-avatar>
+                          <app-avatar [name]="c.name" [color]="c.color" [size]="42"></app-avatar>
                           <span>
                             {{ getContactLabel(c) }}
                           </span>

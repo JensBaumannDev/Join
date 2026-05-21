@@ -31,7 +31,8 @@
   <div class="assignee-list">
     @for (item of assignees; track item.name) {
       <div class="assignee-item">
-        <app-avatar [name]="item.name" [color]="item.color" [size]="38" />
+        <app-avatar [name]="item.name" [color]="item.color" [size]="42
+        " />
         <span>{{ item.name }}</span>
         @if (item.isYou) {
           <span class="assignee-you">(You)</span>
