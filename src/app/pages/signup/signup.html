@@ -36,7 +36,6 @@
           }
         </mat-form-field>
 
-
         <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input
             matInput
@@ -96,6 +95,11 @@
           }
         </mat-form-field>
 
+        <div class="checkbox-container">
+          <mat-checkbox formControlName="acceptTerms" color="primary">
+            I accept the <a routerLink="/privacy-policy">Privacy Policy</a>
+          </mat-checkbox>
+        </div>
 
         <button class="btn-primary" type="submit" [disabled]="form.invalid">Sign up</button>
       </form>
