@@ -336,6 +336,7 @@
   &__selected-contacts {
     @include flex(row, wrap, flex-start);
     margin-top: 16px;
+    gap: 10px;
 
     &:empty {
       margin-top: 0;
@@ -485,7 +486,7 @@
       }
     }
     &__more-dropdown {
-      left: -84px;
+      left: -138px;
     }
 
     &__input,
