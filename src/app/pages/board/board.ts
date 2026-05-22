@@ -46,10 +46,14 @@ export class Board implements OnInit {
   screenWidth = signal(window.innerWidth);
 
   /** State for the avatar popup */
-  avatarPopup = signal({
+  avatarPopup = signal<{
+    visible: boolean;
+    taskId: string | number | null;
+    assignments: any[];
+  }>({
     visible: false,
-    taskId: null as string | number | null,
-    assignments: [] as any[],
+    taskId: null,
+    assignments: [],
   });
 
   /**
