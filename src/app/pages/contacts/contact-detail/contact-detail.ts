@@ -48,7 +48,12 @@ export class ContactDetail {
     return this.authService.currentUser()?.email === this.contact.email;
   }
  
-  /** Formats a raw phone number into a standardized display format: +49 1234 123 12 1 */
+  /**
+   * Formats a raw phone number into a standardized display format: +49 1234 123 12 1.
+   * 
+   * @param phone - The raw phone number input (string or number).
+   * @returns The formatted phone number string.
+   */
   formatPhone(phone: any): string {
     if (phone === undefined || phone === null) return '';
     let cleaned = String(phone).replace(/\D/g, '');
@@ -71,7 +76,12 @@ export class ContactDetail {
     return result.trim();
   }
 
-  /** Generates initials from a full name (e.g., "Anja Schulz" -> "AS") */
+  /**
+   * Generates initials from a full name (e.g., "Anja Schulz" -> "AS").
+   * 
+   * @param name - The full name string.
+   * @returns The initials of the name in uppercase.
+   */
   getInitials(name: string) {
     return name
       .split(' ')

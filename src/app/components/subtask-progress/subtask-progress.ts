@@ -1,17 +1,18 @@
 import { Component, input, OnInit, signal, inject, computed, effect } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 
+/** Component representing the progress of subtasks on a task card */
 @Component({
   selector: 'app-subtask-progress',
   standalone: true,
   templateUrl: './subtask-progress.html',
   styleUrl: './subtask-progress.scss',
 })
-/** Component representing the progress of subtasks on a task card */
 export class SubtaskProgress implements OnInit {
   /** Required input for the ID of the task */
   taskId = input.required<string>();
 
+  /** Injected TaskService for retrieving and monitoring subtask updates */
   private taskService = inject(TaskService);
 
   /** Signal holding the list of subtasks for this task */
@@ -34,6 +35,7 @@ export class SubtaskProgress implements OnInit {
   /** Computed tooltip description showing progress details */
   tooltip = computed(() => `${this.done()} von ${this.total()} Subtasks erledigt`);
 
+  /** Registers a reactive effect checking for real-time subtask updates */
   constructor() {
     effect(async () => {
       const trigger = this.taskService.subtaskUpdateTrigger();
@@ -43,6 +45,7 @@ export class SubtaskProgress implements OnInit {
     });
   }
 
+  /** Component lifecycle hook fetching initial subtasks */
   async ngOnInit() {
     await this.loadSubtasks();
   }

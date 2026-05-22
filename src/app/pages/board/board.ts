@@ -20,6 +20,7 @@ import { CategoryBadge } from '../../components/category-badge/category-badge';
 import { SubtaskProgress } from '../../components/subtask-progress/subtask-progress';
 import { parseAssignedTo } from '../../utils/task.utils';
 
+/** Page component managing the kanban board interface and drag-and-drop task workflow */
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -27,13 +28,18 @@ import { parseAssignedTo } from '../../utils/task.utils';
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
-/** Page component managing the kanban board interface and drag-and-drop task workflow */
 export class Board implements OnInit {
+  /** Injected TaskService for performing CRUD and status operations on tasks */
   private taskService = inject(TaskService);
+  /** Injected ContactService for retrieving assignees info */
   private contactService = inject(ContactService);
+  /** Injected AvatarService for resolving user visual avatar settings */
   private avatarService = inject(AvatarService);
+  /** Injected DialogService for managing overlay dialog views */
   private dialogService = inject(DialogService);
+  /** Injected Angular Router for navigating between board views */
   private router = inject(Router);
+  /** Injected AuthService for accessing current logged-in user state */
   private authService = inject(AuthService);
 
   /** Signal tracking the current screen width for responsive rendering */
@@ -47,7 +53,13 @@ export class Board implements OnInit {
     assignments: [],
   });
 
-  /** Shows the avatar popup on click of the contact list */
+  /**
+   * Toggles the display state of the assignee avatar overlay popup.
+   * Computes the alignment and maximum height based on available screen space.
+   * 
+   * @param event - The mouse click event.
+   * @param task - The active task object.
+   */
   toggleAvatarPopup(event: MouseEvent, task: Task) {
     event.stopPropagation();
     if (this.avatarPopup().visible) {
@@ -89,7 +101,7 @@ export class Board implements OnInit {
     });
   }
 
-  /** Closes the avatar popup when clicking anywhere else on the document */
+  /** Closes the avatar popup overlay. */
   @HostListener('document:click')
   closeAvatarPopup() {
     if (this.avatarPopup().visible) {
@@ -97,7 +109,7 @@ export class Board implements OnInit {
     }
   }
 
-  /** Updates the screenWidth signal when the window is resized */
+  /** Updates the screenWidth signal when the window is resized. */
   @HostListener('window:resize')
   onResize() {
     this.screenWidth.set(window.innerWidth);
@@ -109,13 +121,22 @@ export class Board implements OnInit {
   /** Computed property adding a delay to drag start on mobile to allow for page scrolling */
   dragDelay = computed(() => this.screenWidth() <= 1024 ? 150 : 0);
 
-  /** Opens the detail dialog for a specific task */
+  /**
+   * Opens the detail dialog modal for a specific task.
+   * 
+   * @param task - The task object to display details for.
+   * @returns A promise resolving when the dialog opens.
+   */
   async openTaskDetailDialog(task: any) {
     const subtasks = await this.taskService.getSubtasksForTask(task.id);
     this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
   }
 
-  /** Navigates to the add-task page on mobile or opens the add-task dialog on desktop */
+  /**
+   * Opens the add-task interface (navigates on mobile, opens modal on desktop).
+   * 
+   * @param status - The initial status/column category for the new task.
+   */
   openAddTaskDialog(status: string) {
     if (this.screenWidth() <= 1200) {
       this.router.navigate(['/add-task']);
@@ -124,7 +145,12 @@ export class Board implements OnInit {
     this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
   }
 
-  /** Returns done/total/percentage stats for subtasks of a task */
+  /**
+   * Computes statistics for the subtasks of a given task.
+   * 
+   * @param task - The target task object.
+   * @returns An object containing done count, total count, and percentage, or null if there are no subtasks.
+   */
   getSubtaskStats(task: Task): { done: number; total: number; percentage: number } | null {
     const subtasks = (task as any).subtasks;
     if (!subtasks || subtasks.length === 0) return null;
@@ -133,9 +159,13 @@ export class Board implements OnInit {
     return { done, total, percentage: Math.round((done / total) * 100) };
   }
 
-
-
-  /** Parses raw task assignees into mapped contact objects */
+  /**
+   * Maps raw string names or assignments of a task into structured contact assignment objects.
+   * 
+   * @param task - The task to parse assignments for.
+   * @param allContacts - The master list of all contact records to match against.
+   * @returns An array of enriched assignment objects.
+   */
   private parseTaskAssignments(task: Task, allContacts: any[]): any[] {
     if (task.task_assignments && task.task_assignments.length > 0) {
       return task.task_assignments;
@@ -223,13 +253,23 @@ export class Board implements OnInit {
     ]);
   }
 
-  /** Returns the file path for the priority icon based on the priority level */
+  /**
+   * Resolves the static SVG file path for a task's priority level.
+   * 
+   * @param priority - The priority string (e.g. 'urgent', 'medium', 'low').
+   * @returns The relative file path to the SVG asset.
+   */
   getPriorityIcon(priority: string): string {
     const p = priority?.toLowerCase();
     return `./icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
   }
 
-  /** Retrieves initials and color data for a specific contact assignment */
+  /**
+   * Retrieves initials and color configuration for a specific assignment.
+   * 
+   * @param assignment - The assignment object containing contact details.
+   * @returns An object with initials and background color.
+   */
   getContactInfo(assignment: any) {
     const name = assignment.contact?.name || assignment.name || 'Unknown';
     const color = assignment.contact?.color || assignment.color;
@@ -244,24 +284,45 @@ export class Board implements OnInit {
     return contact?.name || this.authService.getDisplayName(user);
   }
 
-  /** Helper checking if an assignment matches the current user */
+  /**
+   * Checks if a given assignment belongs to the currently logged in user.
+   * 
+   * @param assign - The assignment object.
+   * @returns True if it matches the current user, false otherwise.
+   */
   private isCurrentUserAssignment(assign: any): boolean {
     const name = assign.contact?.name || assign.name;
     return !!name && name === this.currentUserContactName;
   }
 
-  /** Resolves label for assignment, appending '(You)' if appropriate */
+  /**
+   * Generates a descriptive string for an assignment, appending '(You)' if it matches the active user.
+   * 
+   * @param assign - The assignment object.
+   * @returns The generated display name label.
+   */
   getAssignmentLabel(assign: any): string {
     const name = assign.contact?.name || assign.name || 'Unknown';
     return this.isCurrentUserAssignment(assign) ? `${name} (You)` : name;
   }
 
-  /** Returns assignments for a task, prioritizing task_assignments but falling back to assigned_to names */
+  /**
+   * Returns pre-computed contact assignments for a task.
+   * 
+   * @param task - The target task object.
+   * @returns An array of assignment objects.
+   */
   getTaskAssignments(task: Task): any[] {
     return (task as any).assignments || [];
   }
 
-  /** Handles the drag and drop event for moving tasks between columns */
+  /**
+   * Handles the CDK drag & drop event when moving tasks within or between columns.
+   * Persists new positions and column status updates directly in the database.
+   * 
+   * @param event - The CdkDragDrop event details.
+   * @returns A promise resolving when positions have been updated.
+   */
   async drop(event: CdkDragDrop<any[]>) {
     const movedTask = event.previousContainer.data[event.previousIndex];
     const isSameColumn = event.previousContainer === event.container;

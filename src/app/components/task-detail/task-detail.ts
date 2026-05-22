@@ -66,14 +66,22 @@ export class TaskDetail implements OnInit, OnDestroy {
     this.isEditing.set(true);
   }
 
-  /** Updates the local task data and disables editing mode once edit changes are saved */
+  /**
+   * Updates the local task data and disables editing mode once edit changes are saved.
+   * 
+   * @param event - The saved task details and subtask array.
+   */
   onEditSaved(event: { task: Task; subtasks: any[] }) {
     this.task = event.task;
     this.subtasks = event.subtasks;
     this.isEditing.set(false);
   }
 
-  /** Toggles the completion status of a subtask and persists it in the database */
+  /**
+   * Toggles the completion status of a subtask and persists it in the database.
+   * 
+   * @param subtask - The subtask item to toggle.
+   */
   async toggleSubtask(subtask: any) {
     subtask.completed = !subtask.completed;
     await this.taskService.updateSubtaskCompleted(subtask.id, subtask.completed, String(this.task.id));

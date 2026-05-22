@@ -68,7 +68,12 @@ export class AddTask implements OnInit {
   /** Form group for task input elements */
   taskForm: FormGroup;
 
-  /** Validation function ensuring the due date is not in the past */
+  /**
+   * Validation function ensuring the due date is not in the past.
+   * 
+   * @param control - The form control to validate.
+   * @returns A validation error object if the date is in the past, or null if valid.
+   */
   pastDateValidators(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
 
@@ -81,7 +86,11 @@ export class AddTask implements OnInit {
     return selectedDate < today ? { pastDate: true } : null;
   }
 
-  /** Initializes form controls using FormBuilder */
+  /**
+   * Initializes form controls using FormBuilder.
+   * 
+   * @param fb - FormBuilder dependency.
+   */
   constructor(private fb: FormBuilder) {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
@@ -93,7 +102,11 @@ export class AddTask implements OnInit {
     });
   }
 
-  /** Document click listener to close dropdowns when clicking outside */
+  /**
+   * Document click listener to close dropdowns when clicking outside.
+   * 
+   * @param event - The mouse click event.
+   */
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -114,13 +127,13 @@ export class AddTask implements OnInit {
     }
   }
 
-  /** Gets filtered contacts based on the search query term */
+  /** Gets filtered contacts based on the search query term. */
   get filteredContacts() {
     const term = this.contactSearchTerm.toLowerCase();
     return this.contacts().filter((c: any) => c.name.toLowerCase().includes(term));
   }
 
-  /** Fetches contacts and categories on component initialization */
+  /** Fetches contacts and categories on component initialization. */
   async ngOnInit() {
     await Promise.all([this.contactService.getContacts(), this.taskService.getCategories()]);
     if (this.taskToEdit) {
@@ -128,7 +141,7 @@ export class AddTask implements OnInit {
     }
   }
 
-  /** Prefills form controls with the existing task and subtask data in edit mode */
+  /** Prefills form controls with the existing task and subtask data in edit mode. */
   private prefillForm() {
     const task = this.taskToEdit!;
     const assignedNames = this.parseAssignedTo(task.assigned_to);
@@ -144,18 +157,23 @@ export class AddTask implements OnInit {
     });
   }
 
-  /** Internal helper parsing assignments string array representation */
+  /**
+   * Internal helper parsing assignments string array representation.
+   * 
+   * @param val - The raw assigned value (could be string, array, or null).
+   * @returns An array of parsed names.
+   */
   private parseAssignedTo(val: any): string[] {
     return parseAssignedTo(val);
   }
 
-  /** Toggles the assigned contacts dropdown list visibility */
+  /** Toggles the assigned contacts dropdown list visibility. */
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
     if (this.dropdownOpen) this.categoryDropdownOpen = false;
   }
 
-  /** Toggles the task categories dropdown list visibility */
+  /** Toggles the task categories dropdown list visibility. */
   toggleCategoryDropdown() {
     this.categoryDropdownOpen = !this.categoryDropdownOpen;
     if (this.categoryDropdownOpen) {
@@ -164,12 +182,16 @@ export class AddTask implements OnInit {
     }
   }
 
-  /** Toggles the expanded visual list of extra contact icons */
+  /** Toggles the expanded visual list of extra contact icons. */
   toggleMoreContacts() {
     this.moreContactsOpen = !this.moreContactsOpen;
   }
 
-  /** Toggles a contact's assignment on this task */
+  /**
+   * Toggles a contact's assignment on this task.
+   * 
+   * @param contact - The contact object to toggle.
+   */
   toggleContact(contact: any) {
     const exists = this.selectedContacts.find((c) => c.id === contact.id);
 
@@ -184,17 +206,31 @@ export class AddTask implements OnInit {
     });
   }
 
-  /** Helper check to see if a contact matches the current user's email */
+  /**
+   * Helper check to see if a contact matches the current user's email.
+   * 
+   * @param contact - The contact to check.
+   * @returns True if it matches the current user, false otherwise.
+   */
   isCurrentUserContact(contact: any): boolean {
     return this.authService.currentUser()?.email === contact?.email;
   }
 
-  /** Formats contact name label and appends '(You)' suffix for logged in user */
+  /**
+   * Formats contact name label and appends '(You)' suffix for logged in user.
+   * 
+   * @param contact - The contact object.
+   * @returns The formatted name label.
+   */
   getContactLabel(contact: any): string {
     return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
-  /** Updates task priority field in the form */
+  /**
+   * Updates task priority field in the form.
+   * 
+   * @param value - The priority level to set (e.g. 'Low', 'Medium', 'Urgent').
+   */
   setPriority(value: string) {
     this.taskForm.patchValue({ priority: value });
   }

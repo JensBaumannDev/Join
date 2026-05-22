@@ -6,7 +6,8 @@
     "start": "ng serve -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docs": "compodoc -p tsconfig.app.json -s -o"
   },
   "private": true,
   "packageManager": "npm@11.6.2",
@@ -27,9 +28,12 @@
     "@angular/build": "^21.2.3",
     "@angular/cli": "^21.2.3",
     "@angular/compiler-cli": "^21.2.0",
+    "@compodoc/compodoc": "^1.1.26",
+    "jsdoc": "^4.0.5",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "sass": "^1.99.0",
+    "typedoc": "^0.28.19",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

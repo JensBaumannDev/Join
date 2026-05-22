@@ -19,7 +19,13 @@ export class ToastService {
   /** Timeout reference tracking delay before clearing the active toast message */
   private clearTimer: ReturnType<typeof setTimeout> | null = null;
 
-  /** Displays a toast notification with the specified message and style configuration */
+  /**
+   * Displays a toast notification with the specified message and style configuration.
+   * Automatically handles automatic fade-out timers and resetting status signals.
+   * 
+   * @param msg - The text message to display.
+   * @param withIcon - Optional flag to display a success badge icon next to the text.
+   */
   show(msg: string, withIcon = false) {
     if (this.hideTimer) clearTimeout(this.hideTimer);
     if (this.clearTimer) clearTimeout(this.clearTimer);

@@ -24,7 +24,12 @@ export class AvatarService {
     'var(--user-color-15)',
   ];
 
-  /** Generates initials from a name (e.g. "Jens Baumann" -> "JB") */
+  /**
+   * Generates initials from a name (e.g. "Jens Baumann" -> "JB").
+   * 
+   * @param name - The full name string.
+   * @returns The extracted initials (usually 1 or 2 uppercase characters), or '??' if invalid.
+   */
   getInitials(name: string): string {
     if (!name) return '??';
     const cleaned = name.trim().replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
@@ -37,7 +42,12 @@ export class AvatarService {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  /** Returns a deterministic color based on the name string */
+  /**
+   * Returns a deterministic color based on the name string.
+   * 
+   * @param name - The name to generate a color for.
+   * @returns A CSS variable color string.
+   */
   getColor(name: string): string {
     if (!name) return this.colors[0];
 
@@ -51,7 +61,14 @@ export class AvatarService {
     return this.colors[index];
   }
 
-  /** Returns initials and color for a user. If no fixed color is provided, it falls back to a name-based generated color. */
+  /**
+   * Returns initials and color for a user avatar.
+   * Falls back to a name-based generated color if no fixed color is provided.
+   * 
+   * @param name - The name of the user.
+   * @param fixedColor - An optional predefined color string.
+   * @returns An object containing initials and the background color string.
+   */
   getAvatarData(name: string, fixedColor?: string) {
     return {
       initials: this.getInitials(name),
@@ -59,14 +76,23 @@ export class AvatarService {
     };
   }
 
-  /** Returns a random color from the palette */
+  /**
+   * Returns a random color from the palette.
+   * 
+   * @returns A random CSS variable color string.
+   */
   getRandomColor(): string {
     const index = Math.floor(Math.random() * this.colors.length);
     return this.colors[index];
   }
 
-  /** Smart assignment: Returns a color that guarantees even distribution. 
-      It counts how often each color is used and always picks from the least used colors. */
+  /**
+   * Returns a color that guarantees even distribution across existing avatars.
+   * Counts how often each color is used and picks randomly from the least used colors.
+   * 
+   * @param usedColors - List of colors currently in use by other avatars.
+   * @returns The selected CSS variable color string.
+   */
   getBalancedColor(usedColors: string[]): string {
     const frequencies = new Map<string, number>();
     this.colors.forEach(c => frequencies.set(c, 0));

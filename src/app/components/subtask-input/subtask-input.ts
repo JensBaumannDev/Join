@@ -1,11 +1,16 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+/** Represents a single subtask item structure */
 export interface SubtaskItem {
+  /** The text title of the subtask */
   title: string;
+  /** The completion status of the subtask */
   completed: boolean;
 }
 
+
+/** Component managing the creation and editing of subtasks inside a task form */
 @Component({
   selector: 'app-subtask-input',
   standalone: true,
@@ -13,7 +18,6 @@ export interface SubtaskItem {
   templateUrl: './subtask-input.html',
   styleUrl: './subtask-input.scss',
 })
-/** Component managing the creation and editing of subtasks inside a task form */
 export class SubtaskInput {
   /** Inputs the list of subtask items */
   @Input() subtasks: SubtaskItem[] = [];
@@ -45,19 +49,31 @@ export class SubtaskInput {
     }
   }
 
-  /** Removes a subtask from the list by its index */
+  /**
+   * Removes a subtask from the list by its index.
+   * 
+   * @param index - Index of the subtask in the array to remove.
+   */
   remove(index: number) {
     this.subtasksChange.emit(this.subtasks.filter((_, i) => i !== index));
     if (this.editingIndex === index) this.editingIndex = null;
   }
 
-  /** Sets a subtask item into editing mode and initializes its editing value */
+  /**
+   * Sets a subtask item into editing mode and initializes its editing value.
+   * 
+   * @param index - Index of the subtask to set in editing mode.
+   */
   edit(index: number) {
     this.editingIndex = index;
     this.editingValue = this.subtasks[index].title;
   }
 
-  /** Saves the edited subtask value back to the list and exits editing mode */
+  /**
+   * Saves the edited subtask value back to the list and exits editing mode.
+   * 
+   * @param index - Index of the subtask being saved.
+   */
   save(index: number) {
     if (this.editingValue.trim()) {
       const updated = [...this.subtasks];

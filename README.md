@@ -54,6 +54,30 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Documentation (JSDoc)
+
+This project uses **Compodoc** to generate an interactive HTML documentation from the JSDoc comments in the source code.
+
+### Generate & View Documentation
+
+1. First, make sure you have installed all dependencies (especially Compodoc):
+   ```bash
+   npm install
+   ```
+
+2. To generate the documentation locally and start the web server, run:
+   ```bash
+   npm run docs
+   ```
+
+Once the command has run:
+1. The documentation will be generated in the (ignored) `/documentation/` folder.
+2. A local web server starts at **`http://127.0.0.1:8080`**.
+3. The documentation page will automatically open in your default browser.
+
+
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+

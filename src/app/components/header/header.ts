@@ -62,7 +62,11 @@ export class Header {
     this.router.navigate(['/login']);
   }
 
-  /** Closes the dropdown menu if a click occurs outside of it */
+  /**
+   * Closes the dropdown menu if a click occurs outside of it.
+   * 
+   * @param event - The mouse click event.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.menuOpen && !this.isClosing && this.menuWrapper && !this.menuWrapper.nativeElement.contains(event.target)) {

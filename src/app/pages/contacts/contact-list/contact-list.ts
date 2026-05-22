@@ -9,6 +9,7 @@ import { AvatarService } from '../../../services/avatar.service';
 import { AuthService } from '../../../services/auth.service';
 import { Contact } from '../../../interfaces/interface';
 
+/** Component managing the list of contacts, search filtering, and details view selection */
 @Component({
   selector: 'app-contact-list',
   standalone: true,
@@ -16,27 +17,46 @@ import { Contact } from '../../../interfaces/interface';
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
-/** Component managing the list of contacts, search filtering, and details view selection */
 export class ContactList implements OnInit {
+  /** Injected ContactService for managing contacts list state */
   contactService = inject(ContactService);
+  /** Injected AuthService for accessing the current user account info */
   protected authService = inject(AuthService);
+  /** Injected MatDialog service to trigger overlay dialog overlays */
   private dialog = inject(MatDialog);
+  /** Injected ToastService for system alerts display feedback */
   private toastService = inject(ToastService);
+  /** Injected AvatarService for formatting contact visual initials and colors */
   private avatarService = inject(AvatarService);
 
-  /** Checks if the given contact matches the currently logged-in user's email */
+  /**
+   * Checks if the given contact matches the currently logged-in user's email.
+   * 
+   * @param contact - The contact record to check.
+   * @returns True if it matches the current user, false otherwise.
+   */
   isCurrentUserContact(contact: Contact): boolean {
     const user = this.authService.currentUser();
     if (!user) return false;
     return user.email === contact.email;
   }
 
-  /** Returns the display label for a contact, appending (You) if it's the current user */
+  /**
+   * Returns the display label for a contact, appending (You) if it's the current user.
+   * 
+   * @param contact - The contact record.
+   * @returns The generated display name label.
+   */
   getContactLabel(contact: Contact): string {
     return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
-  /** Opens the dialog for adding or editing a contact and processes the result */
+  /**
+   * Opens the dialog for adding or editing a contact and processes the result.
+   * 
+   * @param mode - The dialog mode, either 'add' or 'edit'.
+   * @param contact - The optional contact record to edit.
+   */
   openContactDialog(mode: 'add' | 'edit', contact?: Contact) {
     const dialogRef = this.dialog.open(ContactDialogComponent, {
       data: { mode, contact },
@@ -65,7 +85,7 @@ export class ContactList implements OnInit {
     });
   }
 
-  /** Computed property grouping contacts alphabetically by their initials */
+  /** Computed property grouping contacts alphabetically by their initials. */
   groupedContacts = computed(() => {
     const contacts = this.contactService.contacts();
 
@@ -86,13 +106,17 @@ export class ContactList implements OnInit {
       .sort((a, b) => a.letter.localeCompare(b.letter));
   });
 
-  /** Initialization hook fetching contacts and subscribing to real-time updates */
+  /** Initialization hook fetching contacts and subscribing to real-time updates. */
   ngOnInit() {
     this.contactService.getContacts();
     this.contactService.subscribeToChanges();
   }
 
-  /** Selects a contact to display in the detail view with a brief reset delay */
+  /**
+   * Selects a contact to display in the detail view with a brief reset delay.
+   * 
+   * @param contact - The contact record to select.
+   */
   selectContact(contact: Contact) {
     this.contactService.selectedContact.set(null);
     setTimeout(() => {
@@ -100,14 +124,24 @@ export class ContactList implements OnInit {
     }, 50);
   }
 
-  /** Creates a new contact with a balanced avatar color and re-fetches the list */
+  /**
+   * Creates a new contact with a balanced avatar color and re-fetches the list.
+   * 
+   * @param name - Full name of the contact.
+   * @param email - Email address of the contact.
+   * @param phone - Phone number of the contact.
+   */
   add(name: string, email: string, phone: string) {
     const usedColors = this.contactService.contacts().map(c => c.color).filter(c => c) as string[];
     this.contactService.addContact(name, email, phone, this.avatarService.getBalancedColor(usedColors));
     this.contactService.getContacts();
   }
 
-  /** Deletes a contact from the database and updates selected contact state */
+  /**
+   * Deletes a contact from the database and updates selected contact state.
+   * 
+   * @param id - The ID of the contact to delete.
+   */
   async deleteContact(id: number) {
     await this.contactService.deleteContact(id);
     this.contactService.selectedContact.set(null);

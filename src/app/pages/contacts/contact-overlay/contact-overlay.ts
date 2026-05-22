@@ -12,6 +12,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+/** Modal dialog component for creating or editing contacts */
 @Component({
     selector: 'app-contact-overlay',
     standalone: true,
@@ -29,12 +30,16 @@ import { filter } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-/** Modal dialog component for creating or editing contacts */
 export class ContactDialogComponent implements OnInit, OnDestroy {
+    /** Injected FormBuilder helper class to build validation forms */
     private fb = inject(FormBuilder);
+    /** Injected MatDialogRef wrapper to manage closing this dialog overlay */
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
+    /** Injected MAT_DIALOG_DATA containing initial overlay parameters */
     private data = inject(MAT_DIALOG_DATA);
+    /** Injected ContactService for updating data in database */
     private supabase = inject(ContactService);
+    /** Injected AvatarService to generate visual character initials */
     private avatarService = inject(AvatarService);
 
 
@@ -43,6 +48,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
 
     /** Signal representing the loading state of background operations */
     isLoading = signal(false);
+    /** Subscription collection for cleaning up observables */
     private subscriptions = new Subscription();
 
     /** Signal determining if the dialog is in 'add' or 'edit' mode */
@@ -128,7 +134,11 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    /** Triggers the slide-out exit animation and closes the dialog */
+    /**
+     * Triggers the slide-out exit animation and closes the dialog.
+     * 
+     * @param data - The optional result data to pass back on close.
+     */
     private closeDialog(data?: any) {
         this.isClosing.set(true);
         this.dialogRef.addPanelClass('slide-out');
@@ -137,12 +147,12 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         }, 500);
     }
 
-    /** Closes the dialog without saving any changes */
+    /** Closes the dialog without saving any changes. */
     cancel() {
         this.closeDialog();
     }
 
-    /** Deletes the contact from the database and closes the dialog */
+    /** Deletes the contact from the database and closes the dialog. */
     async delete() {
         this.isLoading.set(true);
         try {
@@ -155,7 +165,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         }
     }
 
-    /** Persists the new or edited contact details to the database */
+    /** Persists the new or edited contact details to the database. */
     async save() {
         if (this.form.invalid) return;
         this.isLoading.set(true);

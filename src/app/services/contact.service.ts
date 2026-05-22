@@ -7,6 +7,7 @@ import { SupabaseService } from './supabase.service';
   providedIn: 'root',
 })
 export class ContactService {
+  /** Injected SupabaseService to handle API client requests */
   private supabaseService = inject(SupabaseService);
 
   /** Helper getter for the central Supabase client instance */
@@ -20,9 +21,15 @@ export class ContactService {
   /** Signal holding the currently active/selected contact */
   selectedContact = signal<Contact | null>(null);
 
+  /** Real-time subscription channel for contacts sync */
   private channel: any = null;
 
-  /** Searches for a single contact by its email address */
+  /**
+   * Searches for a single contact by its email address.
+   * 
+   * @param email - The email address to look up.
+   * @returns A promise resolving to the found Contact, or null if not found.
+   */
   async findContactByEmail(email: string) {
     const { data, error } = await this.supabase
       .from('contacts')
@@ -39,7 +46,11 @@ export class ContactService {
     return data as Contact | null;
   }
 
-  /** Fetches all contacts from the database ordered by name */
+  /**
+   * Fetches all contacts from the database ordered by name and updates the reactive contact signal.
+   * 
+   * @returns A promise resolving when the load is complete.
+   */
   async getContacts() {
     const { data, error } = await this.supabase
       .from('contacts')
@@ -56,7 +67,7 @@ export class ContactService {
     }
   }
 
-  /** Subscribes to real-time postgres changes for the contacts table */
+  /** Subscribes to real-time postgres changes for the contacts table. */
   subscribeToChanges() {
     if (this.channel) {
       return;
@@ -79,7 +90,15 @@ export class ContactService {
       .subscribe();
   }
 
-  /** Inserts a new contact record into the database */
+  /**
+   * Inserts a new contact record into the database.
+   * 
+   * @param name - The name of the new contact.
+   * @param email - The email address of the new contact.
+   * @param phone - The phone number of the new contact.
+   * @param color - The optional accent color code.
+   * @returns A promise resolving when the insertion is complete.
+   */
   async addContact(name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
@@ -90,7 +109,16 @@ export class ContactService {
     }
   }
 
-  /** Updates an existing contact record and syncs local signals */
+  /**
+   * Updates an existing contact record in the database and updates local reactive state signals.
+   * 
+   * @param id - The unique ID of the contact to update.
+   * @param name - The updated name of the contact.
+   * @param email - The updated email address of the contact.
+   * @param phone - The updated phone number of the contact.
+   * @param color - The optional updated accent color.
+   * @returns A promise resolving when the updates are complete.
+   */
   async updateContact(id: number, name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
@@ -119,7 +147,12 @@ export class ContactService {
     }
   }
 
-  /** Deletes a contact record and syncs local signals */
+  /**
+   * Deletes a contact record from the database and updates local reactive state signals.
+   * 
+   * @param id - The unique ID of the contact to delete.
+   * @returns A promise resolving when the deletion is complete.
+   */
   async deleteContact(id: number) {
     const { error } = await this.supabase
       .from('contacts')
