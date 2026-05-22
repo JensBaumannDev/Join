@@ -96,10 +96,10 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         return this.sessionColor;
     });
 
-    /** Computed initials preview based on input name */
     avatarInitials = computed(() => {
         const name = this.formValue()?.name || '';
-        return this.avatarService.getInitials(name);
+        const initials = this.avatarService.getInitials(name);
+        return initials === '??' ? '' : initials;
     });
 
     /** Component initialization hook setup for event listeners and colors */
