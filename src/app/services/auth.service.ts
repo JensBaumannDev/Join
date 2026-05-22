@@ -66,46 +66,45 @@ export class AuthService {
   async syncCurrentUserContact(): Promise<void> {
     const user = this.currentUser();
     if (!user?.email) return;
-
-    const { data, error } = await this.supabase
-      .from('contacts')
-      .select('*')
-      .eq('email', user.email)
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      console.error('Contact sync failed:', error);
-      return;
-    }
+    const { data, error } = await this.fetchContactByEmail(user.email);
+    if (error) return console.error('Contact sync failed:', error);
 
     const name = this.getDisplayName(user);
-
     if (data) {
-      if (data.name !== name) {
-        const { error: updateError } = await this.supabase
-          .from('contacts')
-          .update({ name })
-          .eq('id', data.id);
-
-        if (updateError) {
-          console.error('Contact name sync failed:', updateError);
-        }
-      }
-
-      await this.contactService.getContacts();
-      return;
+      await this.updateExistingContactIfNeeded(data, name);
+    } else {
+      await this.createNewContact(user.email, name);
     }
+  }
 
-    const { error: insertError } = await this.supabase
+  private fetchContactByEmail(email: string) {
+    return this.supabase
       .from('contacts')
-      .insert([{ name, email: user.email, phone: '0000000000' }]);
+      .select('*')
+      .eq('email', email)
+      .limit(1)
+      .maybeSingle();
+  }
 
-    if (insertError) {
-      console.error('Contact create failed:', insertError);
+  private async updateExistingContactIfNeeded(contact: any, name: string): Promise<void> {
+    if (contact.name !== name) {
+      const { error } = await this.supabase
+        .from('contacts')
+        .update({ name })
+        .eq('id', contact.id);
+      if (error) console.error('Contact name sync failed:', error);
+    }
+    await this.contactService.getContacts();
+  }
+
+  private async createNewContact(email: string, name: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('contacts')
+      .insert([{ name, email, phone: '0000000000' }]);
+    if (error) {
+      console.error('Contact create failed:', error);
       return;
     }
-
     await this.contactService.getContacts();
   }
 
@@ -148,18 +147,19 @@ export class AuthService {
    * Signs out the current user and clears session storage flags.
    * 
    * @returns A promise resolving when sign out is complete.
-   * @throws A sign out error if sign out fails.
    */
   async logout(): Promise<void> {
-    const { error } = await this.supabase.auth.signOut();
-
-    if (error) {
-      console.error('Logout failed:', error.message);
-      throw error;
+    try {
+      const { error } = await this.supabase.auth.signOut();
+      if (error) {
+        console.error('Logout failed:', error.message);
+      }
+    } catch (error) {
+      console.error('Unexpected error during logout:', error);
+    } finally {
+      this.currentUser.set(null);
+      sessionStorage.removeItem('greetingShown');
     }
-
-    this.currentUser.set(null);
-    sessionStorage.removeItem('greetingShown');
   }
 
   /**

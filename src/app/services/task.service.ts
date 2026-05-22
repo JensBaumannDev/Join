@@ -62,15 +62,11 @@ export class TaskService {
       .from('task')
       .select('*')
       .order('position', { ascending: true, nullsFirst: false });
-
     if (error) {
       console.error('Task loading error:', error);
       return;
     }
-
-    if (data) {
-      this.tasks.set(data as Task[]);
-    }
+    if (data) this.tasks.set(data as Task[]);
   }
 
   /**
@@ -81,35 +77,28 @@ export class TaskService {
    * @returns A promise resolving to the created task object or undefined.
    */
   async createTask(task: any, subtasks: { title: string; completed: boolean }[] = []) {
-    const { data, error } = await this.supabaseService.supabase
-      .from('task')
-      .insert([task])
-      .select();
-
+    const { data, error } = await this.supabaseService.supabase.from('task').insert([task]).select();
     if (error) {
       console.error('create task error:', error);
       return;
     }
-
-    if (data && data.length > 0 && subtasks && subtasks.length > 0) {
-      const taskId = data[0].id;
-      const subtasksWithId = subtasks.map(s => ({
-        task_id: taskId,
-        title: s.title,
-        completed: s.completed ?? false
-      }));
-
-      const { error: subError } = await this.supabaseService.supabase
-        .from('subtasks')
-        .insert(subtasksWithId);
-
-      if (subError) {
-        console.error('create subtasks error:', subError);
-      }
+    if (data?.[0] && subtasks.length > 0) {
+      await this.insertSubtasks(data[0].id, subtasks);
     }
-
     await this.getTasks();
     return data?.[0];
+  }
+
+  private async insertSubtasks(taskId: number, subtasks: { title: string; completed: boolean }[]): Promise<void> {
+    const subtasksWithId = subtasks.map(s => ({
+      task_id: taskId,
+      title: s.title,
+      completed: s.completed ?? false
+    }));
+    const { error } = await this.supabaseService.supabase.from('subtasks').insert(subtasksWithId);
+    if (error) {
+      console.error('create subtasks error:', error);
+    }
   }
 
   /**
@@ -227,35 +216,27 @@ export class TaskService {
    * @returns A promise resolving when the updates are complete.
    */
   async updateTask(taskId: string, taskData: any, subtasks: { title: string; completed: boolean }[] = []) {
-    const { error } = await this.supabaseService.supabase
-      .from('task')
-      .update(taskData)
-      .eq('id', taskId);
-    if (error) {
-      console.error('Update task error:', error);
-      return;
-    }
-    await this.supabaseService.supabase
-      .from('subtasks')
-      .delete()
-      .eq('task_id', taskId);
+    const { error } = await this.supabaseService.supabase.from('task').update(taskData).eq('id', taskId);
+    if (error) return console.error('Update task error:', error);
+
+    await this.replaceSubtasks(taskId, subtasks);
+    this.tasks.update(tasks =>
+      tasks.map(t => String(t.id) === taskId ? { ...t, ...taskData } : t)
+    );
+    this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
+  }
+
+  private async replaceSubtasks(taskId: string, subtasks: { title: string; completed: boolean }[]): Promise<void> {
+    await this.supabaseService.supabase.from('subtasks').delete().eq('task_id', taskId);
     if (subtasks.length > 0) {
       const subtasksWithId = subtasks.map(s => ({
         task_id: taskId,
         title: s.title,
         completed: s.completed ?? false
       }));
-      const { error: subError } = await this.supabaseService.supabase
-        .from('subtasks')
-        .insert(subtasksWithId);
-      if (subError) {
-        console.error('Update subtasks error:', subError);
-      }
+      const { error } = await this.supabaseService.supabase.from('subtasks').insert(subtasksWithId);
+      if (error) console.error('Update subtasks error:', error);
     }
-    this.tasks.update(tasks =>
-      tasks.map(t => String(t.id) === taskId ? { ...t, ...taskData } : t)
-    );
-    this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
   }
 
   /**
@@ -265,14 +246,8 @@ export class TaskService {
    * @returns A promise resolving when the deletion is complete.
    */
   async deleteTask(taskId: string) {
-    await this.supabaseService.supabase
-      .from('subtasks')
-      .delete()
-      .eq('task_id', taskId);
-    const { error } = await this.supabaseService.supabase
-      .from('task')
-      .delete()
-      .eq('id', taskId);
+    await this.supabaseService.supabase.from('subtasks').delete().eq('task_id', taskId);
+    const { error } = await this.supabaseService.supabase.from('task').delete().eq('id', taskId);
     if (error) {
       console.error('Task delete error:', error);
     } else {

@@ -28,53 +28,51 @@ export class Summary implements OnInit {
     ).length
   );
 
-  /** Computed number of pending tasks with an 'urgent' priority */
-  urgentCount = computed(() => {
+  private getTodayStart(): Date {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    return today;
+  }
 
+  private isUrgentPending(task: any, today: Date): boolean {
+    if (task.priority?.toLowerCase() !== 'urgent') return false;
+    if (task.status?.toLowerCase() === 'done') return false;
+    if (task.due_date && new Date(task.due_date) < today) return false;
+    return true;
+  }
+
+  private getUrgentTasksWithDates(today: Date) {
     return this.taskService.tasks().filter(task => {
-      if (task.priority?.toLowerCase() !== 'urgent') return false;
+      if (!task.due_date || task.priority?.toLowerCase() !== 'urgent') return false;
       if (task.status?.toLowerCase() === 'done') return false;
-      if (task.due_date) {
-        const taskDate = new Date(task.due_date);
-        if (taskDate < today) return false;
-      }
-      return true;
-    }).length;
-  });
-
-  /** Computed formatted earliest due date among pending urgent tasks */
-  upcomingDeadline = computed(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const taskWithDates = this.taskService.tasks().filter(task => {
-      if (!task.due_date || task.priority?.toLowerCase() !== 'urgent') {
-        return false;
-      }
-      if (task.status?.toLowerCase() === 'done') {
-        return false;
-      }
-      const taskDate = new Date(task.due_date);
-      return taskDate >= today;
+      return new Date(task.due_date) >= today;
     });
+  }
 
-    if (taskWithDates.length === 0) {
-      return null;
-    }
-
-    const sortedDates = taskWithDates
-      .map(task => new Date(task.due_date))
-      .sort((a, b) => a.getTime() - b.getTime());
-
-    const earliestDate = sortedDates[0];
-
-    return earliestDate.toLocaleDateString('en-US', {
+  private formatDeadlineDate(date: Date): string {
+    return date.toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
     });
+  }
+
+  /** Computed number of pending tasks with an 'urgent' priority */
+  urgentCount = computed(() => {
+    const today = this.getTodayStart();
+    return this.taskService.tasks().filter(t => this.isUrgentPending(t, today)).length;
+  });
+
+  /** Computed formatted earliest due date among pending urgent tasks */
+  upcomingDeadline = computed(() => {
+    const today = this.getTodayStart();
+    const tasks = this.getUrgentTasksWithDates(today);
+    if (tasks.length === 0) return null;
+
+    const sorted = tasks
+      .map(t => new Date(t.due_date))
+      .sort((a, b) => a.getTime() - b.getTime());
+    return this.formatDeadlineDate(sorted[0]);
   });
 
   /** Computed total number of tasks in the workspace */
@@ -83,7 +81,7 @@ export class Summary implements OnInit {
   );
 
   /** Computed number of tasks with an 'in progress' status */
-  inPorgressCount = computed(() =>
+  inProgressCount = computed(() =>
     this.taskService.tasks().filter(task => task.status?.toLowerCase() === 'in progress'
     ).length
   );

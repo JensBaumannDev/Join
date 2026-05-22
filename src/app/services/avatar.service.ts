@@ -94,23 +94,21 @@ export class AvatarService {
    * @returns The selected CSS variable color string.
    */
   getBalancedColor(usedColors: string[]): string {
+    const frequencies = this.getColorFrequencies(usedColors);
+    const minFreq = Math.min(...Array.from(frequencies.values()));
+    const leastUsedColors = this.colors.filter(c => frequencies.get(c) === minFreq);
+    const index = Math.floor(Math.random() * leastUsedColors.length);
+    return leastUsedColors[index];
+  }
+
+  private getColorFrequencies(usedColors: string[]): Map<string, number> {
     const frequencies = new Map<string, number>();
     this.colors.forEach(c => frequencies.set(c, 0));
-
     usedColors.forEach(c => {
       if (frequencies.has(c)) {
         frequencies.set(c, frequencies.get(c)! + 1);
       }
     });
-
-    let minFreq = Infinity;
-    frequencies.forEach(count => {
-      if (count < minFreq) minFreq = count;
-    });
-
-    const leastUsedColors = this.colors.filter(c => frequencies.get(c) === minFreq);
-
-    const index = Math.floor(Math.random() * leastUsedColors.length);
-    return leastUsedColors[index];
+    return frequencies;
   }
 }
