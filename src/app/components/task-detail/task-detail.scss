@@ -198,6 +198,10 @@
     @include flex(column, nowrap, flex-start, stretch);
     gap: 10px;
     padding-left: 12px;
+    padding-right: 8px;
+    max-height: 310px;
+    overflow-y: auto;
+    @include scrollbar();
   }
 
   .assignee-item {
@@ -224,7 +228,7 @@
     @include flex(column, nowrap, flex-start, stretch);
     gap: 10px;
     padding-left: 16px;
-    max-height: 110px;
+    max-height: 160px;
     overflow-y: auto;
     @include scrollbar();
   }
