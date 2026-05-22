@@ -7,6 +7,7 @@ import { SupabaseService } from './supabase.service';
   providedIn: 'root',
 })
 export class ContactService {
+  /** Injected SupabaseService to handle API client requests */
   private supabaseService = inject(SupabaseService);
 
   /** Helper getter for the central Supabase client instance */
@@ -20,6 +21,7 @@ export class ContactService {
   /** Signal holding the currently active/selected contact */
   selectedContact = signal<Contact | null>(null);
 
+  /** Real-time subscription channel for contacts sync */
   private channel: any = null;
 
   /**

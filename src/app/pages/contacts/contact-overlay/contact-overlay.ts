@@ -31,10 +31,15 @@ import { filter } from 'rxjs/operators';
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ContactDialogComponent implements OnInit, OnDestroy {
+    /** Injected FormBuilder helper class to build validation forms */
     private fb = inject(FormBuilder);
+    /** Injected MatDialogRef wrapper to manage closing this dialog overlay */
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);
+    /** Injected MAT_DIALOG_DATA containing initial overlay parameters */
     private data = inject(MAT_DIALOG_DATA);
+    /** Injected ContactService for updating data in database */
     private supabase = inject(ContactService);
+    /** Injected AvatarService to generate visual character initials */
     private avatarService = inject(AvatarService);
 
 
@@ -43,6 +48,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
 
     /** Signal representing the loading state of background operations */
     isLoading = signal(false);
+    /** Subscription collection for cleaning up observables */
     private subscriptions = new Subscription();
 
     /** Signal determining if the dialog is in 'add' or 'edit' mode */

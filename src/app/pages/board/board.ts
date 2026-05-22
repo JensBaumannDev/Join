@@ -29,11 +29,17 @@ import { parseAssignedTo } from '../../utils/task.utils';
   styleUrl: './board.scss'
 })
 export class Board implements OnInit {
+  /** Injected TaskService for performing CRUD and status operations on tasks */
   private taskService = inject(TaskService);
+  /** Injected ContactService for retrieving assignees info */
   private contactService = inject(ContactService);
+  /** Injected AvatarService for resolving user visual avatar settings */
   private avatarService = inject(AvatarService);
+  /** Injected DialogService for managing overlay dialog views */
   private dialogService = inject(DialogService);
+  /** Injected Angular Router for navigating between board views */
   private router = inject(Router);
+  /** Injected AuthService for accessing current logged-in user state */
   private authService = inject(AuthService);
 
   /** Signal tracking the current screen width for responsive rendering */

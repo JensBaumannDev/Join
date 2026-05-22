@@ -1,10 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+/** Represents a single subtask item structure */
 export interface SubtaskItem {
+  /** The text title of the subtask */
   title: string;
+  /** The completion status of the subtask */
   completed: boolean;
 }
+
 
 /** Component managing the creation and editing of subtasks inside a task form */
 @Component({

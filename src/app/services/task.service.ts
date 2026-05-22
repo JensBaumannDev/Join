@@ -10,12 +10,15 @@ import { Task } from '../interfaces/task.interface';
   providedIn: 'root'
 })
 export class TaskService {
+  /** Injected SupabaseService to handle API client requests */
   private supabaseService = inject(SupabaseService);
+  /** Injected ContactService to map assignments */
   private contactService = inject(ContactService);
 
-  /** Signals for reactive state management */
+  /** Signal holding the reactive list of all tasks */
   tasks = signal<Task[]>([]);
 
+  /** Signal holding task category names from database */
   categories = signal<string[]>([]);
 
   /** Signal holding the board configuration data */

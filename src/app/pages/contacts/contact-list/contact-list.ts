@@ -18,10 +18,15 @@ import { Contact } from '../../../interfaces/interface';
   styleUrl: './contact-list.scss',
 })
 export class ContactList implements OnInit {
+  /** Injected ContactService for managing contacts list state */
   contactService = inject(ContactService);
+  /** Injected AuthService for accessing the current user account info */
   protected authService = inject(AuthService);
+  /** Injected MatDialog service to trigger overlay dialog overlays */
   private dialog = inject(MatDialog);
+  /** Injected ToastService for system alerts display feedback */
   private toastService = inject(ToastService);
+  /** Injected AvatarService for formatting contact visual initials and colors */
   private avatarService = inject(AvatarService);
 
   /**

@@ -8,7 +8,9 @@ import { ContactService } from './contact.service';
   providedIn: 'root',
 })
 export class AuthService {
+  /** Injected SupabaseService to handle API connections */
   private supabaseService = inject(SupabaseService);
+  /** Injected ContactService for updating user contacts information */
   private contactService = inject(ContactService);
   /** Helper getter for the central Supabase client instance */
   private get supabase() {
@@ -21,6 +23,7 @@ export class AuthService {
   /** Signal indicating if the initial session restoration check has finished */
   isAuthResolved = signal(false);
 
+  /** Restores current authenticated user session from database on startup */
   constructor() {
     void this.loadSession();
   }

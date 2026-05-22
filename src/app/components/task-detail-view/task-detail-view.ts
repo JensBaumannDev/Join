@@ -34,8 +34,11 @@ export class TaskDetailView {
   /** Event emitted when a subtask's completion status is toggled */
   @Output() subtaskToggled = new EventEmitter<any>();
 
+  /** Injected TaskService for performing task operations */
   private taskService = inject(TaskService);
+  /** Injected ContactService for looking up assignees */
   private contactService = inject(ContactService);
+  /** Injected AuthService for looking up current logged-in user state */
   private authService = inject(AuthService);
 
   /** Resolves the display name of the current authenticated user */
