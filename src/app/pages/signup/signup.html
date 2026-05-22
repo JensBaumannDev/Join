@@ -109,7 +109,7 @@
           <input type="checkbox" formControlName="acceptTerms" class="hidden-checkbox" />
         </div>
 
-        <button class="btn-primary" type="submit" [disabled]="form.invalid">Sign up</button>
+        <button class="btn-primary" type="submit" [disabled]="form.invalid || loading">Sign up</button>
       </form>
     </main>
 

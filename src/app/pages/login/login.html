@@ -19,7 +19,7 @@
         </div>
 
         <form [formGroup]="form" class="form" (ngSubmit)="submit()">
-          <mat-form-field appearance="outline" class="custom-input">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input
               matInput
               formControlName="email"
@@ -31,9 +31,12 @@
             @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
               <mat-error>Email is required.</mat-error>
             }
+            @if (form.get('email')?.hasError('pattern')) {
+            <mat-error>Email is invalid</mat-error>
+          }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-input">
+          <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input
               matInput
               formControlName="password"
