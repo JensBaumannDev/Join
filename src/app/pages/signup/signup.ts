@@ -15,6 +15,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     styleUrls: ['./signup.scss']
 })
 export class Signup {
+        /** Toggle acceptTerms checkbox manually for custom checkbox UI */
+        toggleAcceptTerms() {
+            const ctrl = this.form.get('acceptTerms');
+            if (ctrl) ctrl.setValue(!ctrl.value);
+        }
     /** FormBuilder helper instance */
     private fb = inject(FormBuilder);
     /** Service managing authentication state */
@@ -76,5 +81,22 @@ export class Signup {
     /** Toggles the confirmation password field display type */
     toggleConfirmPassword(): void {
         this.showConfirmPassword.update((v) => !v);
+    }
+
+    errorMessage: string | null = null;
+
+    async signUp() {
+        if (this.form.invalid) return;
+        const name = this.form.value.name ?? '';
+        const email = this.form.value.email ?? '';
+        const password = this.form.value.password ?? '';
+        try {
+            this.errorMessage = null;
+            await this.authService.signUp(String(email), String(password), String(name));
+            await this.router.navigate(['/login']);
+        } catch (error: any) {
+            this.errorMessage = error?.message ?? 'Registration failed. Please try again.';
+            console.error('Signup failed:', error);
+        }
     }
 }

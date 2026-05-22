@@ -13,7 +13,7 @@
         <div class="separator"></div>
       </div>
 
-      <form [formGroup]="form" class="form">
+      <form [formGroup]="form" class="form" (ngSubmit)="signUp()">
         <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input matInput formControlName="name" placeholder="Name" />
           <img matSuffix src="icons/form/person.svg" alt="user" />
@@ -96,9 +96,17 @@
         </mat-form-field>
 
         <div class="checkbox-container">
-          <mat-checkbox formControlName="acceptTerms" color="primary">
-            I accept the <a routerLink="/privacy-policy">Privacy Policy</a>
-          </mat-checkbox>
+          <div class="custom-checkbox" (click)="toggleAcceptTerms()">
+            <img
+              [src]="form.get('acceptTerms')?.value ? 'icons/board/checkbox_checked.svg' : 'icons/board/checkbox.svg'"
+              [alt]="form.get('acceptTerms')?.value ? 'checked' : 'unchecked'"
+              class="checkbox-icon"
+            />
+            <p class="checkbox-label">
+              I accept the <a routerLink="/privacy-policy">Privacy Policy</a>
+            </p>
+          </div>
+          <input type="checkbox" formControlName="acceptTerms" class="hidden-checkbox" />
         </div>
 
         <button class="btn-primary" type="submit" [disabled]="form.invalid">Sign up</button>
