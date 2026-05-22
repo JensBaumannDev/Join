@@ -58,6 +58,84 @@ export class AuthService {
   }
 
   /**
+   * Duplicates default tasks, subtasks and contacts (where user_id is null) for a newly registered/logged-in user
+   * if they do not have any tasks or contacts yet.
+   * 
+   * @param user - The authenticated user object
+   */
+  async initializeUserCopy(user: User): Promise<void> {
+    // 1. Check if user already has tasks
+    const { count: taskCount, error: taskCheckError } = await this.supabase
+      .from('task')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+
+    if (!taskCheckError && taskCount === 0) {
+      const { data: templates, error: templateError } = await this.supabase
+        .from('task')
+        .select('*')
+        .is('user_id', null);
+
+      if (!templateError && templates) {
+        for (const template of templates) {
+          const oldTaskId = template.id;
+          const taskCopy = { ...template };
+          delete taskCopy.id;
+          delete taskCopy.created_at;
+          taskCopy.user_id = user.id;
+
+          const { data: newTasks, error: insertError } = await this.supabase
+            .from('task')
+            .insert([taskCopy])
+            .select();
+
+          if (!insertError && newTasks?.[0]) {
+            const newTaskId = newTasks[0].id;
+            const { data: subtasks, error: subtaskError } = await this.supabase
+              .from('subtasks')
+              .select('*')
+              .eq('task_id', oldTaskId);
+
+            if (!subtaskError && subtasks && subtasks.length > 0) {
+              const subtaskCopies = subtasks.map(s => {
+                const sCopy = { ...s };
+                delete sCopy.id;
+                sCopy.task_id = newTaskId;
+                return sCopy;
+              });
+              await this.supabase.from('subtasks').insert(subtaskCopies);
+            }
+          }
+        }
+      }
+    }
+
+    // 2. Check if user already has contacts
+    const { count: contactCount, error: contactCheckError } = await this.supabase
+      .from('contacts')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+
+    if (!contactCheckError && contactCount === 0) {
+      const { data: templateContacts, error: contactTemplateError } = await this.supabase
+        .from('contacts')
+        .select('*')
+        .is('user_id', null);
+
+      if (!contactTemplateError && templateContacts && templateContacts.length > 0) {
+        const contactCopies = templateContacts.map(c => {
+          const cCopy = { ...c };
+          delete cCopy.id;
+          delete cCopy.created_at;
+          cCopy.user_id = user.id;
+          return cCopy;
+        });
+        await this.supabase.from('contacts').insert(contactCopies);
+      }
+    }
+  }
+
+  /**
    * Synchronizes the current user details with the contacts table in the database.
    * Creates a new contact record if none exists.
    * 
@@ -66,22 +144,23 @@ export class AuthService {
   async syncCurrentUserContact(): Promise<void> {
     const user = this.currentUser();
     if (!user?.email) return;
-    const { data, error } = await this.fetchContactByEmail(user.email);
+    const { data, error } = await this.fetchContactByEmail(user.email, user.id);
     if (error) return console.error('Contact sync failed:', error);
 
     const name = this.getDisplayName(user);
     if (data) {
       await this.updateExistingContactIfNeeded(data, name);
     } else {
-      await this.createNewContact(user.email, name);
+      await this.createNewContact(user.email, name, user.id);
     }
   }
 
-  private fetchContactByEmail(email: string) {
+  private fetchContactByEmail(email: string, userId: string) {
     return this.supabase
       .from('contacts')
       .select('*')
       .eq('email', email)
+      .eq('user_id', userId)
       .limit(1)
       .maybeSingle();
   }
@@ -97,10 +176,10 @@ export class AuthService {
     await this.contactService.getContacts();
   }
 
-  private async createNewContact(email: string, name: string): Promise<void> {
+  private async createNewContact(email: string, name: string, userId: string): Promise<void> {
     const { error } = await this.supabase
       .from('contacts')
-      .insert([{ name, email, phone: '0000000000' }]);
+      .insert([{ name, email, phone: '0000000000', user_id: userId }]);
     if (error) {
       console.error('Contact create failed:', error);
       return;
@@ -115,8 +194,12 @@ export class AuthService {
    */
   async loadSession(): Promise<void> {
     const { data } = await this.supabase.auth.getSession();
-    this.currentUser.set(data.session?.user ?? null);
-    await this.syncCurrentUserContact();
+    const user = data.session?.user ?? null;
+    this.currentUser.set(user);
+    if (user) {
+      await this.initializeUserCopy(user);
+      await this.syncCurrentUserContact();
+    }
     this.isAuthResolved.set(true);
   }
 
@@ -140,7 +223,10 @@ export class AuthService {
     }
 
     this.currentUser.set(data.user);
-    await this.syncCurrentUserContact();
+    if (data.user) {
+      await this.initializeUserCopy(data.user);
+      await this.syncCurrentUserContact();
+    }
   }
 
   /**

@@ -24,6 +24,15 @@ export class ContactService {
   /** Real-time subscription channel for contacts sync */
   private channel: any = null;
 
+  constructor() {
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session?.user) {
+        this.contacts.set([]);
+        this.selectedContact.set(null);
+      }
+    });
+  }
+
   /**
    * Searches for a single contact by its email address.
    * 
@@ -31,10 +40,15 @@ export class ContactService {
    * @returns A promise resolving to the found Contact, or null if not found.
    */
   async findContactByEmail(email: string) {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return null;
+
     const { data, error } = await this.supabase
       .from('contacts')
       .select('*')
       .eq('email', email)
+      .eq('user_id', userId)
       .limit(1)
       .maybeSingle();
     if (error) {
@@ -50,9 +64,17 @@ export class ContactService {
    * @returns A promise resolving when the load is complete.
    */
   async getContacts() {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) {
+      this.contacts.set([]);
+      return;
+    }
+
     const { data, error } = await this.supabase
       .from('contacts')
       .select('*')
+      .eq('user_id', userId)
       .order('name', { ascending: true });
     if (error) return console.error(error);
     if (data) this.contacts.set(data as Contact[]);
@@ -81,9 +103,13 @@ export class ContactService {
    * @returns A promise resolving when the insertion is complete.
    */
   async addContact(name: string, email: string, phone: string, color?: string) {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return;
+
     const { error } = await this.supabase
       .from('contacts')
-      .insert([{ name, email, phone, color }]);
+      .insert([{ name, email, phone, color, user_id: userId }]);
 
     if (error) {
       console.error(error);
@@ -101,10 +127,15 @@ export class ContactService {
    * @returns A promise resolving when the updates are complete.
    */
   async updateContact(id: number, name: string, email: string, phone: string, color?: string) {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return;
+
     const { error } = await this.supabase
       .from('contacts')
       .update({ name, email, phone, color })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', userId);
     if (error) return console.error('Fehler beim Updaten:', error);
 
     this.updateLocalContacts(id, name, email, phone, color);
@@ -126,7 +157,15 @@ export class ContactService {
    * @returns A promise resolving when the deletion is complete.
    */
   async deleteContact(id: number) {
-    const { error } = await this.supabase.from('contacts').delete().eq('id', id);
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return;
+
+    const { error } = await this.supabase
+      .from('contacts')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId);
     if (error) return console.error('Fehler beim Löschen:', error);
 
     this.contacts.update((list) => list.filter((c) => c.id !== id));

@@ -1,6 +1,7 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, effect } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { ContactService } from './contact.service';
+import { AuthService } from './auth.service';
 import { Task } from '../interfaces/task.interface';
 
 /**
@@ -14,6 +15,18 @@ export class TaskService {
   private supabaseService = inject(SupabaseService);
   /** Injected ContactService to map assignments */
   private contactService = inject(ContactService);
+  /** Injected AuthService for user state lookup */
+  private authService = inject(AuthService);
+
+  constructor() {
+    effect(() => {
+      const user = this.authService.currentUser();
+      if (!user) {
+        this.tasks.set([]);
+        this.categories.set([]);
+      }
+    });
+  }
 
   /** Signal holding the reactive list of all tasks */
   tasks = signal<Task[]>([]);
@@ -53,14 +66,20 @@ export class TaskService {
   }
 
   /**
-   * Fetches all tasks from the database sorted by their position.
+   * Fetches all tasks from the database sorted by their position and filtered by logged-in user.
    * 
    * @returns A promise resolving when the tasks have been loaded into state.
    */
   async getTasks() {
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.tasks.set([]);
+      return;
+    }
     const { data, error } = await this.supabaseService.supabase
       .from('task')
       .select('*')
+      .eq('user_id', user.id)
       .order('position', { ascending: true, nullsFirst: false });
     if (error) {
       console.error('Task loading error:', error);
@@ -77,7 +96,13 @@ export class TaskService {
    * @returns A promise resolving to the created task object or undefined.
    */
   async createTask(task: any, subtasks: { title: string; completed: boolean }[] = []) {
-    const { data, error } = await this.supabaseService.supabase.from('task').insert([task]).select();
+    const user = this.authService.currentUser();
+    if (!user) return;
+    const taskWithUser = {
+      ...task,
+      user_id: user.id
+    };
+    const { data, error } = await this.supabaseService.supabase.from('task').insert([taskWithUser]).select();
     if (error) {
       console.error('create task error:', error);
       return;
@@ -102,16 +127,21 @@ export class TaskService {
   }
 
   /**
-   * Fetches all unique categories extracted from existing tasks in the database.
+   * Fetches all unique categories extracted from user-specific tasks in the database.
    * 
    * @returns A promise resolving when the categories are loaded.
    */
   async getCategories() {
-
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.categories.set([]);
+      return;
+    }
     const { data, error } =
       await this.supabaseService.supabase
         .from('task')
-        .select('category');
+        .select('category')
+        .eq('user_id', user.id);
 
     if (error) {
       console.error('Category loading error:', error);
@@ -135,10 +165,13 @@ export class TaskService {
    * @returns A promise resolving when the status is updated.
    */
   async updateTaskStatus(taskId: string, newStatus: string) {
+    const user = this.authService.currentUser();
+    if (!user) return;
     const { error } = await this.supabaseService.supabase
       .from('task')
       .update({ status: newStatus })
-      .eq('id', taskId);
+      .eq('id', taskId)
+      .eq('user_id', user.id);
 
     if (error) {
       console.error('Update error:', error);
@@ -152,9 +185,12 @@ export class TaskService {
    * @returns A promise resolving when the bulk positions are updated.
    */
   async updateTaskPositions(tasks: Task[]) {
+    const user = this.authService.currentUser();
+    if (!user) return;
     const updates = tasks.map((task, index) => ({
       id: task.id,
-      position: index
+      position: index,
+      user_id: user.id
     }));
     
     const { error } = await this.supabaseService.supabase
@@ -216,7 +252,13 @@ export class TaskService {
    * @returns A promise resolving when the updates are complete.
    */
   async updateTask(taskId: string, taskData: any, subtasks: { title: string; completed: boolean }[] = []) {
-    const { error } = await this.supabaseService.supabase.from('task').update(taskData).eq('id', taskId);
+    const user = this.authService.currentUser();
+    if (!user) return;
+    const { error } = await this.supabaseService.supabase
+      .from('task')
+      .update(taskData)
+      .eq('id', taskId)
+      .eq('user_id', user.id);
     if (error) return console.error('Update task error:', error);
 
     await this.replaceSubtasks(taskId, subtasks);
@@ -246,8 +288,14 @@ export class TaskService {
    * @returns A promise resolving when the deletion is complete.
    */
   async deleteTask(taskId: string) {
+    const user = this.authService.currentUser();
+    if (!user) return;
     await this.supabaseService.supabase.from('subtasks').delete().eq('task_id', taskId);
-    const { error } = await this.supabaseService.supabase.from('task').delete().eq('id', taskId);
+    const { error } = await this.supabaseService.supabase
+      .from('task')
+      .delete()
+      .eq('id', taskId)
+      .eq('user_id', user.id);
     if (error) {
       console.error('Task delete error:', error);
     } else {
