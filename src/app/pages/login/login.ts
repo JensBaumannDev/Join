@@ -27,9 +27,14 @@ export class Login implements OnInit {
   /** Signal control state for the splash screen entry animation */
   splashDone = signal(false);
 
-  /** Sets a timeout to complete the logo splash screen entry */
+  /** Sets a timeout to complete the logo splash screen entry, or skips animation if coming from signup */
   ngOnInit(): void {
-    setTimeout(() => this.splashDone.set(true), 1000);
+    if (sessionStorage.getItem('skipLogoAnimation')) {
+      this.splashDone.set(true);
+      sessionStorage.removeItem('skipLogoAnimation');
+    } else {
+      setTimeout(() => this.splashDone.set(true), 1000);
+    }
   }
 
   /** Reactive login validation form configuration */

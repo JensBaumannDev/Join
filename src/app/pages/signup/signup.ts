@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -15,6 +16,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     styleUrls: ['./signup.scss']
 })
 export class Signup {
+                loading = false;
+            private toastService = inject(ToastService);
         /** Toggle acceptTerms checkbox manually for custom checkbox UI */
         toggleAcceptTerms() {
             const ctrl = this.form.get('acceptTerms');
@@ -86,17 +89,51 @@ export class Signup {
     errorMessage: string | null = null;
 
     async signUp() {
-        if (this.form.invalid) return;
-        const name = this.form.value.name ?? '';
-        const email = this.form.value.email ?? '';
-        const password = this.form.value.password ?? '';
+        if (this.form.invalid || this.loading) return;
+        const { name, email, password } = this.getFormValues();
+        this.loading = true;
         try {
             this.errorMessage = null;
-            await this.authService.signUp(String(email), String(password), String(name));
-            await this.router.navigate(['/login']);
+            await this.registerUser(email, password, name);
+            this.handleSuccess();
         } catch (error: any) {
-            this.errorMessage = error?.message ?? 'Registration failed. Please try again.';
-            console.error('Signup failed:', error);
+            this.handleError(error);
+        } finally {
+            this.loading = false;
         }
+    }
+
+    /** Extracts and normalizes form values for registration */
+    private getFormValues() {
+        return {
+            name: this.form.value.name ?? '',
+            email: this.form.value.email ?? '',
+            password: this.form.value.password ?? ''
+        };
+    }
+
+    /** Handles user registration via AuthService */
+    private async registerUser(email: string, password: string, name: string) {
+        await this.authService.signUp(String(email), String(password), String(name));
+    }
+
+    /** Handles successful registration: toast and navigation */
+    private async handleSuccess() {
+        this.toastService.show('You Signed Up successfully', false);
+        await this.router.navigate(['/login']);
+    }
+
+    /** Handles registration errors and user feedback */
+    private handleError(error: any) {
+        let msg = error?.message ?? 'Registration failed. Please try again.';
+        if (
+            error?.status === 400 &&
+            (msg.includes('already registered') || msg.includes('already in use') || msg.includes('User already registered'))
+        ) {
+            msg = 'A user with this email already exists.';
+        }
+        this.toastService.show(msg, false);
+        this.errorMessage = msg;
+        console.error('Signup failed:', error);
     }
 }

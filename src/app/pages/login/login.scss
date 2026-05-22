@@ -70,13 +70,13 @@
 
   .form {
     max-width: 420px;
-    gap: 14px;
+    gap: 24px;
   }
 
   .btns-container {
     @include flex(row, nowrap, center, center);
     gap: 35px;
-    margin-top: 24px;
+    margin-top: 32px;
 
     .btn-secondary,
     .btn-primary {
