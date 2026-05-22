@@ -1,13 +1,13 @@
 import { Component, input, OnInit, signal, inject, computed, effect } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 
+/** Component representing the progress of subtasks on a task card */
 @Component({
   selector: 'app-subtask-progress',
   standalone: true,
   templateUrl: './subtask-progress.html',
   styleUrl: './subtask-progress.scss',
 })
-/** Component representing the progress of subtasks on a task card */
 export class SubtaskProgress implements OnInit {
   /** Required input for the ID of the task */
   taskId = input.required<string>();

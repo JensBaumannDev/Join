@@ -6,6 +6,7 @@ export interface SubtaskItem {
   completed: boolean;
 }
 
+/** Component managing the creation and editing of subtasks inside a task form */
 @Component({
   selector: 'app-subtask-input',
   standalone: true,
@@ -13,7 +14,6 @@ export interface SubtaskItem {
   templateUrl: './subtask-input.html',
   styleUrl: './subtask-input.scss',
 })
-/** Component managing the creation and editing of subtasks inside a task form */
 export class SubtaskInput {
   /** Inputs the list of subtask items */
   @Input() subtasks: SubtaskItem[] = [];

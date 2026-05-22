@@ -8,13 +8,13 @@ import { ContactService } from '../../services/contact.service';
 import { AuthService } from '../../services/auth.service';
 import { parseAssignedTo } from '../../utils/task.utils';
 
+/** Component rendering the details of a single task in a overlay panel */
 @Component({
   selector: 'app-task-detail-view',
   standalone: true,
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
   templateUrl: './task-detail-view.html',
 })
-/** Component rendering the details of a single task in a overlay panel */
 export class TaskDetailView {
   /** Input property representing the current task details */
   @Input() task!: Task;

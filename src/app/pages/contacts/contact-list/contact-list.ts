@@ -9,6 +9,7 @@ import { AvatarService } from '../../../services/avatar.service';
 import { AuthService } from '../../../services/auth.service';
 import { Contact } from '../../../interfaces/interface';
 
+/** Component managing the list of contacts, search filtering, and details view selection */
 @Component({
   selector: 'app-contact-list',
   standalone: true,
@@ -16,7 +17,6 @@ import { Contact } from '../../../interfaces/interface';
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
-/** Component managing the list of contacts, search filtering, and details view selection */
 export class ContactList implements OnInit {
   contactService = inject(ContactService);
   protected authService = inject(AuthService);

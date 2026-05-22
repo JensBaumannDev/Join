@@ -12,6 +12,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+/** Modal dialog component for creating or editing contacts */
 @Component({
     selector: 'app-contact-overlay',
     standalone: true,
@@ -29,7 +30,6 @@ import { filter } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-/** Modal dialog component for creating or editing contacts */
 export class ContactDialogComponent implements OnInit, OnDestroy {
     private fb = inject(FormBuilder);
     private dialogRef = inject(MatDialogRef<ContactDialogComponent>);

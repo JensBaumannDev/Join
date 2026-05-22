@@ -20,6 +20,7 @@ import { CategoryBadge } from '../../components/category-badge/category-badge';
 import { SubtaskProgress } from '../../components/subtask-progress/subtask-progress';
 import { parseAssignedTo } from '../../utils/task.utils';
 
+/** Page component managing the kanban board interface and drag-and-drop task workflow */
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -27,7 +28,6 @@ import { parseAssignedTo } from '../../utils/task.utils';
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
-/** Page component managing the kanban board interface and drag-and-drop task workflow */
 export class Board implements OnInit {
   private taskService = inject(TaskService);
   private contactService = inject(ContactService);
