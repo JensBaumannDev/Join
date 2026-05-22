@@ -46,11 +46,10 @@ export class Board implements OnInit {
   screenWidth = signal(window.innerWidth);
 
   /** State for the avatar popup */
-  avatarPopup = signal<{ visible: boolean; x: number; bottom?: number; top?: number; maxHeight: number; assignments: any[] }>({
+  avatarPopup = signal({
     visible: false,
-    x: 0,
-    maxHeight: 400,
-    assignments: [],
+    taskId: null as string | number | null,
+    assignments: [] as any[],
   });
 
   /**
@@ -61,45 +60,25 @@ export class Board implements OnInit {
    * @param task - The active task object.
    */
   toggleAvatarPopup(event: MouseEvent, task: Task) {
-    event.stopPropagation();
-    if (this.avatarPopup().visible) {
-      this.avatarPopup.update(p => ({ ...p, visible: false }));
-      return;
-    }
-    
-    const target = event.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const assignments = this.getTaskAssignments(task);
-    const headerHeight = 95;
-    const margin = 12;
-    
-    // Check space above
-    const spaceAbove = rect.top - headerHeight - margin;
-    const spaceBelow = window.innerHeight - rect.bottom - margin;
-    
-    let bottom: number | undefined;
-    let top: number | undefined;
-    let maxHeight: number;
+  event.stopPropagation();
 
-    if (spaceAbove > 150 || spaceAbove > spaceBelow) {
-      // Show above
-      bottom = window.innerHeight - rect.top + 8;
-      maxHeight = Math.min(400, spaceAbove);
-    } else {
-      // Show below
-      top = rect.bottom + 8;
-      maxHeight = Math.min(400, spaceBelow);
-    }
-    
-    this.avatarPopup.set({
-      visible: true,
-      x: Math.max(12, Math.min(rect.left, window.innerWidth - 262)),
-      bottom: bottom as number,
-      top: top as number,
-      maxHeight,
-      assignments,
-    });
+  const popup = this.avatarPopup();
+
+  if (popup.visible && popup.taskId === task.id) {
+    this.avatarPopup.update(p => ({
+      ...p,
+      visible: false,
+      taskId: null,
+    }));
+    return;
   }
+
+  this.avatarPopup.set({
+    visible: true,
+    taskId: task.id,
+    assignments: this.getTaskAssignments(task),
+  });
+}
 
   /** Closes the avatar popup overlay. */
   @HostListener('document:click')

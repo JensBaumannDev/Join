@@ -2,341 +2,351 @@
 @use '../../../styles/base/' as *;
 
 .board-container {
-    padding: 80px 32px 0 32px;
-    max-width: 1208px;
-    width: 100%;
+  padding: 80px 32px 0 32px;
+  max-width: 1208px;
+  width: 100%;
 }
 
 .board-content {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
-    width: 100%;
-    margin-top: 48px;
-    align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  width: 100%;
+  margin-top: 48px;
+  align-items: stretch;
 }
 
 .column {
-    @include flex(column, nowrap, flex-start, stretch);
+  @include flex(column, nowrap, flex-start, stretch);
 }
 
 .column-header {
-    @include flex(row, wrap, space-between, center);
-    margin-bottom: 24px;
+  @include flex(row, wrap, space-between, center);
+  margin-bottom: 24px;
 
-    h3 {
-        font-size: 20px;
-        font-weight: 700;
-        color: $color-primary;
-    }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: $color-primary;
+  }
 }
 
 .add-task-btn {
-    @include flex(row, wrap, flex-start, center);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: transform 0.1s ease;
+  @include flex(row, wrap, flex-start, center);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 
-    &:hover {
-
-        svg rect,
-        svg path {
-            stroke: $color-highlight;
-        }
+  &:hover {
+    svg rect,
+    svg path {
+      stroke: $color-highlight;
     }
+  }
 }
 
 .task-list {
-    min-height: 400px;
-    padding-bottom: 100px;
-    flex-grow: 1;
+  min-height: 400px;
+  padding-bottom: 100px;
+  flex-grow: 1;
 }
 
 .outer-drag {
-    width: 100%;
-    margin-bottom: 16px;
-    overflow: visible;
+  width: 100%;
+  margin-bottom: 16px;
+  overflow: visible;
 }
 
 .task-card {
-    @include flex(column, nowrap, flex-start, stretch);
-    width: 100%;
-    min-width: 250px;
-    box-sizing: border-box;
-    background: $color-white;
-    border-radius: 24px;
-    padding: 16px;
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.06);
-    cursor: grab;
-    gap: 12px;
+  @include flex(column, nowrap, flex-start, stretch);
+  width: 100%;
+  min-width: 250px;
+  box-sizing: border-box;
+  background: $color-white;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.06);
+  cursor: grab;
+  gap: 12px;
 
-    &:active {
-        cursor: grabbing;
+  &:active {
+    cursor: grabbing;
+  }
+
+  .task-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: $color-primary;
+    margin: 0;
+  }
+
+  .task-desc {
+    font-size: 16px;
+    color: $color-text-muted;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: clip;
+  }
+
+  .progress-section {
+    @include flex(row, nowrap, space-between, center);
+    gap: 10px;
+    font-size: 16px;
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 8px;
+      background-color: $color-gray-light;
+      border-radius: 4px;
     }
 
-    .task-title {
+    .progress-bar-fill {
+      height: 100%;
+      background-color: $color-accent;
+      border-radius: 4px;
+    }
+  }
+
+  .task-footer {
+    @include flex(row, nowrap, space-between, center);
+    margin-top: 8px;
+
+    .contact-list {
+      @include flex(row, nowrap, flex-start, center);
+      margin-left: 8px;
+      cursor: pointer;
+      position: relative;
+
+      .avatar {
+        @include flex(row, nowrap, center, center);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px $color-white;
+        margin-right: -8px;
+        color: $color-white;
         font-size: 16px;
-        font-weight: 700;
-        color: $color-primary;
-        margin: 0;
+        font-weight: 400;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
 
-    .task-desc {
-        font-size: 16px;
-        color: $color-text-muted;
-        margin: 0;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: clip;
+    .prio-icon {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
     }
-
-    .progress-section {
-        @include flex(row, nowrap, space-between, center);
-        gap: 10px;
-        font-size: 16px;
-
-        .progress-bar-bg {
-            flex: 1;
-            height: 8px;
-            background-color: $color-gray-light;
-            border-radius: 4px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background-color: $color-accent;
-            border-radius: 4px;
-        }
-    }
-
-    .task-footer {
-        @include flex(row, nowrap, space-between, center);
-        margin-top: 8px;
-
-        .contact-list {
-            @include flex(row, nowrap, flex-start, center);
-            margin-left: 8px;
-            cursor: pointer;
-
-            .avatar {
-                @include flex(row, nowrap, center, center);
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                box-shadow: 0 0 0 2px $color-white;
-                margin-right: -8px;
-                color: $color-white;
-                font-size: 16px;
-                font-weight: 400;
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-        }
-
-        .prio-icon {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-    }
+  }
 }
 
 .empty-list-placeholder {
-    @include flex(row, nowrap, center, center);
-    height: 56px;
-    border: 1px dashed $color-text-muted;
-    border-radius: 10px;
-    background-color: $color-gray-light;
-    color: $color-text-muted;
-    font-size: 16px;
+  @include flex(row, nowrap, center, center);
+  height: 56px;
+  border: 1px dashed $color-text-muted;
+  border-radius: 10px;
+  background-color: $color-gray-light;
+  color: $color-text-muted;
+  font-size: 16px;
 }
 
-
 .cdk-drag-preview {
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
 
-    .inner-drag {
-        transform: rotate(4deg);
-    }
+  .inner-drag {
+    transform: rotate(4deg);
+  }
 }
 
 .cdk-drag-placeholder {
-    opacity: 0.4;
-    border: 2px dashed $color-text-muted;
-    border-radius: 24px;
-    background: rgba(0, 0, 0, 0.03);
-    margin-bottom: 16px;
+  opacity: 0.4;
+  border: 2px dashed $color-text-muted;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.03);
+  margin-bottom: 16px;
 }
 
 .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-
 .avatar-overflow {
-    background-color: $color-primary;
-    color: $color-white;
-    font-size: 16px;
-    font-weight: 600;
-    box-shadow: 0 0 0 2px $color-white;
-    cursor: default;
-    user-select: none;
+  background-color: $color-primary;
+  color: $color-white;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px $color-white;
+  cursor: default;
+  user-select: none;
 }
 
 .avatar-popup {
-    @include flex(column, nowrap, flex-start, stretch);
-    position: fixed;
-    z-index: $z-index-dropdown;
-    background: $color-white;
-    border-radius: 16px;
-    padding: 12px 16px;
-    gap: 10px;
-    max-height: 400px;
+  @include flex(column, nowrap, flex-start, stretch);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -24px;
+  z-index: $z-index-dropdown;
+  background: $color-white;
+  border-radius: 16px;
+  padding: 12px 16px;
+  gap: 10px;
+  min-width: 252px;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  animation: popup-in 0.15s ease;
+  scrollbar-gutter: stable;
+  background-clip: padding-box;
+
+  @include scrollbar($width: 8px, $thumb-color: $color-find-task-border, $track-margin: 12px);
+
+  @include mobile {
     min-width: 252px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    animation: popup-in 0.15s ease;
-    scrollbar-gutter: stable;
-    background-clip: padding-box;
-
-    @include scrollbar($width: 8px, $thumb-color: $color-find-task-border, $track-margin: 12px);
-
-    @include mobile {
-        min-width: 200px;
-        max-width: calc(100vw - 24px);
-        padding: 12px 16px;
-    }
+    max-width: calc(100vw - 24px);
+  }
 }
 
 @keyframes popup-in {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .avatar-popup-row {
-    @include flex(row, nowrap, flex-start, center);
-    gap: 10px;
+  @include flex(row, nowrap, flex-start, center);
+  gap: 10px;
 }
 
 .avatar-popup-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: $color-primary;
-    white-space: nowrap;
+  font-size: 16px;
+  font-weight: 500;
+  color: $color-primary;
+  white-space: nowrap;
 }
 
 .avatar.avatar-sm {
-    @include flex(row, nowrap, center, center);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 16px;
-    flex-shrink: 0;
-    color: $color-white;
+  @include flex(row, nowrap, center, center);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: $color-white;
 }
 
 /* #region RESPONSIVE */
 @include large-desktop {
-    .board-container {
-        padding: 80px 65px 0 65px;
-    }
+  .board-container {
+    padding: 80px 65px 0 65px;
+  }
 }
 
 @media (max-width: 1350px) {
-    .board-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .board-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @include tablet-lg {
-    .board-container {
-        padding: 48px 0 100px 0;
-        max-width: 100%;
+  .board-content,
+  .column,
+  .task-list,
+  .outer-drag {
+    overflow: visible !important;
+  }
+
+  .board-container {
+    padding: 48px 0 100px 0;
+    max-width: 100%;
+  }
+
+  .board-content {
+    @include flex(column, nowrap, flex-start, flex-start);
+    gap: 32px;
+    margin-top: 32px;
+  }
+
+  .column {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .column-header {
+    margin-bottom: 12px;
+    width: 252px;
+    margin-left: 16px;
+    padding: 0;
+  }
+
+  :host ::ng-deep .task-list {
+    @include flex(row, nowrap);
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 16px;
+    padding: 10px 16px 20px 16px;
+    min-height: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+
+    @include scrollbar($width: 8px, $thumb-color: $color-find-task-border);
+
+    &.cdk-drop-list-dragging {
+      padding-right: 100px;
     }
+  }
 
-    .board-content {
-        @include flex(column, nowrap, flex-start, flex-start);
-        gap: 32px;
-        margin-top: 32px;
+  .outer-drag {
+    flex: 0 0 auto;
+    width: auto;
+    margin-bottom: 0;
+    touch-action: auto !important; //DON'T  TOUCH THIS "IMPORTANT"
+
+    &.cdk-drag-dragging {
+      touch-action: none !important; //DON'T TOUCH THIS "IMPORTANT"
     }
+  }
 
-    .column {
-        width: 100%;
-        min-width: 0;
-    }
+  .task-card {
+    width: 252px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
 
-    .column-header {
-        margin-bottom: 12px;
-        width: 252px;
-        margin-left: 16px;
-        padding: 0;
-    }
+  .empty-list-placeholder {
+    width: 250px;
+    height: 56px;
+    flex-shrink: 0;
+  }
 
-    :host ::ng-deep .task-list {
-        @include flex(row, nowrap);
-        overflow-x: auto;
-        gap: 16px;
-        padding: 10px 16px 20px 16px;
-        min-height: auto;
-        -webkit-overflow-scrolling: touch;
-        touch-action: auto;
-
-        @include scrollbar($width: 8px, $thumb-color: $color-find-task-border);
-
-        &.cdk-drop-list-dragging {
-            padding-right: 100px;
-        }
-    }
-
-    .outer-drag {
-        flex: 0 0 auto;
-        width: auto;
-        margin-bottom: 0;
-        touch-action: auto !important; //DON'T  TOUCH THIS "IMPORTANT"
-
-        &.cdk-drag-dragging {
-            touch-action: none !important; //DON'T TOUCH THIS "IMPORTANT"
-        }
-    }
-
-    .task-card {
-        width: 252px;
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-    }
-
-    .empty-list-placeholder {
-        width: 250px;
-        height: 56px;
-        flex-shrink: 0;
-    }
-
-    .cdk-drag-placeholder {
-        margin-bottom: 0;
-        margin-right: 16px;
-        width: 252px;
-        height: 150px;
-    }
+  .cdk-drag-placeholder {
+    margin-bottom: 0;
+    margin-right: 16px;
+    width: 252px;
+    height: 150px;
+  }
 }
 
-/* #endregion */
+@media (min-width: 1025px) and (max-width: 1349px) {
+  .avatar-popup {
+    left: 70px;
+  }
+}

@@ -1,86 +1,105 @@
 <ng-template #addBtn let-col>
-    <button class="add-task-btn" (click)="openAddTaskDialog(col.id)">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="1" y="1" width="22" height="22" rx="7" stroke="#2A3647" stroke-width="2" />
-            <path d="M12 8V16" stroke="#2A3647" stroke-width="2" stroke-linecap="round" />
-            <path d="M16 12.0754L8 12.0754" stroke="#2A3647" stroke-width="2" stroke-linecap="round" />
-        </svg>
-    </button>
+  <button class="add-task-btn" (click)="openAddTaskDialog(col.id)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="22" height="22" rx="7" stroke="#2A3647" stroke-width="2" />
+      <path d="M12 8V16" stroke="#2A3647" stroke-width="2" stroke-linecap="round" />
+      <path d="M16 12.0754L8 12.0754" stroke="#2A3647" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
 </ng-template>
 
 <section class="board-container" cdkDropListGroup>
-    <app-find-task></app-find-task>
-    <div class="board-content">
+  <app-find-task></app-find-task>
+  <div class="board-content">
+    @for (col of columns; track col.id) {
+      <div class="column">
+        <div class="column-header">
+          <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
+          @if (col.id !== 'done') {
+            <ng-container *ngTemplateOutlet="addBtn; context: { $implicit: col }"></ng-container>
+          }
+        </div>
 
-        @for (col of columns; track col.id) {
-        <div class="column">
-            <div class="column-header">
-                <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
-                @if (col.id !== 'done') {
-                <ng-container *ngTemplateOutlet="addBtn; context: { $implicit: col }"></ng-container>
+        <div
+          class="task-list"
+          [id]="col.id"
+          cdkDropList
+          [cdkDropListData]="col.tasks()"
+          (cdkDropListDropped)="drop($event)"
+          [cdkDropListOrientation]="listOrientation()"
+        >
+          @for (task of col.tasks(); track task.id) {
+            <div
+              class="outer-drag"
+              cdkDrag
+              (click)="openTaskDetailDialog(task)"
+              [cdkDragStartDelay]="dragDelay()"
+            >
+              <div class="inner-drag task-card">
+                @if (task.category) {
+                  <app-category-badge [category]="task.category"></app-category-badge>
                 }
-            </div>
+                <h4 class="task-title">{{ task.title }}</h4>
+                <p class="task-desc">{{ task.description }}</p>
 
-            <div class="task-list" [id]="col.id" cdkDropList [cdkDropListData]="col.tasks()"
-                (cdkDropListDropped)="drop($event)" [cdkDropListOrientation]="listOrientation()">
-                @for (task of col.tasks(); track task.id) {
-                <div class="outer-drag" cdkDrag (click)="openTaskDetailDialog(task)" [cdkDragStartDelay]="dragDelay()">
-                    <div class="inner-drag task-card">
-                        @if (task.category) {
-                        <app-category-badge [category]="task.category"></app-category-badge>
-                        }
-                        <h4 class="task-title">{{ task.title }}</h4>
-                        <p class="task-desc">{{ task.description }}</p>
+                <app-subtask-progress [taskId]="task.id"></app-subtask-progress>
 
-                        <app-subtask-progress [taskId]="task.id"></app-subtask-progress>
-
-                        <div class="task-footer">
-                            <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
-                                @for (assign of task.assignments.slice(0, 3); track $index) {
-                                @if (getContactInfo(assign); as info) {
-                                <div class="avatar" [style.background-color]="info.color" [attr.title]="getAssignmentLabel(assign)">
-                                    {{ info.initials }}
-                                </div>
-                                }
-                                }
-                                @if (task.assignments.length > 3) {
-                                <div class="avatar avatar-overflow">
-                                    +{{ task.assignments.length - 3 }}
-                                </div>
-                                }
-                            </div>
-                            @if (task.priority) {
-                            <img [src]="getPriorityIcon(task.priority)" class="prio-icon" [alt]="task.priority">
-                            }
+                <div class="task-footer">
+                  <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
+                    @for (assign of task.assignments.slice(0, 3); track $index) {
+                      @if (getContactInfo(assign); as info) {
+                        <div
+                          class="avatar"
+                          [style.background-color]="info.color"
+                          [attr.title]="getAssignmentLabel(assign)"
+                        >
+                          {{ info.initials }}
                         </div>
-                    </div>
+                      }
+                    }
+
+                    @if (task.assignments.length > 3) {
+                      <div class="avatar avatar-overflow">
+                        +{{ task.assignments.length - 3 }}
+
+                        @if (avatarPopup().visible && avatarPopup().taskId === task.id) {
+                          <div class="avatar-popup" (click)="$event.stopPropagation()">
+                            @for (assign of avatarPopup().assignments; track $index) {
+                              @if (getContactInfo(assign); as info) {
+                                <div class="avatar-popup-row">
+                                  <div
+                                    class="avatar avatar-sm"
+                                    [style.background-color]="info.color"
+                                  >
+                                    {{ info.initials }}
+                                  </div>
+
+                                  <span class="avatar-popup-name">
+                                    {{ getAssignmentLabel(assign) }}
+                                  </span>
+                                </div>
+                              }
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                  @if (task.priority) {
+                    <img
+                      [src]="getPriorityIcon(task.priority)"
+                      class="prio-icon"
+                      [alt]="task.priority"
+                    />
+                  }
                 </div>
-                } @empty {
-                <div class="empty-list-placeholder">No tasks {{ col.label }}</div>
-                }
+              </div>
             </div>
+          } @empty {
+            <div class="empty-list-placeholder">No tasks {{ col.label }}</div>
+          }
         </div>
-        }
-
-    </div>
-</section>
-
-@if (avatarPopup().visible) {
-<div class="avatar-popup"
-    [style.bottom.px]="avatarPopup().bottom"
-    [style.top.px]="avatarPopup().top"
-    [style.left.px]="avatarPopup().x"
-    [style.max-height.px]="avatarPopup().maxHeight"
-    (click)="$event.stopPropagation()">
-    @for (assign of avatarPopup().assignments; track $index) {
-        @if (getContactInfo(assign); as info) {
-        <div class="avatar-popup-row">
-            <div class="avatar avatar-sm" [style.background-color]="info.color">
-                {{ info.initials }}
-            </div>
-            <span class="avatar-popup-name">{{ getAssignmentLabel(assign) }}</span>
-        </div>
-        }
+      </div>
     }
-</div>
-}
+  </div>
+</section>
