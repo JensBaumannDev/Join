@@ -4,7 +4,9 @@ import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { Task } from '../../interfaces/task.interface';
 import { TaskService } from '../../services/task.service';
+import { ContactService } from '../../services/contact.service';
 import { AuthService } from '../../services/auth.service';
+import { parseAssignedTo } from '../../utils/task.utils';
 
 @Component({
   selector: 'app-task-detail-view',
@@ -12,48 +14,45 @@ import { AuthService } from '../../services/auth.service';
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
   templateUrl: './task-detail-view.html',
 })
+/** Component rendering the details of a single task in a overlay panel */
 export class TaskDetailView {
+  /** Input property representing the current task details */
   @Input() task!: Task;
+
+  /** Input property representing the subtasks for this task */
   @Input() subtasks: any[] = [];
 
+  /** Event emitted when the detail panel is closed */
   @Output() closed = new EventEmitter<void>();
+
+  /** Event emitted when the task is deleted */
   @Output() deleted = new EventEmitter<void>();
+
+  /** Event emitted when the edit mode is activated */
   @Output() editClicked = new EventEmitter<void>();
+
+  /** Event emitted when a subtask's completion status is toggled */
   @Output() subtaskToggled = new EventEmitter<any>();
 
   private taskService = inject(TaskService);
+  private contactService = inject(ContactService);
   private authService = inject(AuthService);
 
+  /** Resolves the display name of the current authenticated user */
   private get currentUserContactName(): string | null {
     const user = this.authService.currentUser();
     if (!user?.email) return null;
-    const contact = this.taskService.contacts().find((c) => c.email === user.email);
+    const contact = this.contactService.contacts().find((c) => c.email === user.email);
     return contact?.name || this.authService.getDisplayName(user);
   }
 
+  /** Resolves and builds contact preview objects for all task assignees */
   get assignees(): { name: string; color?: string; isYou?: boolean }[] {
     const val: any = this.task.assigned_to;
     if (!val) return [];
 
-    let names: string[] = [];
-    if (Array.isArray(val)) {
-      names = val;
-    } else if (typeof val === 'string') {
-      const trimmed = val.trim();
-      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-        try {
-          names = JSON.parse(trimmed);
-        } catch {
-          names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
-        }
-      } else if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
-        names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
-      } else {
-        names = trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
-      }
-    }
-
-    const allContacts = this.taskService.contacts();
+    const names = parseAssignedTo(val);
+    const allContacts = this.contactService.contacts();
     return names.map(name => {
       const color = allContacts.find(c => c.name === name)?.color;
       return {

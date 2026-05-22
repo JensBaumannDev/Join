@@ -4,6 +4,7 @@ import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { Contact } from '../../../interfaces/interface';
 import { AuthService } from '../../../services/auth.service';
 
+/** Component for displaying contact details, including communication fields and action triggers */
 @Component({
   selector: 'app-contact-detail',
   standalone: true,
@@ -12,7 +13,9 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './contact-detail.scss',
 })
 export class ContactDetail {
+  /** Signal reflecting if the mobile action menu is open */
   mobileMenuOpen = signal(false);
+  /** Signal reflecting if the mobile action menu container is visible */
   mobileMenuVisible = signal(false);
 
   /** Opens the mobile menu with a slide-in animation */
@@ -28,13 +31,19 @@ export class ContactDetail {
       this.mobileMenuVisible.set(false);
     }, 250);
   }
+  /** Input contact record to display */
   @Input({ required: true }) contact!: Contact;
+  /** Output event emitted when user triggers edit contact */
   @Output() edit = new EventEmitter<void>();
+  /** Output event emitted when user triggers delete contact */
   @Output() delete = new EventEmitter<void>();
+  /** Output event emitted when back navigation is triggered on mobile */
   @Output() back = new EventEmitter<void>();
 
+  /** Injectable AuthService to check if current logged in user matches contact */
   private authService = inject(AuthService);
 
+  /** Getter check if this contact matches current logged in user */
   get isCurrentUserContact(): boolean {
     return this.authService.currentUser()?.email === this.contact.email;
   }

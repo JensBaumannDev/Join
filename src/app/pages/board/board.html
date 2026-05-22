@@ -17,7 +17,7 @@
             <div class="column-header">
                 <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
                 @if (col.id !== 'done') {
-                <ng-container *ngTemplateOutlet="addBtn; context: { $implicit: col }" />
+                <ng-container *ngTemplateOutlet="addBtn; context: { $implicit: col }"></ng-container>
                 }
             </div>
 
@@ -27,25 +27,25 @@
                 <div class="outer-drag" cdkDrag (click)="openTaskDetailDialog(task)" [cdkDragStartDelay]="dragDelay()">
                     <div class="inner-drag task-card">
                         @if (task.category) {
-                        <app-category-badge [category]="task.category" />
+                        <app-category-badge [category]="task.category"></app-category-badge>
                         }
                         <h4 class="task-title">{{ task.title }}</h4>
                         <p class="task-desc">{{ task.description }}</p>
 
-                        <app-subtask [taskId]="task.id" />
+                        <app-subtask-progress [taskId]="task.id"></app-subtask-progress>
 
                         <div class="task-footer">
                             <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
-                                @for (assign of getTaskAssignments(task).slice(0, 3); track $index) {
+                                @for (assign of task.assignments.slice(0, 3); track $index) {
                                 @if (getContactInfo(assign); as info) {
                                 <div class="avatar" [style.background-color]="info.color" [attr.title]="getAssignmentLabel(assign)">
                                     {{ info.initials }}
                                 </div>
                                 }
                                 }
-                                @if (getTaskAssignments(task).length > 3) {
+                                @if (task.assignments.length > 3) {
                                 <div class="avatar avatar-overflow">
-                                    +{{ getTaskAssignments(task).length - 3 }}
+                                    +{{ task.assignments.length - 3 }}
                                 </div>
                                 }
                             </div>

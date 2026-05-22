@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, computed } from '@angular/core';
-import { Supabase } from '../contact.service';
+import { ContactService } from '../../../services/contact.service';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { ContactDetail } from '../contact-detail/contact-detail';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,23 +16,27 @@ import { Contact } from '../../../interfaces/interface';
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
+/** Component managing the list of contacts, search filtering, and details view selection */
 export class ContactList implements OnInit {
-  contactService = inject(Supabase);
+  contactService = inject(ContactService);
   protected authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private toastService = inject(ToastService);
   private avatarService = inject(AvatarService);
 
+  /** Checks if the given contact matches the currently logged-in user's email */
   isCurrentUserContact(contact: Contact): boolean {
     const user = this.authService.currentUser();
     if (!user) return false;
     return user.email === contact.email;
   }
 
+  /** Returns the display label for a contact, appending (You) if it's the current user */
   getContactLabel(contact: Contact): string {
     return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
+  /** Opens the dialog for adding or editing a contact and processes the result */
   openContactDialog(mode: 'add' | 'edit', contact?: Contact) {
     const dialogRef = this.dialog.open(ContactDialogComponent, {
       data: { mode, contact },
@@ -61,6 +65,7 @@ export class ContactList implements OnInit {
     });
   }
 
+  /** Computed property grouping contacts alphabetically by their initials */
   groupedContacts = computed(() => {
     const contacts = this.contactService.contacts();
 
@@ -81,11 +86,13 @@ export class ContactList implements OnInit {
       .sort((a, b) => a.letter.localeCompare(b.letter));
   });
 
+  /** Initialization hook fetching contacts and subscribing to real-time updates */
   ngOnInit() {
     this.contactService.getContacts();
     this.contactService.subscribeToChanges();
   }
 
+  /** Selects a contact to display in the detail view with a brief reset delay */
   selectContact(contact: Contact) {
     this.contactService.selectedContact.set(null);
     setTimeout(() => {
@@ -93,12 +100,14 @@ export class ContactList implements OnInit {
     }, 50);
   }
 
+  /** Creates a new contact with a balanced avatar color and re-fetches the list */
   add(name: string, email: string, phone: string) {
     const usedColors = this.contactService.contacts().map(c => c.color).filter(c => c) as string[];
     this.contactService.addContact(name, email, phone, this.avatarService.getBalancedColor(usedColors));
     this.contactService.getContacts();
   }
 
+  /** Deletes a contact from the database and updates selected contact state */
   async deleteContact(id: number) {
     await this.contactService.deleteContact(id);
     this.contactService.selectedContact.set(null);

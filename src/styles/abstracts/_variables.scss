@@ -1,3 +1,4 @@
+// Color Variables
 $color-text: #000000;
 $color-white: #ffffff;
 $color-text-muted: #cdcdcd;
@@ -36,6 +37,7 @@ $z-index-modal: 50;
 $z-index-toast: 60;
 $z-index-header-sidebar: 100;
 
+// User Colors
 $user-colors: (
   rgba(255, 122, 0, 1),
   rgba(255, 94, 179, 1),
@@ -54,6 +56,7 @@ $user-colors: (
   rgba(255, 187, 43, 1)
 );
 
+// Component Colors
 $sidebar-bg: $color-primary;
 $sidebar-text: $color-text-muted;
 $sidebar-text-hover: $color-white;

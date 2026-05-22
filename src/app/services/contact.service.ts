@@ -1,61 +1,68 @@
-import { Injectable, signal } from '@angular/core'
-import { createClient } from '@supabase/supabase-js'
-import { Contact } from '../../interfaces/interface'
+import { Injectable, inject, signal } from '@angular/core';
+import { Contact } from '../interfaces/interface';
+import { SupabaseService } from './supabase.service';
 
+/** Service handling contact CRUD operations and real-time synchronization with Supabase */
 @Injectable({
   providedIn: 'root',
 })
-export class Supabase {
+export class ContactService {
+  private supabaseService = inject(SupabaseService);
 
-  supabaseUrl = 'https://xghgnrqmiunojpfilsyr.supabase.co'
-  supabaseKey = 'sb_publishable_fq87MyT8emzNGArQ2tHwHA_9DRDSjD9'
+  /** Helper getter for the central Supabase client instance */
+  get supabase() {
+    return this.supabaseService.supabase;
+  }
 
-  supabase = createClient(this.supabaseUrl, this.supabaseKey)
+  /** Signal holding the reactive list of all contacts */
+  contacts = signal<Contact[]>([]);
 
-  contacts = signal<Contact[]>([])
+  /** Signal holding the currently active/selected contact */
+  selectedContact = signal<Contact | null>(null);
 
-  selectedContact = signal<Contact | null>(null)
+  private channel: any = null;
 
+  /** Searches for a single contact by its email address */
   async findContactByEmail(email: string) {
     const { data, error } = await this.supabase
       .from('contacts')
       .select('*')
       .eq('email', email)
       .limit(1)
-      .maybeSingle()
+      .maybeSingle();
 
     if (error) {
-      console.error('Contact lookup error:', error)
-      return null
+      console.error('Contact lookup error:', error);
+      return null;
     }
 
-    return data as Contact | null
+    return data as Contact | null;
   }
 
-  private channel: any = null
-
+  /** Fetches all contacts from the database ordered by name */
   async getContacts() {
     const { data, error } = await this.supabase
       .from('contacts')
       .select('*')
-      .order('name', { ascending: true })
+      .order('name', { ascending: true });
 
     if (error) {
-      console.error(error)
-      return
+      console.error(error);
+      return;
     }
 
     if (data) {
-      this.contacts.set(data as Contact[])
+      this.contacts.set(data as Contact[]);
     }
   }
 
+  /** Subscribes to real-time postgres changes for the contacts table */
   subscribeToChanges() {
     if (this.channel) {
-      return
+      return;
     }
 
-    this.channel = this.supabase.channel('contacts-changes')
+    this.channel = this.supabase.channel('contacts-changes');
 
     this.channel
       .on(
@@ -72,16 +79,18 @@ export class Supabase {
       .subscribe();
   }
 
+  /** Inserts a new contact record into the database */
   async addContact(name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
-      .insert([{ name, email, phone, color }])
+      .insert([{ name, email, phone, color }]);
 
     if (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
+  /** Updates an existing contact record and syncs local signals */
   async updateContact(id: number, name: string, email: string, phone: string, color?: string) {
     const { error } = await this.supabase
       .from('contacts')
@@ -110,6 +119,7 @@ export class Supabase {
     }
   }
 
+  /** Deletes a contact record and syncs local signals */
   async deleteContact(id: number) {
     const { error } = await this.supabase
       .from('contacts')

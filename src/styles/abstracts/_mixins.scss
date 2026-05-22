@@ -1,7 +1,7 @@
 @use 'sass:math';
 @use 'variables' as vars;
 
-
+// Mixin for fluid typography
 @mixin fluid-text($min: 16, $max: 48) {
   $maxViewportWidth: 1440;
   $minViewportWidth: 320;
@@ -19,6 +19,7 @@
     #{$maxSize * 1rem});
 }
 
+// Mixin for custom scrollbar styling
 @mixin scrollbar($width: 6px, $thumb-color: vars.$color-gray-form, $track-margin: 0px) {
   scrollbar-width: thin;
   scrollbar-color: #{$thumb-color} transparent;
@@ -42,6 +43,7 @@
   }
 }
 
+// Mixin for flexbox layout
 @mixin flex($flex-direction: row, $flex-wrap: wrap, $justify-content: flex-start, $align-items: stretch) {
   display: flex;
   flex-direction: $flex-direction;
@@ -50,17 +52,20 @@
   align-items: $align-items;
 }
 
+// Mixin for centering content
 @mixin maxContent {
   padding-left: calc((100% - 1440px) / 2);
   padding-right: calc((100% - 1440px) / 2);
 }
 
+// Mixin for max-width container
 @mixin maxWidth {
   max-width: 1440px;
   width: 100%;
   box-sizing: border-box;
 }
 
+// Mixin for custom Material Dialog styling
 @mixin custom-material-dialog($radius: 30px) {
   .mat-mdc-dialog-container {
     --mdc-dialog-container-shape: #{$radius};
@@ -75,8 +80,7 @@
   }
 }
 
-/* src/styles.scss */
-
+// Mixin to reset autofill styles
 @mixin clean-autofill($color-white, $color-text) {
   &:-webkit-autofill,
   &:-webkit-autofill:hover, 

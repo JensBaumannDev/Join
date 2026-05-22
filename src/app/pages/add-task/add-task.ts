@@ -2,48 +2,73 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Supabase } from '../contacts/contact.service';
+import { ContactService } from '../../services/contact.service';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { TaskService } from '../../services/task.service';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from '../../services/auth.service';
 import { Task } from '../../interfaces/task.interface';
-import { Subtask } from '../../components/subtask/subtask';
+import { SubtaskInput } from '../../components/subtask-input/subtask-input';
+import { parseAssignedTo } from '../../utils/task.utils';
 
+/** Page/Dialog component for creating or editing tasks */
 @Component({
   selector: 'app-add-task',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AvatarComponent, Subtask],
+  imports: [CommonModule, ReactiveFormsModule, AvatarComponent, SubtaskInput],
   templateUrl: './add-task.html',
   styleUrl: './add-task.scss',
 })
 export class AddTask implements OnInit {
+  /** Input flag indicating if component is rendered inside a modal dialog */
   @Input() isDialog = false;
+  /** Input specifying the initial status column for the new task */
   @Input() initialStatus = 'To do';
+  /** Input representing the task object to be edited, if any */
   @Input() taskToEdit: Task | null = null;
+  /** Input representing subtasks of the edited task */
   @Input() subtasksToEdit: any[] = [];
+  /** Output event emitted when task is successfully saved or created */
   @Output() taskCreated = new EventEmitter<void>();
+  /** Output event emitted when user cancels task creation */
   @Output() cancelClicked = new EventEmitter<void>();
 
-  contactService = inject(Supabase);
+  /** Injectable ContactService for managing contacts */
+  contactService = inject(ContactService);
+  /** Injectable AuthService for fetching current user session details */
   protected authService = inject(AuthService);
+  /** Injectable TaskService for managing task lists and categories */
   taskService = inject(TaskService);
+  /** Injectable Router for page redirection */
   private router = inject(Router);
 
+  /** Signal or array of all contacts */
   contacts = this.contactService.contacts;
+  /** Signal or array of task categories */
   categories = this.taskService.categories;
 
+  /** List of contacts assigned to the task */
   selectedContacts: any[] = [];
+  /** List of subtasks to be created or updated */
   subtaskList: { title: string; completed: boolean }[] = [];
+  /** Maximum number of contact avatars visible in preview */
   maxVisibleContacts = 3;
+  /** Flag representing contact dropdown visibility */
   dropdownOpen = false;
+  /** Flag representing category dropdown visibility */
   categoryDropdownOpen = false;
+  /** Flag representing more-contacts popup visibility */
   moreContactsOpen = false;
+  /** Input search term for filtering contacts */
   contactSearchTerm = '';
+  /** State flag indicating if task submit is in progress */
   isSubmitting = false;
+  /** String ISO date for today */
   todayDate: string = new Date().toISOString().split('T')[0];
+  /** Form group for task input elements */
   taskForm: FormGroup;
 
+  /** Validation function ensuring the due date is not in the past */
   pastDateValidators(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
 
@@ -56,6 +81,7 @@ export class AddTask implements OnInit {
     return selectedDate < today ? { pastDate: true } : null;
   }
 
+  /** Initializes form controls using FormBuilder */
   constructor(private fb: FormBuilder) {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
@@ -67,6 +93,7 @@ export class AddTask implements OnInit {
     });
   }
 
+  /** Document click listener to close dropdowns when clicking outside */
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -87,11 +114,13 @@ export class AddTask implements OnInit {
     }
   }
 
+  /** Gets filtered contacts based on the search query term */
   get filteredContacts() {
     const term = this.contactSearchTerm.toLowerCase();
     return this.contacts().filter((c: any) => c.name.toLowerCase().includes(term));
   }
 
+  /** Fetches contacts and categories on component initialization */
   async ngOnInit() {
     await Promise.all([this.contactService.getContacts(), this.taskService.getCategories()]);
     if (this.taskToEdit) {
@@ -99,6 +128,7 @@ export class AddTask implements OnInit {
     }
   }
 
+  /** Prefills form controls with the existing task and subtask data in edit mode */
   private prefillForm() {
     const task = this.taskToEdit!;
     const assignedNames = this.parseAssignedTo(task.assigned_to);
@@ -114,24 +144,18 @@ export class AddTask implements OnInit {
     });
   }
 
+  /** Internal helper parsing assignments string array representation */
   private parseAssignedTo(val: any): string[] {
-    if (!val) return [];
-    if (Array.isArray(val)) return val;
-    if (typeof val === 'string') {
-      const trimmed = val.trim();
-      if (trimmed.startsWith('[')) {
-        try { return JSON.parse(trimmed); } catch { }
-      }
-      return trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
-    }
-    return [];
+    return parseAssignedTo(val);
   }
 
+  /** Toggles the assigned contacts dropdown list visibility */
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
     if (this.dropdownOpen) this.categoryDropdownOpen = false;
   }
 
+  /** Toggles the task categories dropdown list visibility */
   toggleCategoryDropdown() {
     this.categoryDropdownOpen = !this.categoryDropdownOpen;
     if (this.categoryDropdownOpen) {
@@ -140,10 +164,12 @@ export class AddTask implements OnInit {
     }
   }
 
+  /** Toggles the expanded visual list of extra contact icons */
   toggleMoreContacts() {
     this.moreContactsOpen = !this.moreContactsOpen;
   }
 
+  /** Toggles a contact's assignment on this task */
   toggleContact(contact: any) {
     const exists = this.selectedContacts.find((c) => c.id === contact.id);
 
@@ -158,20 +184,25 @@ export class AddTask implements OnInit {
     });
   }
 
+  /** Helper check to see if a contact matches the current user's email */
   isCurrentUserContact(contact: any): boolean {
     return this.authService.currentUser()?.email === contact?.email;
   }
 
+  /** Formats contact name label and appends '(You)' suffix for logged in user */
   getContactLabel(contact: any): string {
     return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
+  /** Updates task priority field in the form */
   setPriority(value: string) {
     this.taskForm.patchValue({ priority: value });
   }
 
+  /** Injectable ToastService instance */
   toastService = inject(ToastService);
 
+  /** Handles task form validation and submits new or edited task to database */
   async submit() {
     if (this.isSubmitting) return;
 
@@ -215,6 +246,7 @@ export class AddTask implements OnInit {
     }
   }
 
+  /** Resets the form and selected contact list to initial values */
   clear() {
     this.taskForm.reset({
       priority: 'Medium',
@@ -224,6 +256,7 @@ export class AddTask implements OnInit {
     this.subtaskList = [];
   }
 
+  /** Callback responding to cancel click event */
   onCancelOrClear() {
     if (this.isDialog) {
       this.cancelClicked.emit();

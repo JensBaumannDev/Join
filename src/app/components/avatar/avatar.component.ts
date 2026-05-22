@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarService } from '../../services/avatar.service';
 
+/** Component representing a user avatar with initials and color background */
 @Component({
   selector: 'app-avatar',
   standalone: true,
@@ -32,5 +33,6 @@ export class AvatarComponent {
     return this.isHeader() ? 24 : 16;
   });
 
+  /** Initializes the AvatarComponent with the AvatarService */
   constructor(private avatarService: AvatarService) { }
 }

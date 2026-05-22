@@ -10,6 +10,7 @@ import { Login } from './pages/login/login';
 import { Signup } from './pages/signup/signup';
 import { authGuard } from './guards/auth.guard';
 
+/** Global application routing mapping paths to components and guarding protected resources */
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
