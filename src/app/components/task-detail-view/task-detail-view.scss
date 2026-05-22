@@ -1,0 +1,60 @@
+@use '../../../styles/abstracts' as *;
+
+.assignee-list {
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 10px;
+  padding-left: 12px;
+  padding-right: 8px;
+  max-height: 310px;
+  overflow-y: auto;
+  @include scrollbar();
+}
+
+.subtask-list {
+  @include flex(column, nowrap, flex-start, stretch);
+  gap: 10px;
+  padding-left: 16px;
+  max-height: 160px;
+  overflow-y: auto;
+  @include scrollbar();
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color-primary;
+  background-color: $color-white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  @include mobile-md {
+    bottom: 85px;
+  }
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    animation: bounce 1.5s infinite;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 6px);
+  }
+}

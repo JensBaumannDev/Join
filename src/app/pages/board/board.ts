@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, computed, signal, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from '../../services/dialog.service';
 import { TaskDetail } from '../../components/task-detail/task-detail';
@@ -28,7 +28,7 @@ import { parseAssignedTo } from '../../utils/task.utils';
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
-export class Board implements OnInit {
+export class Board implements OnInit, OnDestroy {
   /** Injected TaskService for performing CRUD and status operations on tasks */
   private taskService = inject(TaskService);
   /** Injected ContactService for retrieving assignees info */
@@ -49,10 +49,16 @@ export class Board implements OnInit {
   avatarPopup = signal<{
     visible: boolean;
     taskId: string | number | null;
+    x: number;
+    bottom?: number | null;
+    top?: number | null;
+    maxHeight: number;
     assignments: any[];
   }>({
     visible: false,
     taskId: null,
+    x: 0,
+    maxHeight: 260,
     assignments: [],
   });
 
@@ -64,25 +70,42 @@ export class Board implements OnInit {
    * @param task - The active task object.
    */
   toggleAvatarPopup(event: MouseEvent, task: Task) {
-  event.stopPropagation();
+    event.stopPropagation();
 
-  const popup = this.avatarPopup();
+    const popup = this.avatarPopup();
 
-  if (popup.visible && popup.taskId === task.id) {
-    this.avatarPopup.update(p => ({
-      ...p,
-      visible: false,
-      taskId: null,
-    }));
-    return;
+    if (popup.visible && popup.taskId === task.id) {
+      this.avatarPopup.update(p => ({
+        ...p,
+        visible: false,
+        taskId: null,
+      }));
+      return;
+    }
+
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const assignments = this.getTaskAssignments(task);
+    const headerHeight = 95;
+    const margin = 12;
+
+    const spaceAbove = rect.top - headerHeight - margin;
+    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    const openDirection = (spaceAbove > 150 || spaceAbove > spaceBelow) ? 'up' : 'down';
+
+    const bottom = openDirection === 'up' ? window.innerHeight - rect.top + 8 : null;
+    const top = openDirection === 'down' ? rect.bottom + 8 : null;
+
+    this.avatarPopup.set({
+      visible: true,
+      taskId: task.id,
+      x: Math.max(12, Math.min(rect.left, window.innerWidth - 262)),
+      bottom,
+      top,
+      maxHeight: 260,
+      assignments,
+    });
   }
-
-  this.avatarPopup.set({
-    visible: true,
-    taskId: task.id,
-    assignments: this.getTaskAssignments(task),
-  });
-}
 
   /** Closes the avatar popup overlay. */
   @HostListener('document:click')
@@ -227,13 +250,30 @@ export class Board implements OnInit {
     return this.taskService.boardConfig();
   }
 
-  /** Initializes the board by fetching configuration and tasks */
+  /** Event listener callback for capturing and handling window and element scrolls */
+  private onScrollAction = (event: Event) => {
+    if (this.avatarPopup().visible) {
+      const target = event.target as HTMLElement;
+      if (target?.closest?.('.avatar-popup')) {
+        return;
+      }
+      this.avatarPopup.update(p => ({ ...p, visible: false, taskId: null }));
+    }
+  };
+
+  /** Initializes the board by fetching configuration and tasks and registering scroll listeners */
   async ngOnInit() {
+    window.addEventListener('scroll', this.onScrollAction, true);
     await Promise.all([
       this.taskService.getBoardConfig(),
       this.taskService.getTasks(),
       this.contactService.getContacts()
     ]);
+  }
+
+  /** Cleans up registered scroll event listeners to prevent memory leaks */
+  ngOnDestroy() {
+    window.removeEventListener('scroll', this.onScrollAction, true);
   }
 
   /**

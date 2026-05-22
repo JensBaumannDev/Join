@@ -26,6 +26,10 @@
     background-color: $color-bg-content;
     width: 100%;
 
+    @include desktop {
+        @include scrollbar($width: 8px, $thumb-color: $color-find-task-border);
+    }
+
     &--full-bleed {
         padding: 0;
         max-width: none;

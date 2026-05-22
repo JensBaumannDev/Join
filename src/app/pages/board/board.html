@@ -61,27 +61,6 @@
                     @if (task.assignments.length > 3) {
                       <div class="avatar avatar-overflow">
                         +{{ task.assignments.length - 3 }}
-
-                        @if (avatarPopup().visible && avatarPopup().taskId === task.id) {
-                          <div class="avatar-popup" (click)="$event.stopPropagation()">
-                            @for (assign of avatarPopup().assignments; track $index) {
-                              @if (getContactInfo(assign); as info) {
-                                <div class="avatar-popup-row">
-                                  <div
-                                    class="avatar avatar-sm"
-                                    [style.background-color]="info.color"
-                                  >
-                                    {{ info.initials }}
-                                  </div>
-
-                                  <span class="avatar-popup-name">
-                                    {{ getAssignmentLabel(assign) }}
-                                  </span>
-                                </div>
-                              }
-                            }
-                          </div>
-                        }
                       </div>
                     }
                   </div>
@@ -103,3 +82,28 @@
     }
   </div>
 </section>
+
+@if (avatarPopup().visible) {
+  <div
+    class="avatar-popup"
+    [style.bottom.px]="avatarPopup().bottom"
+    [style.top.px]="avatarPopup().top"
+    [style.left.px]="avatarPopup().x"
+    [style.max-height.px]="avatarPopup().maxHeight"
+    (click)="$event.stopPropagation()"
+  >
+    @for (assign of avatarPopup().assignments; track $index) {
+      @if (getContactInfo(assign); as info) {
+        <div class="avatar-popup-row">
+          <div
+            class="avatar avatar-sm"
+            [style.background-color]="info.color"
+          >
+            {{ info.initials }}
+          </div>
+          <span class="avatar-popup-name">{{ getAssignmentLabel(assign) }}</span>
+        </div>
+      }
+    }
+  </div>
+}

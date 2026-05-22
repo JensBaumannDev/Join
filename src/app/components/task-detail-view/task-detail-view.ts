@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, ViewChild, ElementRef, AfterViewInit, signal } from '@angular/core';
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { CategoryBadge } from '../category-badge/category-badge';
 import { AvatarComponent } from '../avatar/avatar.component';
@@ -14,8 +14,15 @@ import { parseAssignedTo } from '../../utils/task.utils';
   standalone: true,
   imports: [CategoryBadge, DatePipe, LowerCasePipe, AvatarComponent],
   templateUrl: './task-detail-view.html',
+  styleUrl: './task-detail-view.scss',
 })
-export class TaskDetailView {
+export class TaskDetailView implements AfterViewInit {
+  /** Reference to the scrollable content container */
+  @ViewChild('detailContent') detailContent!: ElementRef<HTMLElement>;
+
+  /** Signal indicating if the scroll helper arrow should be shown */
+  showScrollIndicator = signal(false);
+
   /** Input property representing the current task details */
   @Input() task!: Task;
 
@@ -64,5 +71,27 @@ export class TaskDetailView {
         isYou: name === this.currentUserContactName,
       };
     });
+  }
+
+  /** Checks scrollability of the task content after view is rendered */
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.detailContent) {
+        this.checkScroll(this.detailContent.nativeElement);
+      }
+    }, 100);
+  }
+
+  /** Triggered on scroll event of the detail container */
+  onScroll(event: Event) {
+    const target = event.target as HTMLElement;
+    this.checkScroll(target);
+  }
+
+  /** Evaluates scroll positions to toggle visibility of scroll indicator arrow */
+  checkScroll(element: HTMLElement) {
+    const isScrollable = element.scrollHeight > element.clientHeight + 10;
+    const isAtTop = element.scrollTop < 10;
+    this.showScrollIndicator.set(isScrollable && isAtTop);
   }
 }
