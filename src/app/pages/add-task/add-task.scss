@@ -365,9 +365,9 @@
 
   &__more-dropdown {
     position: absolute;
-    top: 40px;
+    top: 44px;
     width: max-content;
-    min-width: 250px;
+    min-width: 252px;
     max-width: min(250px, 90vw);
     max-height: 250px;
     overflow-y: auto;
@@ -411,7 +411,6 @@
     }
   }
 
-
   &__actions {
     @include flex(row, wrap, space-between);
     gap: 16px;
@@ -437,8 +436,6 @@
     padding: 48px 14px 100px 14px;
     height: auto;
     min-height: calc(100vh - 80px);
-
-
 
     &__columns {
       flex-direction: column;
@@ -487,7 +484,7 @@
     }
 
     &__more-dropdown {
-      left: -138px;
+      left: -157px;
     }
 
     &__input,
@@ -504,6 +501,14 @@
       .btn {
         padding: 12px;
       }
+    }
+  }
+}
+
+@media (min-width: 480px) and (max-width: 540px) {
+  .add-task {
+    &__more-dropdown {
+      left: -157px;
     }
   }
 }
