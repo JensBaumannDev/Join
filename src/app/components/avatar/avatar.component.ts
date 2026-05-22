@@ -20,6 +20,9 @@ export class AvatarComponent {
   /** Whether to use the header-specific styling (white bg, colored text) */
   isHeader = input<boolean>(false);
 
+  /** Whether to use the contact details specific styling (larger font size) */
+  isContactDetail = input<boolean>(false);
+
   /** The persistent color for the avatar. If not provided, it falls back to a name-based generated color. */
   color = input<string>();
 
@@ -30,6 +33,7 @@ export class AvatarComponent {
 
   /** Font size computed based on the avatar size */
   fontSize = computed(() => {
+    if (this.isContactDetail()) return 47;
     return this.isHeader() ? 24 : 16;
   });
 
