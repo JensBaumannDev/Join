@@ -37,12 +37,10 @@ export class ContactService {
       .eq('email', email)
       .limit(1)
       .maybeSingle();
-
     if (error) {
       console.error('Contact lookup error:', error);
       return null;
     }
-
     return data as Contact | null;
   }
 
@@ -56,36 +54,19 @@ export class ContactService {
       .from('contacts')
       .select('*')
       .order('name', { ascending: true });
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    if (data) {
-      this.contacts.set(data as Contact[]);
-    }
+    if (error) return console.error(error);
+    if (data) this.contacts.set(data as Contact[]);
   }
 
   /** Subscribes to real-time postgres changes for the contacts table. */
   subscribeToChanges() {
-    if (this.channel) {
-      return;
-    }
-
+    if (this.channel) return;
     this.channel = this.supabase.channel('contacts-changes');
-
     this.channel
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'contacts',
-        },
-        () => {
-          this.getContacts();
-        }
+        { event: '*', schema: 'public', table: 'contacts' },
+        () => this.getContacts()
       )
       .subscribe();
   }
@@ -124,26 +105,17 @@ export class ContactService {
       .from('contacts')
       .update({ name, email, phone, color })
       .eq('id', id);
+    if (error) return console.error('Fehler beim Updaten:', error);
 
-    if (error) {
-      console.error('Fehler beim Updaten:', error);
-      return;
-    }
+    this.updateLocalContacts(id, name, email, phone, color);
+  }
 
+  private updateLocalContacts(id: number, name: string, email: string, phone: string, color?: string) {
     this.contacts.update((list) =>
-      list.map((c) =>
-        c.id === id ? { ...c, name, email, phone, color } : c
-      )
+      list.map((c) => (c.id === id ? { ...c, name, email, phone, color } : c))
     );
-
     if (this.selectedContact()?.id === id) {
-      this.selectedContact.set({
-        ...this.selectedContact()!,
-        name,
-        email,
-        phone,
-        color,
-      });
+      this.selectedContact.set({ ...this.selectedContact()!, name, email, phone, color });
     }
   }
 
@@ -154,18 +126,10 @@ export class ContactService {
    * @returns A promise resolving when the deletion is complete.
    */
   async deleteContact(id: number) {
-    const { error } = await this.supabase
-      .from('contacts')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Fehler beim Löschen:', error);
-      return;
-    }
+    const { error } = await this.supabase.from('contacts').delete().eq('id', id);
+    if (error) return console.error('Fehler beim Löschen:', error);
 
     this.contacts.update((list) => list.filter((c) => c.id !== id));
-
     if (this.selectedContact()?.id === id) {
       this.selectedContact.set(null);
     }

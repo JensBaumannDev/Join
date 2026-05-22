@@ -27,9 +27,7 @@ export class ToastService {
    * @param withIcon - Optional flag to display a success badge icon next to the text.
    */
   show(msg: string, withIcon = false) {
-    if (this.hideTimer) clearTimeout(this.hideTimer);
-    if (this.clearTimer) clearTimeout(this.clearTimer);
-
+    this.clearTimers();
     this.isVisible.set(false);
     this.isHiding.set(false);
 
@@ -37,16 +35,24 @@ export class ToastService {
       this.message.set(msg);
       this.showIcon.set(withIcon);
       this.isVisible.set(true);
-
-      this.hideTimer = setTimeout(() => {
-        this.isVisible.set(false);
-        this.isHiding.set(true);
-        this.clearTimer = setTimeout(() => {
-          this.message.set(null);
-          this.isHiding.set(false);
-          this.showIcon.set(false);
-        }, 500);
-      }, 3000);
+      this.startHideTimer();
     });
+  }
+
+  private clearTimers() {
+    if (this.hideTimer) clearTimeout(this.hideTimer);
+    if (this.clearTimer) clearTimeout(this.clearTimer);
+  }
+
+  private startHideTimer() {
+    this.hideTimer = setTimeout(() => {
+      this.isVisible.set(false);
+      this.isHiding.set(true);
+      this.clearTimer = setTimeout(() => {
+        this.message.set(null);
+        this.isHiding.set(false);
+        this.showIcon.set(false);
+      }, 500);
+    }, 3000);
   }
 }
