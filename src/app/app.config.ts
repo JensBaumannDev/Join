@@ -6,7 +6,11 @@ import { routes } from './app.routes';
 /** Custom global ErrorHandler to filter out harmless browser/router transition abort errors */
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  /** Inspects errors and silences aborted view transition errors while logging other exceptions */
+  /**
+   * Inspects errors and silences aborted view transition errors while logging other exceptions.
+   * 
+   * @param error - The error or exception object to handle.
+   */
   handleError(error: any): void {
     const message = error?.message || String(error);
     if (

@@ -18,7 +18,11 @@ export class CategoryBadge {
   /** Injectable AvatarService to resolve category color */
   private avatarService = inject(AvatarService);
 
-  /** Retrieves the hex color based on the category name */
+  /**
+   * Retrieves the hex color based on the category name.
+   * 
+   * @returns The resolved hex color string.
+   */
   getColor(): string {
     return this.avatarService.getColor(this.category() + ' category');
   }

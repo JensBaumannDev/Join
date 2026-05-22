@@ -3,6 +3,9 @@ import { SupabaseService } from './supabase.service';
 import { ContactService } from './contact.service';
 import { Task } from '../interfaces/task.interface';
 
+/**
+ * Service handling Kanban tasks, categories, board configs, and subtask operations.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +34,11 @@ export class TaskService {
     await this.contactService.getContacts();
   }
 
-  /** Fetches the board configuration (column names etc.) */
+  /**
+   * Fetches the board configuration (e.g., column names and layout) from Supabase.
+   * 
+   * @returns A promise resolving when the board configuration is loaded.
+   */
   async getBoardConfig() {
     const { data, error } = await this.supabaseService.supabase
       .from('board')
@@ -42,7 +49,11 @@ export class TaskService {
     }
   }
 
-  /** Fetches all tasks from the database */
+  /**
+   * Fetches all tasks from the database sorted by their position.
+   * 
+   * @returns A promise resolving when the tasks have been loaded into state.
+   */
   async getTasks() {
     const { data, error } = await this.supabaseService.supabase
       .from('task')
@@ -59,7 +70,13 @@ export class TaskService {
     }
   }
 
-  /** Creates a new task and its associated subtasks in the database */
+  /**
+   * Creates a new task and inserts its associated subtasks in the database.
+   * 
+   * @param task - The task data object to insert.
+   * @param subtasks - The list of initial subtask objects.
+   * @returns A promise resolving to the created task object or undefined.
+   */
   async createTask(task: any, subtasks: { title: string; completed: boolean }[] = []) {
     const { data, error } = await this.supabaseService.supabase
       .from('task')
@@ -92,7 +109,11 @@ export class TaskService {
     return data?.[0];
   }
 
-  /** Fetches all unique categories from existing tasks */
+  /**
+   * Fetches all unique categories extracted from existing tasks in the database.
+   * 
+   * @returns A promise resolving when the categories are loaded.
+   */
   async getCategories() {
 
     const { data, error } =
@@ -114,7 +135,13 @@ export class TaskService {
     }
   }
 
-  /** Updates the status of a task (Drag & Drop) */
+  /**
+   * Updates the category/status column of a task (e.g., during Drag & Drop).
+   * 
+   * @param taskId - The unique identifier of the task.
+   * @param newStatus - The new status value (e.g. 'to-do', 'in-progress').
+   * @returns A promise resolving when the status is updated.
+   */
   async updateTaskStatus(taskId: string, newStatus: string) {
     const { error } = await this.supabaseService.supabase
       .from('task')
@@ -126,7 +153,12 @@ export class TaskService {
     }
   }
 
-  /** Persists the position of all tasks based on their current signal order in bulk */
+  /**
+   * Persists the visual position order of all tasks in bulk in the database.
+   * 
+   * @param tasks - The array of tasks representing the new order.
+   * @returns A promise resolving when the bulk positions are updated.
+   */
   async updateTaskPositions(tasks: Task[]) {
     const updates = tasks.map((task, index) => ({
       id: task.id,
@@ -142,7 +174,12 @@ export class TaskService {
     }
   }
 
-  /** Fetches subtasks for a given taskId from Supabase */
+  /**
+   * Fetches all subtasks associated with a specific task ID.
+   * 
+   * @param taskId - The unique identifier of the parent task.
+   * @returns A promise resolving to the list of subtask records.
+   */
   async getSubtasksForTask(taskId: string) {
     const { data, error } = await this.supabaseService.supabase
       .from('subtasks')
@@ -158,7 +195,14 @@ export class TaskService {
   /** Signal to trigger refresh of subtasks in specific components */
   subtaskUpdateTrigger = signal<{ taskId: string; timestamp: number } | null>(null);
 
-  /** Updates the completed state of a subtask */
+  /**
+   * Updates the completion status of a single subtask and triggers reactive updates.
+   * 
+   * @param subtaskId - The database ID of the subtask.
+   * @param completed - The new completion state.
+   * @param taskId - The parent task's unique ID for triggering updates.
+   * @returns A promise resolving when the update is complete.
+   */
   async updateSubtaskCompleted(subtaskId: string, completed: boolean, taskId: string) {
     const { error } = await this.supabaseService.supabase
       .from('subtasks')
@@ -171,7 +215,14 @@ export class TaskService {
     }
   }
 
-  /** Updates a task and replaces its subtasks */
+  /**
+   * Updates task details and completely replaces its set of subtasks.
+   * 
+   * @param taskId - The unique identifier of the task.
+   * @param taskData - The updated fields for the task.
+   * @param subtasks - The complete replacement list of subtasks.
+   * @returns A promise resolving when the updates are complete.
+   */
   async updateTask(taskId: string, taskData: any, subtasks: { title: string; completed: boolean }[] = []) {
     const { error } = await this.supabaseService.supabase
       .from('task')
@@ -204,7 +255,12 @@ export class TaskService {
     this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
   }
 
-  /** Deletes a task and its subtasks from Supabase */
+  /**
+   * Deletes a task and all of its associated subtasks from the database.
+   * 
+   * @param taskId - The unique identifier of the task to delete.
+   * @returns A promise resolving when the deletion is complete.
+   */
   async deleteTask(taskId: string) {
     await this.supabaseService.supabase
       .from('subtasks')

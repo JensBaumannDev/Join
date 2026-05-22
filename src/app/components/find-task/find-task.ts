@@ -20,7 +20,11 @@ export class FindTask {
   /** Angular Router for navigation */
   private router = inject(Router);
 
-  /** Updates the search term inside taskService from the input element value */
+  /**
+   * Updates the search term inside taskService from the input element value.
+   * 
+   * @param event - The input change or keyup event.
+   */
   onSearch(event: Event) {
     const input = event.target as HTMLInputElement;
     this.taskService.searchTerm.set(input.value.trim());

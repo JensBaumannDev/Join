@@ -42,7 +42,12 @@ export class Signup {
         acceptTerms: [false, Validators.requiredTrue],
     }, { validators: Signup.passwordMatchValidator });
 
-    /** Static validator asserting that password matches confirmPassword control value */
+    /**
+     * Static validator asserting that password matches confirmPassword control value.
+     * 
+     * @param form - The abstract form control representing the form group.
+     * @returns A validation error object if passwords mismatch, or null if they match.
+     */
     static passwordMatchValidator(form: AbstractControl) {
         const password = form.get('password')?.value;
         const confirmPasswordControl = form.get('confirmPassword');

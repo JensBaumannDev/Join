@@ -45,19 +45,31 @@ export class SubtaskInput {
     }
   }
 
-  /** Removes a subtask from the list by its index */
+  /**
+   * Removes a subtask from the list by its index.
+   * 
+   * @param index - Index of the subtask in the array to remove.
+   */
   remove(index: number) {
     this.subtasksChange.emit(this.subtasks.filter((_, i) => i !== index));
     if (this.editingIndex === index) this.editingIndex = null;
   }
 
-  /** Sets a subtask item into editing mode and initializes its editing value */
+  /**
+   * Sets a subtask item into editing mode and initializes its editing value.
+   * 
+   * @param index - Index of the subtask to set in editing mode.
+   */
   edit(index: number) {
     this.editingIndex = index;
     this.editingValue = this.subtasks[index].title;
   }
 
-  /** Saves the edited subtask value back to the list and exits editing mode */
+  /**
+   * Saves the edited subtask value back to the list and exits editing mode.
+   * 
+   * @param index - Index of the subtask being saved.
+   */
   save(index: number) {
     if (this.editingValue.trim()) {
       const updated = [...this.subtasks];

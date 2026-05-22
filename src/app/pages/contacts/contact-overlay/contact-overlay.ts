@@ -128,7 +128,11 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    /** Triggers the slide-out exit animation and closes the dialog */
+    /**
+     * Triggers the slide-out exit animation and closes the dialog.
+     * 
+     * @param data - The optional result data to pass back on close.
+     */
     private closeDialog(data?: any) {
         this.isClosing.set(true);
         this.dialogRef.addPanelClass('slide-out');
@@ -137,12 +141,12 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         }, 500);
     }
 
-    /** Closes the dialog without saving any changes */
+    /** Closes the dialog without saving any changes. */
     cancel() {
         this.closeDialog();
     }
 
-    /** Deletes the contact from the database and closes the dialog */
+    /** Deletes the contact from the database and closes the dialog. */
     async delete() {
         this.isLoading.set(true);
         try {
@@ -155,7 +159,7 @@ export class ContactDialogComponent implements OnInit, OnDestroy {
         }
     }
 
-    /** Persists the new or edited contact details to the database */
+    /** Persists the new or edited contact details to the database. */
     async save() {
         if (this.form.invalid) return;
         this.isLoading.set(true);

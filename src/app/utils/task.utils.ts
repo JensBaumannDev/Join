@@ -1,4 +1,10 @@
-/** Parses the database representation of assigned contacts into a clean array of names */
+/**
+ * Parses the database representation of assigned contacts into a clean array of names.
+ * Supports JSON arrays, bracket lists, curly brace lists, and comma-separated string formats.
+ * 
+ * @param val - The raw database representation of the assigned contacts.
+ * @returns A parsed array of contact names.
+ */
 export function parseAssignedTo(val: any): string[] {
   if (!val) return [];
   if (Array.isArray(val)) return val;
