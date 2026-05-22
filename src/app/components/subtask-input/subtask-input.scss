@@ -1,33 +1,5 @@
 @use '../../../styles/abstracts/' as *;
 
-.progress-section {
-  @include flex(row, nowrap, space-between, center);
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 120%;
-  cursor: default;
-
-  .progress-bar-bg {
-    height: 8px;
-    background-color: $color-gray-light;
-    border-radius: 8px;
-    width: 110px;
-
-    .progress-bar-fill {
-      height: 100%;
-      background-color: $color-accent;
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
-  }
-
-  .subtask-label {
-    white-space: nowrap;
-    color: $color-primary;
-  }
-}
-
 .subtask {
   &__wrapper {
     position: relative;

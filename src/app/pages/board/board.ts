@@ -12,26 +12,31 @@ import {
   CdkDrag,
 } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../services/task.service';
+import { ContactService } from '../../services/contact.service';
 import { AvatarService } from '../../services/avatar.service';
 import { Task } from '../../interfaces/task.interface';
 import { FindTask } from '../../components/find-task/find-task';
 import { CategoryBadge } from '../../components/category-badge/category-badge';
-import { Subtask } from '../../components/subtask/subtask';
+import { SubtaskProgress } from '../../components/subtask-progress/subtask-progress';
+import { parseAssignedTo } from '../../utils/task.utils';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge, Subtask],
+  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge, SubtaskProgress],
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
+/** Page component managing the kanban board interface and drag-and-drop task workflow */
 export class Board implements OnInit {
   private taskService = inject(TaskService);
+  private contactService = inject(ContactService);
   private avatarService = inject(AvatarService);
   private dialogService = inject(DialogService);
   private router = inject(Router);
   private authService = inject(AuthService);
 
+  /** Signal tracking the current screen width for responsive rendering */
   screenWidth = signal(window.innerWidth);
 
   /** State for the avatar popup */
@@ -130,39 +135,73 @@ export class Board implements OnInit {
 
 
 
-  /** All tasks filtered by the search term */
+  /** Parses raw task assignees into mapped contact objects */
+  private parseTaskAssignments(task: Task, allContacts: any[]): any[] {
+    if (task.task_assignments && task.task_assignments.length > 0) {
+      return task.task_assignments;
+    }
+
+    const val: any = task.assigned_to;
+    if (!val) return [];
+
+    const names = parseAssignedTo(val);
+    return names.map(name => {
+      const contact = allContacts.find(c => c.name === name);
+      const assignment = {
+        name: name,
+        color: contact?.color,
+        contact: contact,
+      };
+      return {
+        ...assignment,
+        isYou: this.isCurrentUserAssignment(assignment),
+      };
+    });
+  }
+
+  /** All tasks filtered by the search term and enriched with pre-computed contact assignments */
   filteredTasks = computed(() => {
     const term = this.taskService.searchTerm().toLowerCase();
     const tasks = this.taskService.tasks();
-    if (!term) return tasks;
-    return tasks.filter(t =>
+    const allContacts = this.contactService.contacts();
+    
+    const enriched = tasks.map(t => {
+      const assignments = this.parseTaskAssignments(t, allContacts);
+      return {
+        ...t,
+        assignments
+      };
+    });
+
+    if (!term) return enriched;
+    return enriched.filter(t =>
       (t.title?.toLowerCase() ?? '').includes(term) ||
       (t.description?.toLowerCase() ?? '').includes(term) ||
       (t.category?.toLowerCase() ?? '').includes(term)
     );
   });
 
-  /** Filtered tasks for the 'To do' column */
+  /** Computed list of tasks currently in the 'To do' status */
   todo = computed(() => this.filteredTasks().filter(t =>
     ['to do', 'todo'].includes(t.status?.toLowerCase() ?? '')
   ));
 
-  /** Filtered tasks for the 'In progress' column */
+  /** Computed list of tasks currently in the 'In progress' status */
   in_progress = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'in progress'
   ));
 
-  /** Filtered tasks for the 'Await feedback' column */
+  /** Computed list of tasks currently in the 'Await feedback' status */
   await_feedback = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'await feedback'
   ));
 
-  /** Filtered tasks for the 'Done' column */
+  /** Computed list of tasks currently in the 'Done' status */
   done = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'done'
   ));
 
-  /** Configuration for each column in the kanban board */
+  /** Configuration defining columns, labels, and task lists */
   columns = [
     { id: 'to do', configKey: 'to_do', label: 'To do', tasks: this.todo },
     { id: 'in progress', configKey: 'in_progress', label: 'In progress', tasks: this.in_progress },
@@ -180,7 +219,7 @@ export class Board implements OnInit {
     await Promise.all([
       this.taskService.getBoardConfig(),
       this.taskService.getTasks(),
-      this.taskService.getContacts()
+      this.contactService.getContacts()
     ]);
   }
 
@@ -197,18 +236,21 @@ export class Board implements OnInit {
     return this.avatarService.getAvatarData(name, color);
   }
 
+  /** Getter resolving the name of the current authenticated user */
   private get currentUserContactName(): string | null {
     const user = this.authService.currentUser();
     if (!user?.email) return null;
-    const contact = this.taskService.contacts().find((c) => c.email === user.email);
+    const contact = this.contactService.contacts().find((c) => c.email === user.email);
     return contact?.name || this.authService.getDisplayName(user);
   }
 
+  /** Helper checking if an assignment matches the current user */
   private isCurrentUserAssignment(assign: any): boolean {
     const name = assign.contact?.name || assign.name;
     return !!name && name === this.currentUserContactName;
   }
 
+  /** Resolves label for assignment, appending '(You)' if appropriate */
   getAssignmentLabel(assign: any): string {
     const name = assign.contact?.name || assign.name || 'Unknown';
     return this.isCurrentUserAssignment(assign) ? `${name} (You)` : name;
@@ -216,49 +258,11 @@ export class Board implements OnInit {
 
   /** Returns assignments for a task, prioritizing task_assignments but falling back to assigned_to names */
   getTaskAssignments(task: Task): any[] {
-    if (task.task_assignments && task.task_assignments.length > 0) {
-      return task.task_assignments;
-    }
-
-    const val: any = task.assigned_to;
-    if (!val) return [];
-
-    let names: string[] = [];
-    if (Array.isArray(val)) {
-      names = val;
-    } else if (typeof val === 'string') {
-      const trimmed = val.trim();
-      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-        try {
-          names = JSON.parse(trimmed);
-        } catch (e) {
-          names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
-        }
-      } else if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
-        names = trimmed.slice(1, -1).split(',').map(n => n.trim().replace(/^["']|["']$/g, ''));
-      } else {
-        names = trimmed.split(',').map(n => n.trim()).filter(n => n.length > 0);
-      }
-    }
-
-    const allContacts = this.taskService.contacts();
-
-    return names.map(name => {
-      const contact = allContacts.find(c => c.name === name);
-      const assignment = {
-        name: name,
-        color: contact?.color,
-        contact: contact,
-      };
-      return {
-        ...assignment,
-        isYou: this.isCurrentUserAssignment(assignment),
-      };
-    });
+    return (task as any).assignments || [];
   }
 
   /** Handles the drag and drop event for moving tasks between columns */
-  async drop(event: CdkDragDrop<Task[]>) {
+  async drop(event: CdkDragDrop<any[]>) {
     const movedTask = event.previousContainer.data[event.previousIndex];
     const isSameColumn = event.previousContainer === event.container;
     const newStatus = event.container.id;

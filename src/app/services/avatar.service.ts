@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
+/** Service that manages avatar generation, initials extraction, and dynamic colors */
 @Injectable({
   providedIn: 'root',
 })
 export class AvatarService {
+  /** Array of predefined CSS color variables for contact avatars */
   private readonly colors = [
     'var(--user-color-1)',
     'var(--user-color-2)',

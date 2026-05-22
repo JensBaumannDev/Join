@@ -1,4 +1,3 @@
-@if (isFormMode) {
 <div class="subtask__wrapper">
   <input id="subtaskInput" class="subtask__field" [(ngModel)]="inputValue" placeholder="Add new subtask"
     (focus)="inputFocus = true" (blur)="inputFocus = !!inputValue" (keydown.enter)="$event.preventDefault(); add()" />
@@ -58,12 +57,3 @@
   </div>
   }
 </div>
-} @else if (!isLoading() && total() > 0) {
-<div class="progress-section" [title]="tooltip()">
-  <div class="progress-bar-bg">
-    <div class="progress-bar-fill" [style.width.%]="percentage()" [attr.aria-valuenow]="percentage()" aria-valuemin="0"
-      aria-valuemax="100" role="progressbar"></div>
-  </div>
-  <p class="subtask-label">{{ done() }}/{{ total() }} Subtasks</p>
-</div>
-}

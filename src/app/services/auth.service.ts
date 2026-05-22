@@ -1,29 +1,38 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { User } from '@supabase/supabase-js';
-import { Supabase } from '../pages/contacts/contact.service';
+import { SupabaseService } from './supabase.service';
+import { ContactService } from './contact.service';
 
+/** Service handling user authentication, session state, and user-to-contact synchronization */
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private supabaseService = inject(Supabase);
+  private supabaseService = inject(SupabaseService);
+  private contactService = inject(ContactService);
+  /** Helper getter for the central Supabase client instance */
   private get supabase() {
     return this.supabaseService.supabase;
   }
 
+  /** Signal holding the currently authenticated user session */
   currentUser = signal<User | null>(null);
+
+  /** Signal indicating if the initial session restoration check has finished */
   isAuthResolved = signal(false);
 
   constructor() {
     void this.loadSession();
   }
 
+  /** Resolves and returns a human-readable display name for the user */
   getDisplayName(user: User | null = this.currentUser()): string {
     if (!user) return 'Guest';
     if (user.email === 'guest@join.com') return 'Guest';
     return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || 'Guest';
   }
 
+  /** Synchronizes the current user details with the contacts table in the database */
   async syncCurrentUserContact(): Promise<void> {
     const user = this.currentUser();
     if (!user?.email) return;
@@ -54,7 +63,7 @@ export class AuthService {
         }
       }
 
-      await this.supabaseService.getContacts();
+      await this.contactService.getContacts();
       return;
     }
 
@@ -67,14 +76,10 @@ export class AuthService {
       return;
     }
 
-    await this.supabaseService.getContacts();
+    await this.contactService.getContacts();
   }
 
-  /**
-   * Restores the user session after a page reload.
-   * Supabase stores the session token in localStorage.
-   * getSession() reads that token and returns the active session.
-   */
+  /** Restores the user session from local storage on startup */
   async loadSession(): Promise<void> {
     const { data } = await this.supabase.auth.getSession();
     this.currentUser.set(data.session?.user ?? null);
@@ -82,6 +87,7 @@ export class AuthService {
     this.isAuthResolved.set(true);
   }
 
+  /** Authenticates a user using email and password */
   async login(email: string, password: string): Promise<void> {
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
@@ -97,6 +103,7 @@ export class AuthService {
     await this.syncCurrentUserContact();
   }
 
+  /** Signs out the current user and clears session storage flags */
   async logout(): Promise<void> {
     const { error } = await this.supabase.auth.signOut();
 
@@ -109,6 +116,7 @@ export class AuthService {
     sessionStorage.removeItem('greetingShown');
   }
 
+  /** Checks if a user is currently authenticated */
   isLoggedIn(): boolean {
     return this.currentUser() !== null;
   }

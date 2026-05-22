@@ -3,6 +3,7 @@ import { TaskService } from '../../services/task.service';
 import { RouterLink } from '@angular/router';
 import { Greetings } from "../../components/greetings/greetings";
 
+/** Dashboard summary component providing statistics on tasks and deadlines */
 @Component({
   selector: 'app-summary',
   imports: [RouterLink, Greetings],
@@ -10,23 +11,24 @@ import { Greetings } from "../../components/greetings/greetings";
   styleUrl: './summary.scss',
 })
 export class Summary implements OnInit {
+  /** Injectable TaskService to query tasks and compute counters */
   private taskService = inject(TaskService);
-  /** MOBILE GREETING OVERLAY TOGGLE */
+  /** Signal determining visibility of the mobile greeting overlay */
   showMobileGreeting = signal(false);
 
-  /** TO DO COUNTER */
+  /** Computed number of tasks with a 'to do' status */
   todoCount = computed(() =>
     this.taskService.tasks().filter(task => ['to do', 'todo'].includes(task.status?.toLowerCase() ?? '')
     ).length
   );
 
-  /** DONE COUNTER*/
+  /** Computed number of tasks with a 'done' status */
   doneCount = computed(() =>
     this.taskService.tasks().filter(task => ['done'].includes(task.status?.toLowerCase() ?? '')
     ).length
   );
 
-  /** URGENT COUNTER*/
+  /** Computed number of pending tasks with an 'urgent' priority */
   urgentCount = computed(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -40,10 +42,9 @@ export class Summary implements OnInit {
       }
       return true;
     }).length;
-  })
+  });
 
-
-  /** URGENT DEADLINE COUNTER*/
+  /** Computed formatted earliest due date among pending urgent tasks */
   upcomingDeadline = computed(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -76,24 +77,24 @@ export class Summary implements OnInit {
     });
   });
 
-  /** TASKS IN BOAR COUNTER */
+  /** Computed total number of tasks in the workspace */
   taskInBoardCount = computed(() =>
     this.taskService.tasks().length
   );
 
-  /** IN PORGRESS COUNTER*/
+  /** Computed number of tasks with an 'in progress' status */
   inPorgressCount = computed(() =>
     this.taskService.tasks().filter(task => task.status?.toLowerCase() === 'in progress'
     ).length
   );
 
-  /** AWAITING FEEDBACK COUNTER*/
+  /** Computed number of tasks awaiting feedback */
   awaitingFeedbackCount = computed(() =>
     this.taskService.tasks().filter(task => ['await feedback', 'awaitfeedback'].includes(task.status?.toLowerCase() ?? '')
     ).length
   );
 
-  /** INITIALIZES GREETING INTRO AND LOADS TASKS */
+  /** Triggers the introductory greeting once per session and fetches tasks */
   ngOnInit() {
     const alreadySeen = sessionStorage.getItem('greetingShown');
 

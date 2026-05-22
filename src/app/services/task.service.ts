@@ -1,20 +1,19 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Supabase } from '../pages/contacts/contact.service';
+import { SupabaseService } from './supabase.service';
+import { ContactService } from './contact.service';
 import { Task } from '../interfaces/task.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private supabaseService = inject(Supabase);
+  private supabaseService = inject(SupabaseService);
+  private contactService = inject(ContactService);
 
   /** Signals for reactive state management */
   tasks = signal<Task[]>([]);
 
   categories = signal<string[]>([]);
-
-  /** Signal holding the current list of contacts */
-  contacts = signal<any[]>([]);
 
   /** Signal holding the board configuration data */
   boardConfig = signal<any>(null);
@@ -22,14 +21,14 @@ export class TaskService {
   /** Signal for filtering tasks by search term */
   searchTerm = signal<string>('');
 
-  /** Fetches all contacts from Supabase */
+  /** Proxy to ContactService contacts for backwards compatibility */
+  get contacts() {
+    return this.contactService.contacts;
+  }
+
+  /** Proxy to ContactService getContacts for backwards compatibility */
   async getContacts() {
-    const { data, error } = await this.supabaseService.supabase
-      .from('contacts')
-      .select('*');
-    if (!error && data) {
-      this.contacts.set(data);
-    }
+    await this.contactService.getContacts();
   }
 
   /** Fetches the board configuration (column names etc.) */
@@ -60,7 +59,7 @@ export class TaskService {
     }
   }
 
-
+  /** Creates a new task and its associated subtasks in the database */
   async createTask(task: any, subtasks: { title: string; completed: boolean }[] = []) {
     const { data, error } = await this.supabaseService.supabase
       .from('task')
@@ -93,6 +92,7 @@ export class TaskService {
     return data?.[0];
   }
 
+  /** Fetches all unique categories from existing tasks */
   async getCategories() {
 
     const { data, error } =
@@ -126,15 +126,20 @@ export class TaskService {
     }
   }
 
-  /** Persists the position of all tasks based on their current signal order */
+  /** Persists the position of all tasks based on their current signal order in bulk */
   async updateTaskPositions(tasks: Task[]) {
-    const updates = tasks.map((task, index) =>
-      this.supabaseService.supabase
-        .from('task')
-        .update({ position: index })
-        .eq('id', task.id)
-    );
-    await Promise.all(updates);
+    const updates = tasks.map((task, index) => ({
+      id: task.id,
+      position: index
+    }));
+    
+    const { error } = await this.supabaseService.supabase
+      .from('task')
+      .upsert(updates);
+
+    if (error) {
+      console.error('Bulk update positions error:', error);
+    }
   }
 
   /** Fetches subtasks for a given taskId from Supabase */

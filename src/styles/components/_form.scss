@@ -1,12 +1,14 @@
 @use '@angular/material' as mat;
 @use '../abstracts' as *;
 
+// Main wrapper class for form layouts with a flex column direction
 .form {
   @include flex(column, wrap, flex-start, stretch);
   gap: 30px;
   flex: 1;
   width: 100%;
 
+  // Custom Material form field container with overrides for heights, shapes, and colors
   .custom-input {
     width: 100%;
 
@@ -27,6 +29,7 @@
     )
   );
 
+  // Subscript wrapper for Material form fields (usually reservation space for validation errors)
   ::v-deep .mat-mdc-form-field-subscript-wrapper {
     height: 25px;
     display: block;
@@ -39,14 +42,18 @@
         )
       );
     }
+    
+    // Color styling for Material form field validation error text
     .mat-mdc-form-field-error {
       color: $color-error;
     }
 
+    // Padding adjustment for Material form field validation error container
     .mat-mdc-form-field-error-wrapper {
       padding: 8px 0 0 0;
     }
 
+    // Padding override and centering alignment for MDC text fields
     &.mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
         padding-left: 20px;
@@ -59,12 +66,15 @@
       }
     }
 
+    // Styling for image suffix icons used at the end of input fields (e.g., password eye icon)
     img[matSuffix] {
       width: 24px;
       height: 24px;
       opacity: 0.7;
       margin-left: 10px;
     }
+    
+    // Sets responsive typography/font sizes for all standard input types and textareas
     input,
     input[type='text'],
     input[type='password'],
@@ -83,6 +93,7 @@
   }
 }
 
+// Resets autofill background and text colors to match our theme design
 input, textarea, select {
   @include clean-autofill($color-white, $color-text);
 }

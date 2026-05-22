@@ -37,6 +37,7 @@
 
 // --- Keyframes ---
 
+// Animates sliding in from the right (e.g., contact overlay & add-task dialog on desktop)
 @keyframes slideInRight {
   from { 
     transform: translateX(100%);
@@ -48,6 +49,7 @@
   }
 }
 
+// Animates sliding out to the right (e.g., closing contact overlay & add-task dialog on desktop)
 @keyframes slideOutRight {
   from { 
     transform: translateX(0);
@@ -59,21 +61,25 @@
   }
 }
 
+// Animates sliding in from the bottom (e.g., contact overlay & add-task dialog on mobile)
 @keyframes slideInBottom {
   from { transform: translateY(100vh); }
   to   { transform: translateY(0); }
 }
 
+// Animates sliding out to the bottom (e.g., closing contact overlay & add-task dialog on mobile)
 @keyframes slideOutBottom {
   from { transform: translateY(0);}
   to   { transform: translateY(100vh);}
 }
 
+// Smoothly fades in elements (e.g., header dropdown menu & contact detail view)
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
+// Smoothly fades out elements (e.g., header dropdown menu & contact detail view)
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }

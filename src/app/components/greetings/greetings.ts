@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
+/** Component for displaying a time-of-day greeting to the current user */
 @Component({
   selector: 'app-greetings',
   imports: [],
@@ -8,9 +9,12 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './greetings.scss',
 })
 export class Greetings implements OnInit {
+  /** The greeting message text (e.g. Good Morning) */
   greetingText: string = '';
+  /** Injectable AuthService for fetching user information */
   private authService = inject(AuthService);
 
+  /** Retrieves the name of the logged-in user or guest */
   get userName(): string {
     const user = this.authService.currentUser();
 
@@ -23,10 +27,12 @@ export class Greetings implements OnInit {
     return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || '';
   }
 
+  /** Sets the greeting message on initialization */
   ngOnInit() {
     this.setGreeting();
   }
 
+  /** Computes and assigns the greeting text based on the current hour of the day */
   setGreeting() {
     const currentHour = new Date().getHours();
 
