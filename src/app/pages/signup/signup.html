@@ -15,7 +15,7 @@
 
       <form [formGroup]="form" class="form" (ngSubmit)="signUp()">
         <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
-          <input matInput formControlName="name" placeholder="Name" />
+          <input matInput formControlName="name" placeholder="Name" autocomplete="off" />
           <img matSuffix src="icons/form/person.svg" alt="user" />
           @if (form.get('name')?.hasError('required')) {
             <mat-error>Field is required</mat-error>
@@ -26,7 +26,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
-          <input matInput formControlName="email" type="email" placeholder="Email" />
+          <input matInput formControlName="email" type="email" placeholder="Email" autocomplete="off" />
           <img matSuffix src="icons/form/mail.svg" alt="mail" />
           @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
             <mat-error>Email is required.</mat-error>
@@ -42,6 +42,7 @@
             formControlName="password"
             [type]="showPassword() ? 'text' : 'password'"
             placeholder="Password"
+            autocomplete="new-password"
           />
           @if (!form.get('password')?.value) {
             <img matSuffix src="icons/form/lock.svg" alt="lock" />
@@ -68,6 +69,7 @@
             formControlName="confirmPassword"
             [type]="showConfirmPassword() ? 'text' : 'password'"
             placeholder="Confirm Password"
+            autocomplete="new-password"
           />
           @if (!form.get('confirmPassword')?.value) {
             <img matSuffix src="icons/form/lock.svg" alt="lock" />

@@ -13,27 +13,27 @@
     width: 100%;
 
     @include mat.form-field-overrides(
-    (
-      container-height: 50px,
-      outlined-container-shape: 10px,
-      outlined-outline-color: $color-gray-form,
-      outlined-focus-outline-color: $color-highlight,
-      outlined-hover-outline-color: $color-highlight,
-      outlined-input-text-placeholder-color: $color-gray-form,
-      container-vertical-padding: 10px,
-      outlined-outline-width: 1px,
-      outlined-focus-outline-width: 1px,
-      outlined-error-outline-color: $color-error,
-      outlined-error-hover-outline-color: $color-error,
-      outlined-error-focus-outline-color: $color-error,
-    )
-  );
+      (
+        container-height: 50px,
+        outlined-container-shape: 10px,
+        outlined-outline-color: $color-gray-form,
+        outlined-focus-outline-color: $color-highlight,
+        outlined-hover-outline-color: $color-highlight,
+        outlined-input-text-placeholder-color: $color-gray-form,
+        container-vertical-padding: 10px,
+        outlined-outline-width: 1px,
+        outlined-focus-outline-width: 1px,
+        outlined-error-outline-color: $color-error,
+        outlined-error-hover-outline-color: $color-error,
+        outlined-error-focus-outline-color: $color-error,
+      )
+    );
 
-  // Subscript wrapper for Material form fields (usually reservation space for validation errors)
-  ::v-deep .mat-mdc-form-field-subscript-wrapper {
-    height: 25px;
-    display: block;
-  }
+    // Subscript wrapper for Material form fields (usually reservation space for validation errors)
+    ::v-deep .mat-mdc-form-field-subscript-wrapper {
+      height: 25px;
+      display: block;
+    }
 
     @include tablet-lg {
       @include mat.form-field-overrides(
@@ -42,7 +42,7 @@
         )
       );
     }
-    
+
     // Color styling for Material form field validation error text
     .mat-mdc-form-field-error {
       color: $color-error;
@@ -73,7 +73,7 @@
       opacity: 0.7;
       margin-left: 10px;
     }
-    
+
     // Sets responsive typography/font sizes for all standard input types and textareas
     input,
     input[type='text'],
@@ -94,6 +94,15 @@
 }
 
 // Resets autofill background and text colors to match our theme design
-input, textarea, select {
+input,
+textarea,
+select {
   @include clean-autofill($color-white, $color-text);
+}
+
+body .mat-mdc-form-field {
+  input.mat-mdc-input-element,
+  textarea.mat-mdc-input-element {
+    @include clean-autofill(#ffffff, #333333);
+  }
 }
