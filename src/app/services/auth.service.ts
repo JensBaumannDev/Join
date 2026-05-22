@@ -8,6 +8,23 @@ import { ContactService } from './contact.service';
   providedIn: 'root',
 })
 export class AuthService {
+  /**
+   * Registers a new user with Supabase
+   * @param email - The user's email address
+   * @param password - The user's password
+   * @param fullName - The user's full name
+   * @returns The Supabase response data
+   * @throws Error if registration fails
+   */
+  async signUp(email: string, password: string, fullName: string) {
+    const { data, error } = await this.supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName } }
+    });
+    if (error) throw error;
+    return data;
+  }
   /** Injected SupabaseService to handle API connections */
   private supabaseService = inject(SupabaseService);
   /** Injected ContactService for updating user contacts information */
