@@ -26,6 +26,8 @@ export class Login implements OnInit {
   loginError = signal(false);
   /** Signal control state for the splash screen entry animation */
   splashDone = signal(false);
+  /** Signal tracking active authentication request loading states */
+  loading = signal(false);
 
   /** Sets a timeout to complete the logo splash screen entry, or skips animation if coming from signup */
   ngOnInit(): void {
@@ -56,7 +58,8 @@ export class Login implements OnInit {
 
   /** Submits login credentials and routes to dashboard summary on success */
   async submit(): Promise<void> {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.loading()) return;
+    this.loading.set(true);
     this.loginError.set(false);
 
     const { email, password } = this.form.value;
@@ -70,6 +73,8 @@ export class Login implements OnInit {
         ctrl?.setErrors({ loginError: true });
         ctrl?.markAsTouched();
       });
+    } finally {
+      this.loading.set(false);
     }
   }
 
@@ -86,11 +91,15 @@ export class Login implements OnInit {
 
   /** Logins using default guest user credentials */
   async guestLogin(): Promise<void> {
+    if (this.loading()) return;
+    this.loading.set(true);
     try {
       await this.authService.login('guest@join.com', 'guest123');
       this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
+    } finally {
+      this.loading.set(false);
     }
   }
 }
