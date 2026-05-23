@@ -6,7 +6,7 @@
   background: $color-bg-content;
   z-index: $z-index-modal;
   pointer-events: none;
-  animation: splash-fade-out 0.5s ease both 0.4s;
+  opacity: 0;
 }
 
 .login-container {
@@ -15,11 +15,44 @@
 
   .login-logo {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 80px;
+    left: max(80px, calc(50% - 645px));
     width: 100px;
     z-index: $z-index-modal + 1;
-    animation: logo-from-center 700ms ease-in-out both 0.2s;
+    transform: translate(0, 0);
+  }
+
+  &.is-animating {
+    .splash-screen {
+      transition: opacity 0.5s ease 0.4s;
+    }
+
+    .login-logo {
+      transition: all 0.7s ease-in-out 0.2s;
+    }
+
+    .login-content {
+      transition: opacity 0.4s ease 0.4s;
+    }
+  }
+
+  &.is-splash {
+    .splash-screen {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .login-logo {
+      top: 50%;
+      left: 50%;
+      width: 274px;
+      transform: translate(-50%, -50%);
+    }
+
+    .login-content {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 }
 
@@ -29,7 +62,7 @@
   @include flex(column, nowrap, space-between, center);
   gap: 110px;
   min-height: 100dvh;
-  animation: content-fade-in 0.4s ease both 0.4s;
+  opacity: 1;
 }
 
 .login-header {
@@ -95,15 +128,14 @@
   .footer-link {
     color: $color-text-muted;
     text-decoration: none;
-    transition:
-      background-color 125ms,
-      color 125ms;
+    transition: background-color 125ms, color 125ms;
     cursor: pointer;
 
     &:hover {
       color: $color-highlight;
       font-weight: 700;
     }
+    
     &.active {
       background-color: $color-primary-hover;
     }
@@ -117,8 +149,15 @@
 @include mobile {
   .login-container {
     .login-logo {
+      top: 40px;
+      left: 40px;
       width: 60px;
-      animation-name: logo-from-center-mobile;
+    }
+
+    &.is-splash {
+      .login-logo {
+        width: 164px;
+      }
     }
   }
 
@@ -162,24 +201,4 @@
     order: 3;
     margin-bottom: 20px;
   }
-}
-
-@keyframes logo-from-center {
-  from {transform: translate(-50%, -50%) scale(2.74)}
-  to {transform: translate(max(calc(80px - 50vw), -640px), calc(80px - 50vh))}
-}
-
-@keyframes logo-from-center-mobile {
-  from {transform: translate(-50%, -50%) scale(2.74)}
-  to {transform: translate(calc(40px - 50vw), calc(40px - 50vh))}
-}
-
-@keyframes splash-fade-out {
-  from {opacity: 1}
-  to {opacity: 0}
-}
-
-@keyframes content-fade-in {
-  from {opacity: 0}
-  to {opacity: 1}
 }
