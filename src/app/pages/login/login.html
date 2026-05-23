@@ -2,7 +2,8 @@
   <div class="splash-screen" aria-hidden="true"></div>
 }
 
-<section class="login-container">
+<section class="login-container" [class.is-splash]="!splashDone()" [class.is-animating]="isAnimating()">
+  <div class="splash-screen" aria-hidden="true"></div>
   <img src="logo/join-mobile.svg" alt="logo join" class="login-logo" />
   <section class="login-content">
       <header class="login-header">

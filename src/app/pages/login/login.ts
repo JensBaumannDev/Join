@@ -1,9 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth.service';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 /** Page component representing the User Login interface */
 @Component({
@@ -12,13 +14,15 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login implements OnInit {
+export class Login implements OnInit, OnDestroy {
   /** FormBuilder helper instance */
   private fb = inject(FormBuilder);
   /** Service managing authentication state */
   private authService = inject(AuthService);
   /** Injected Router for redirecting post-authentication */
   private router = inject(Router);
+  // Subscription for router navigation events (for splash animation)
+  private routerSub?: Subscription;
 
   /** Signal to toggle visibility of input password text */
   showPassword = signal(false);
@@ -26,18 +30,66 @@ export class Login implements OnInit {
   loginError = signal(false);
   /** Signal control state for the splash screen entry animation */
   splashDone = signal(false);
+  /** Signal indicating if the animation is running */
+  isAnimating = signal(false);
   /** Signal tracking active authentication request loading states */
   loading = signal(false);
 
   /** Sets a timeout to complete the logo splash screen entry, or skips animation if coming from signup */
   ngOnInit(): void {
-    if (sessionStorage.getItem('skipLogoAnimation')) {
-      this.splashDone.set(true);
-      sessionStorage.removeItem('skipLogoAnimation');
-    } else {
-      setTimeout(() => this.splashDone.set(true), 1000);
-    }
+    this.triggerAnimation();
+
+    this.routerSub = this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (event.urlAfterRedirects.includes('/login') || event.urlAfterRedirects === '/') {
+        this.triggerAnimation();
+      }
+    });
   }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
+  }
+
+  private triggerAnimation(): void {
+  this.resetScrollPosition();
+
+  if (this.shouldSkipAnimation()) {
+    this.skipToFinishedState();
+    return;
+  }
+
+  this.runLogoAnimation();
+}
+
+private resetScrollPosition(): void {
+  const content = document.querySelector('.content') as HTMLElement;
+  if (content) {
+    content.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }
+}
+
+private shouldSkipAnimation(): boolean {
+  return !!sessionStorage.getItem('skipLogoAnimation');
+}
+
+private skipToFinishedState(): void {
+  this.splashDone.set(true);
+  sessionStorage.removeItem('skipLogoAnimation');
+}
+
+private runLogoAnimation(): void {
+  this.isAnimating.set(false);
+  this.splashDone.set(false);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    this.isAnimating.set(true);
+    
+    setTimeout(() => this.splashDone.set(true), 50);
+    setTimeout(() => this.isAnimating.set(false), 1250);
+  }));
+}
 
   /** Reactive login validation form configuration */
   form = this.fb.group({
@@ -62,20 +114,25 @@ export class Login implements OnInit {
     this.loading.set(true);
     this.loginError.set(false);
 
-    const { email, password } = this.form.value;
     try {
+      const { email, password } = this.form.value;
       await this.authService.login(email!, password!);
       this.router.navigate(['/summary']);
     } catch {
-      this.loginError.set(true);
-      ['email', 'password'].forEach(controlName => {
-        const ctrl = this.form.get(controlName);
-        ctrl?.setErrors({ loginError: true });
-        ctrl?.markAsTouched();
-      });
+      this.setLoginErrors();
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /** Sets error states on form controls after a failed login attempt */
+  private setLoginErrors(): void {
+    this.loginError.set(true);
+    ['email', 'password'].forEach(controlName => {
+      const ctrl = this.form.get(controlName);
+      ctrl?.setErrors({ loginError: true });
+      ctrl?.markAsTouched();
+    });
   }
 
   /** Clears the validation error styles and active error flags on the controls */
