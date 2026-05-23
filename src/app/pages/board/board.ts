@@ -340,9 +340,74 @@ export class Board implements OnInit, OnDestroy {
   }
 
   /**
+   * Handles same-column task reordering after a drag-and-drop event.
+   *
+   * @param event - The CdkDragDrop event details.
+   * @param movedTask - The task being dragged.
+   * @param allTasks - Mutable copy of the full task list.
+   * @param fromIdx - Global index of the moved task.
+   */
+  private async reorderSameColumn(
+    event: CdkDragDrop<any[]>, movedTask: any, allTasks: Task[], fromIdx: number
+  ): Promise<void> {
+    const targetTask = event.container.data[event.currentIndex];
+    if (!targetTask || targetTask.id === movedTask.id) return;
+    const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+    if (globalToIdx === -1) return;
+    allTasks.splice(fromIdx, 1);
+    const adjustedToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+    allTasks.splice(fromIdx < globalToIdx ? adjustedToIdx + 1 : adjustedToIdx, 0, movedTask);
+    this.taskService.tasks.set(allTasks);
+    await this.taskService.updateTaskPositions(allTasks);
+  }
+
+
+  /**
+   * Inserts a task into the global list at the correct position after a cross-column drop.
+   *
+   * @param event - The CdkDragDrop event details.
+   * @param allTasks - Mutable copy of the full task list.
+   * @param updatedTask - The task with its new status already set.
+   */
+  private insertTaskAtDropPosition(event: CdkDragDrop<any[]>, allTasks: Task[], updatedTask: Task): void {
+    const targetColumnData = event.container.data;
+    if (event.currentIndex < targetColumnData.length) {
+      const targetTask = targetColumnData[event.currentIndex];
+      const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
+      allTasks.splice(globalToIdx !== -1 ? globalToIdx : allTasks.length, 0, updatedTask);
+    } else {
+      allTasks.push(updatedTask);
+    }
+  }
+
+
+  /**
+   * Handles cross-column task movement after a drag-and-drop event.
+   *
+   * @param event - The CdkDragDrop event details.
+   * @param movedTask - The task being dragged.
+   * @param allTasks - Mutable copy of the full task list.
+   * @param fromIdx - Global index of the moved task.
+   * @param newStatus - The target column status value.
+   */
+  private async moveToOtherColumn(
+    event: CdkDragDrop<any[]>, movedTask: any, allTasks: Task[], fromIdx: number, newStatus: string
+  ): Promise<void> {
+    const [removedTask] = allTasks.splice(fromIdx, 1);
+    const updatedTask = { ...removedTask, status: newStatus };
+    this.insertTaskAtDropPosition(event, allTasks, updatedTask);
+    this.taskService.tasks.set(allTasks);
+    await Promise.all([
+      this.taskService.updateTaskStatus(movedTask.id, newStatus),
+      this.taskService.updateTaskPositions(allTasks),
+    ]);
+  }
+
+
+  /**
    * Handles the CDK drag & drop event when moving tasks within or between columns.
    * Persists new positions and column status updates directly in the database.
-   * 
+   *
    * @param event - The CdkDragDrop event details.
    * @returns A promise resolving when positions have been updated.
    */
@@ -350,47 +415,13 @@ export class Board implements OnInit, OnDestroy {
     const movedTask = event.previousContainer.data[event.previousIndex];
     const isSameColumn = event.previousContainer === event.container;
     const newStatus = event.container.id;
-
-    // Work on a mutable copy of the global tasks array
     const allTasks = [...this.taskService.tasks()];
     const globalFromIdx = allTasks.findIndex(t => t.id === movedTask.id);
     if (globalFromIdx === -1) return;
-
     if (isSameColumn) {
-      // Same column: reorder by finding the target card's global position
-      const targetTask = event.container.data[event.currentIndex];
-      if (!targetTask || targetTask.id === movedTask.id) return;
-
-      const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
-      if (globalToIdx === -1) return;
-
-      allTasks.splice(globalFromIdx, 1);
-      const adjustedToIdx = allTasks.findIndex(t => t.id === targetTask.id);
-      // Moving forward → insert after target; moving backward → insert before target
-      allTasks.splice(globalFromIdx < globalToIdx ? adjustedToIdx + 1 : adjustedToIdx, 0, movedTask);
-      this.taskService.tasks.set(allTasks);
-      await this.taskService.updateTaskPositions(allTasks);
+      await this.reorderSameColumn(event, movedTask, allTasks, globalFromIdx);
     } else {
-      // Cross-column: update status and insert at the exact drop position
-      const [removedTask] = allTasks.splice(globalFromIdx, 1);
-      const updatedTask = { ...removedTask, status: newStatus };
-
-      const targetColumnData = event.container.data;
-      if (event.currentIndex < targetColumnData.length) {
-        // Insert before the card currently at the drop position
-        const targetTask = targetColumnData[event.currentIndex];
-        const globalToIdx = allTasks.findIndex(t => t.id === targetTask.id);
-        allTasks.splice(globalToIdx !== -1 ? globalToIdx : allTasks.length, 0, updatedTask);
-      } else {
-        // Dropped at the end of the column
-        allTasks.push(updatedTask);
-      }
-
-      this.taskService.tasks.set(allTasks);
-      await Promise.all([
-        this.taskService.updateTaskStatus(movedTask.id, newStatus),
-        this.taskService.updateTaskPositions(allTasks),
-      ]);
+      await this.moveToOtherColumn(event, movedTask, allTasks, globalFromIdx, newStatus);
     }
   }
 }

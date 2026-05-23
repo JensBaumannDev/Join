@@ -16,13 +16,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     styleUrls: ['./signup.scss']
 })
 export class Signup {
-                loading = false;
-            private toastService = inject(ToastService);
-        /** Toggle acceptTerms checkbox manually for custom checkbox UI */
-        toggleAcceptTerms() {
-            const ctrl = this.form.get('acceptTerms');
-            if (ctrl) ctrl.setValue(!ctrl.value);
-        }
+    loading = false;
+    private toastService = inject(ToastService);
+
+    /** Toggle acceptTerms checkbox manually for custom checkbox UI */
+    toggleAcceptTerms() {
+        const ctrl = this.form.get('acceptTerms');
+        if (ctrl) ctrl.setValue(!ctrl.value);
+    }
     /** FormBuilder helper instance */
     private fb = inject(FormBuilder);
     /** Service managing authentication state */

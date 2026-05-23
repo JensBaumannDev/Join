@@ -60,80 +60,79 @@ export class AuthService {
   /**
    * Duplicates default tasks, subtasks and contacts (where user_id is null) for a newly registered/logged-in user
    * if they do not have any tasks or contacts yet.
-   * 
+   *
    * @param user - The authenticated user object
    */
   async initializeUserCopy(user: User): Promise<void> {
-    // 1. Check if user already has tasks
-    const { count: taskCount, error: taskCheckError } = await this.supabase
-      .from('task')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
+    await this.initTasksCopy(user);
+    await this.initContactsCopy(user);
+  }
 
-    if (!taskCheckError && taskCount === 0) {
-      const { data: templates, error: templateError } = await this.supabase
-        .from('task')
-        .select('*')
-        .is('user_id', null);
 
-      if (!templateError && templates) {
-        for (const template of templates) {
-          const oldTaskId = template.id;
-          const taskCopy = { ...template };
-          delete taskCopy.id;
-          delete taskCopy.created_at;
-          taskCopy.user_id = user.id;
-
-          const { data: newTasks, error: insertError } = await this.supabase
-            .from('task')
-            .insert([taskCopy])
-            .select();
-
-          if (!insertError && newTasks?.[0]) {
-            const newTaskId = newTasks[0].id;
-            const { data: subtasks, error: subtaskError } = await this.supabase
-              .from('subtasks')
-              .select('*')
-              .eq('task_id', oldTaskId);
-
-            if (!subtaskError && subtasks && subtasks.length > 0) {
-              const subtaskCopies = subtasks.map(s => {
-                const sCopy = { ...s };
-                delete sCopy.id;
-                sCopy.task_id = newTaskId;
-                return sCopy;
-              });
-              await this.supabase.from('subtasks').insert(subtaskCopies);
-            }
-          }
-        }
-      }
-    }
-
-    // 2. Check if user already has contacts
-    const { count: contactCount, error: contactCheckError } = await this.supabase
-      .from('contacts')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-
-    if (!contactCheckError && contactCount === 0) {
-      const { data: templateContacts, error: contactTemplateError } = await this.supabase
-        .from('contacts')
-        .select('*')
-        .is('user_id', null);
-
-      if (!contactTemplateError && templateContacts && templateContacts.length > 0) {
-        const contactCopies = templateContacts.map(c => {
-          const cCopy = { ...c };
-          delete cCopy.id;
-          delete cCopy.created_at;
-          cCopy.user_id = user.id;
-          return cCopy;
-        });
-        await this.supabase.from('contacts').insert(contactCopies);
+  private async initTasksCopy(user: User): Promise<void> {
+    const { count, error } = await this.supabase
+      .from('task').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
+    if (error || count !== 0) return;
+    const { data: templates, error: tErr } = await this.supabase
+      .from('task').select('*').is('user_id', null);
+    if (!tErr && templates) {
+      for (const template of templates) {
+        await this.copyTemplateTaskWithSubtasks(template, user.id);
       }
     }
   }
+
+
+  private async copyTemplateTaskWithSubtasks(template: any, userId: string): Promise<void> {
+    const oldTaskId = template.id;
+    const taskCopy = { ...template };
+    delete taskCopy.id;
+    delete taskCopy.created_at;
+    taskCopy.user_id = userId;
+    const { data: newTasks, error } = await this.supabase
+      .from('task').insert([taskCopy]).select();
+    if (!error && newTasks?.[0]) {
+      await this.copySubtasksToNewTask(oldTaskId, newTasks[0].id);
+    }
+  }
+
+
+  private async copySubtasksToNewTask(oldTaskId: number, newTaskId: number): Promise<void> {
+    const { data: subtasks, error } = await this.supabase
+      .from('subtasks').select('*').eq('task_id', oldTaskId);
+    if (error || !subtasks || subtasks.length === 0) return;
+    const subtaskCopies = subtasks.map(s => {
+      const sCopy = { ...s };
+      delete sCopy.id;
+      sCopy.task_id = newTaskId;
+      return sCopy;
+    });
+    await this.supabase.from('subtasks').insert(subtaskCopies);
+  }
+
+
+  private buildContactCopies(contacts: any[], userId: string): any[] {
+    return contacts.map(c => {
+      const copy = { ...c };
+      delete copy.id;
+      delete copy.created_at;
+      copy.user_id = userId;
+      return copy;
+    });
+  }
+
+
+  private async initContactsCopy(user: User): Promise<void> {
+    const { count, error } = await this.supabase
+      .from('contacts').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
+    if (error || count !== 0) return;
+    const { data: templates, error: cErr } = await this.supabase
+      .from('contacts').select('*').is('user_id', null);
+    if (!cErr && templates && templates.length > 0) {
+      await this.supabase.from('contacts').insert(this.buildContactCopies(templates, user.id));
+    }
+  }
+
 
   /**
    * Synchronizes the current user details with the contacts table in the database.
