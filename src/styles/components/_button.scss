@@ -82,4 +82,26 @@
     color: $color-primary-hover;
     border-color: $color-primary-hover;
   }
+
+  &:disabled,
+  &.disabled {
+    background-color: $color-white;
+    color: $color-primary;
+    border: 1px solid $color-primary;
+    cursor: default;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+
+  &:disabled:hover,
+  &.disabled:hover,
+  &:disabled:active,
+  &.disabled:active {
+    background-color: $color-white;
+    color: $color-primary;
+    border: 1px solid $color-primary;
+    box-shadow: none;
+    pointer-events: none;
+    opacity: 0.7;
+  }
 }
