@@ -48,8 +48,14 @@ export class ContactList implements OnInit {
    * @returns The generated display name label.
    */
   getContactLabel(contact: Contact): string {
-    const name = contact.name.length > 15 ? contact.name.slice(0, 15) + '...' : contact.name;
-    return this.isCurrentUserContact(contact) ? `${name} (You)` : name;
+    const isCurrentUser = this.isCurrentUserContact(contact);
+    const maxLength = isCurrentUser ? 18 : 22;
+
+    const name = contact.name.length > maxLength
+      ? contact.name.slice(0, maxLength) + '...'
+      : contact.name;
+
+    return isCurrentUser ? `${name} (You)` : name;
   }
 
   /**
