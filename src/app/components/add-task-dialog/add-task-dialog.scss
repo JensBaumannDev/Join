@@ -1,6 +1,4 @@
 @use '../../../styles/abstracts' as *;
-@use '../../../styles/components' as *;
-@use '../../../styles/base' as *;
 
 .dialog-container {
   @include custom-material-dialog(30px);
