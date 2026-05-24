@@ -1,25 +1,47 @@
 import { Routes } from '@angular/router';
-import { Summary } from './pages/summary/summary';
-import { Board } from './pages/board/board';
-import { AddTask } from './pages/add-task/add-task';
-import { Contacts } from './pages/contacts/contacts';
-import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
-import { LegalNotice } from './pages/legal-notice/legal-notice';
-import { Help } from './pages/help/help';
-import { Login } from './pages/login/login';
-import { Signup } from './pages/signup/signup';
 import { authGuard } from './guards/auth.guard';
 
 /** Global application routing mapping paths to components and guarding protected resources */
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: Login },
-  { path: 'signup', component: Signup },
-  { path: 'summary', component: Summary, canActivate: [authGuard] },
-  { path: 'board', component: Board, canActivate: [authGuard] },
-  { path: 'add-task', component: AddTask, canActivate: [authGuard] },
-  { path: 'contacts', component: Contacts, canActivate: [authGuard] },
-  { path: 'privacy-policy', component: PrivacyPolicy },
-  { path: 'legal-notice', component: LegalNotice },
-  { path: 'help', component: Help },
-];
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login').then((m) => m.Login),
+  },
+  {
+    path: 'signup',
+    loadComponent: () => import('./pages/signup/signup').then((m) => m.Signup),
+  },
+  {
+    path: 'summary',
+    loadComponent: () => import('./pages/summary/summary').then((m) => m.Summary),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'board',
+    loadComponent: () => import('./pages/board/board').then((m) => m.Board),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'add-task',
+    loadComponent: () => import('./pages/add-task/add-task').then((m) => m.AddTask),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'contacts',
+    loadComponent: () => import('./pages/contacts/contacts').then((m) => m.Contacts),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./pages/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
+  },
+  {
+    path: 'legal-notice',
+    loadComponent: () => import('./pages/legal-notice/legal-notice').then((m) => m.LegalNotice),
+  },
+  {
+    path: 'help',
+    loadComponent: () => import('./pages/help/help').then((m) => m.Help),
+  },
+];
