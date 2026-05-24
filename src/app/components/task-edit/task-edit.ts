@@ -25,10 +25,8 @@ export class TaskEdit {
   private taskService = inject(TaskService);
 
   /** Callback triggered when save completes to notify parent component with refreshed data */
-  async onSaved() {
-    const updated = this.taskService.tasks().find(t => String(t.id) === String(this.task.id));
-    const refreshedTask = updated ?? this.task;
-    const refreshedSubtasks = await this.taskService.getSubtasksForTask(String(this.task.id));
-    this.saved.emit({ task: refreshedTask, subtasks: refreshedSubtasks });
+  onSaved() {
+    const refreshedTask = this.taskService.tasks().find(t => String(t.id) === String(this.task.id)) ?? this.task;
+    this.saved.emit({ task: refreshedTask, subtasks: refreshedTask.subtasks || [] });
   }
 }
