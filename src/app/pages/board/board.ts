@@ -133,9 +133,8 @@ export class Board implements OnInit, OnDestroy {
    * @param task - The task object to display details for.
    * @returns A promise resolving when the dialog opens.
    */
-  async openTaskDetailDialog(task: any) {
-    const subtasks = await this.taskService.getSubtasksForTask(task.id);
-    this.dialogService.open(TaskDetail, { task, subtasks }, 'task-dialog-panel');
+  openTaskDetailDialog(task: any) {
+    this.dialogService.open(TaskDetail, { task, subtasks: task.subtasks || [] }, 'task-dialog-panel');
   }
 
   /**
@@ -151,19 +150,7 @@ export class Board implements OnInit, OnDestroy {
     this.dialogService.open(AddTaskDialog, { initialStatus: status }, 'add-task-dialog-panel');
   }
 
-  /**
-   * Computes statistics for the subtasks of a given task.
-   * 
-   * @param task - The target task object.
-   * @returns An object containing done count, total count, and percentage, or null if there are no subtasks.
-   */
-  getSubtaskStats(task: Task): { done: number; total: number; percentage: number } | null {
-    const subtasks = (task as any).subtasks;
-    if (!subtasks || subtasks.length === 0) return null;
-    const total = subtasks.length;
-    const done = subtasks.filter((s: any) => s.done || s.completed || s.is_done).length;
-    return { done, total, percentage: Math.round((done / total) * 100) };
-  }
+
 
   /**
    * Maps raw string names or assignments of a task into structured contact assignment objects.

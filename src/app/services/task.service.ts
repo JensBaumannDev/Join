@@ -72,20 +72,35 @@ export class TaskService {
    */
   async getTasks() {
     const user = this.authService.currentUser();
-    if (!user) {
-      this.tasks.set([]);
-      return;
-    }
-    const { data, error } = await this.supabaseService.supabase
+    if (!user) return this.tasks.set([]);
+    const { data: tasks, error } = await this.supabaseService.supabase
       .from('task')
       .select('*')
       .eq('user_id', user.id)
       .order('position', { ascending: true, nullsFirst: false });
+    if (error) return console.error('Task loading error:', error);
+    await this.loadAndMergeSubtasks(tasks || []);
+  }
+
+  private async loadAndMergeSubtasks(tasks: Task[]) {
+    if (tasks.length === 0) return this.tasks.set([]);
+    const taskIds = tasks.map(t => t.id);
+    const { data: subtasks, error } = await this.supabaseService.supabase
+      .from('subtasks')
+      .select('*')
+      .in('task_id', taskIds);
     if (error) {
-      console.error('Task loading error:', error);
-      return;
+      console.error('Subtask loading error:', error);
+      return this.tasks.set(tasks);
     }
-    if (data) this.tasks.set(data as Task[]);
+    this.tasks.set(this.mergeTasks(tasks, subtasks || []));
+  }
+
+  private mergeTasks(tasks: any[], subtasks: any[]): Task[] {
+    return tasks.map(t => ({
+      ...t,
+      subtasks: subtasks.filter(s => String(s.task_id) === String(t.id))
+    }));
   }
 
   /**
@@ -220,9 +235,6 @@ export class TaskService {
     return data || [];
   }
 
-  /** Signal to trigger refresh of subtasks in specific components */
-  subtaskUpdateTrigger = signal<{ taskId: string; timestamp: number } | null>(null);
-
   /**
    * Updates the completion status of a single subtask and triggers reactive updates.
    * 
@@ -239,8 +251,20 @@ export class TaskService {
     if (error) {
       console.error('Subtask update error:', error);
     } else {
-      this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
+      this.updateLocalSubtask(subtaskId, completed, taskId);
     }
+  }
+
+  private updateLocalSubtask(subtaskId: string, completed: boolean, taskId: string) {
+    this.tasks.update(tasks =>
+      tasks.map(t => {
+        if (String(t.id) !== taskId) return t;
+        const subtasks = (t.subtasks || []).map(s =>
+          String(s.id) === subtaskId ? { ...s, completed } : s
+        );
+        return { ...t, subtasks };
+      })
+    );
   }
 
   /**
@@ -260,25 +284,34 @@ export class TaskService {
       .eq('id', taskId)
       .eq('user_id', user.id);
     if (error) return console.error('Update task error:', error);
-
-    await this.replaceSubtasks(taskId, subtasks);
-    this.tasks.update(tasks =>
-      tasks.map(t => String(t.id) === taskId ? { ...t, ...taskData } : t)
-    );
-    this.subtaskUpdateTrigger.set({ taskId, timestamp: Date.now() });
+    await this.saveAndApplyUpdatedTask(taskId, taskData, subtasks);
   }
 
-  private async replaceSubtasks(taskId: string, subtasks: { title: string; completed: boolean }[]): Promise<void> {
+  private async saveAndApplyUpdatedTask(taskId: string, taskData: any, subtasks: any[]) {
+    const newSubtasks = await this.replaceSubtasks(taskId, subtasks);
+    this.tasks.update(tasks =>
+      tasks.map(t => String(t.id) === taskId ? { ...t, ...taskData, subtasks: newSubtasks } : t)
+    );
+  }
+
+  private async replaceSubtasks(taskId: string, subtasks: { title: string; completed: boolean }[]): Promise<any[]> {
     await this.supabaseService.supabase.from('subtasks').delete().eq('task_id', taskId);
-    if (subtasks.length > 0) {
-      const subtasksWithId = subtasks.map(s => ({
-        task_id: taskId,
-        title: s.title,
-        completed: s.completed ?? false
-      }));
-      const { error } = await this.supabaseService.supabase.from('subtasks').insert(subtasksWithId);
-      if (error) console.error('Update subtasks error:', error);
-    }
+    if (subtasks.length === 0) return [];
+    return this.insertAndGetSubtasks(taskId, subtasks);
+  }
+
+  private async insertAndGetSubtasks(taskId: string, subtasks: any[]): Promise<any[]> {
+    const payload = subtasks.map(s => ({
+      task_id: taskId,
+      title: s.title,
+      completed: s.completed ?? false
+    }));
+    const { data, error } = await this.supabaseService.supabase
+      .from('subtasks')
+      .insert(payload)
+      .select();
+    if (error) console.error('Update subtasks error:', error);
+    return data || [];
   }
 
   /**

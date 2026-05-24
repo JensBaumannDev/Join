@@ -42,7 +42,7 @@
                 <h4 class="task-title">{{ task.title }}</h4>
                 <p class="task-desc">{{ task.description }}</p>
 
-                <app-subtask-progress [taskId]="task.id"></app-subtask-progress>
+                <app-subtask-progress [subtasks]="task.subtasks || []"></app-subtask-progress>
 
                 <div class="task-footer">
                   <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
