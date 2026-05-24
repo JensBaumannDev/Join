@@ -1,6 +1,7 @@
-<div class="content">
-  @if (contact) {
-  <div class="contacts__detail">
+@if (contact) {
+  @for (c of [contact]; track c.id) {
+    <div class="content">
+      <div class="contacts__detail">
     <div class="contacts__detail-header-mobile">
       <div class="contacts__mobile-title-wrap">
         <div class="contacts__title-mobile">Contacts</div>
@@ -66,9 +67,10 @@
         </div>
       </div>
     </div>
-  </div>
+      </div>
+    </div>
   }
-</div>
+}
 
 <!-- MOBILE OPTIONS BUTTON -->
 <button class="contacts__options-btn-mobile" (click)="openMobileMenu()">

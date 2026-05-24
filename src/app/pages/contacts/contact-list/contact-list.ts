@@ -120,15 +120,12 @@ export class ContactList implements OnInit {
   }
 
   /**
-   * Selects a contact to display in the detail view with a brief reset delay.
+   * Selects a contact to display in the detail view.
    * 
    * @param contact - The contact record to select.
    */
   selectContact(contact: Contact) {
-    this.contactService.selectedContact.set(null);
-    setTimeout(() => {
-      this.contactService.selectedContact.set(contact);
-    }, 50);
+    this.contactService.selectedContact.set(contact);
   }
 
   /**
