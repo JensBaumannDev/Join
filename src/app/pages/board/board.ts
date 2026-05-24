@@ -122,10 +122,10 @@ export class Board implements OnInit, OnDestroy {
   }
 
   /** Computed property determining if columns should be displayed horizontally (mobile) or vertically (desktop) */
-  listOrientation = computed(() => this.screenWidth() <= 1024 ? 'horizontal' : 'vertical');
+  listOrientation = computed(() => this.screenWidth() <= 768 ? 'horizontal' : 'vertical');
 
   /** Computed property adding a delay to drag start on mobile to allow for page scrolling */
-  dragDelay = computed(() => this.screenWidth() <= 1024 ? 150 : 0);
+  dragDelay = computed(() => this.screenWidth() <= 768 ? 150 : 0);
 
   /**
    * Opens the detail dialog modal for a specific task.
