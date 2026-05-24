@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, DestroyRef } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { RouterLink } from '@angular/router';
 import { Greetings } from "../../components/greetings/greetings";
@@ -13,6 +13,8 @@ import { Greetings } from "../../components/greetings/greetings";
 export class Summary implements OnInit {
   /** Injectable TaskService to query tasks and compute counters */
   private taskService = inject(TaskService);
+  /** Injectable DestroyRef for cleaning up timeouts on component destroy */
+  private destroyRef = inject(DestroyRef);
   /** Signal determining visibility of the mobile greeting overlay */
   showMobileGreeting = signal(false);
 
@@ -100,7 +102,8 @@ export class Summary implements OnInit {
       this.showMobileGreeting.set(true);
       sessionStorage.setItem('greetingShown', 'true');
 
-      setTimeout(() => this.showMobileGreeting.set(false), 3000);
+      const timeoutId = setTimeout(() => this.showMobileGreeting.set(false), 3000);
+      this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
     }
     this.taskService.getTasks();
   }
