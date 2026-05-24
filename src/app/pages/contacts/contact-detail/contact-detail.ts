@@ -1,5 +1,5 @@
 
-import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject, DestroyRef } from '@angular/core';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
 import { Contact } from '../../../interfaces/interface';
 import { AuthService } from '../../../services/auth.service';
@@ -17,6 +17,17 @@ export class ContactDetail {
   mobileMenuOpen = signal(false);
   /** Signal reflecting if the mobile action menu container is visible */
   mobileMenuVisible = signal(false);
+  
+  private destroyRef = inject(DestroyRef);
+  private mobileMenuTimeoutId: any = null;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.mobileMenuTimeoutId) {
+        clearTimeout(this.mobileMenuTimeoutId);
+      }
+    });
+  }
 
   /** Opens the mobile menu with a slide-in animation */
   openMobileMenu() {
@@ -27,8 +38,12 @@ export class ContactDetail {
   /** Closes the mobile menu with a slide-out animation */
   closeMobileMenu() {
     this.mobileMenuOpen.set(false);
-    setTimeout(() => {
+    if (this.mobileMenuTimeoutId) {
+      clearTimeout(this.mobileMenuTimeoutId);
+    }
+    this.mobileMenuTimeoutId = setTimeout(() => {
       this.mobileMenuVisible.set(false);
+      this.mobileMenuTimeoutId = null;
     }, 250);
   }
   /** Input contact record to display */
