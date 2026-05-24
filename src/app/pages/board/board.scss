@@ -1,7 +1,7 @@
 @use '../../../styles/abstracts/' as *;
 
 .board-container {
-  padding: 80px 32px 0 32px;
+  padding: 80px 65px 0 65px;
   max-width: 1208px;
   width: 100%;
 }
@@ -48,6 +48,11 @@
 
 .task-list {
   flex-grow: 1;
+  min-height: 150px;
+
+  @media (min-width: 1351px) {
+    min-height: calc(100dvh - 280px);
+  }
 }
 
 .outer-drag {
@@ -59,7 +64,7 @@
 .task-card {
   @include flex(column, nowrap, flex-start, stretch);
   width: 100%;
-  min-width: 250px;
+  min-width: 200px;
   box-sizing: border-box;
   background: $color-white;
   border-radius: 24px;
@@ -154,6 +159,10 @@
   font-size: 16px;
 }
 
+.task-list:has(.cdk-drag-placeholder) .empty-list-placeholder {
+  display: none;
+}
+
 .cdk-drag-preview {
   background: transparent;
   box-shadow: none;
@@ -193,15 +202,9 @@
   cursor: default;
   user-select: none;
 }
-
-
-
 /* #region RESPONSIVE */
-@include large-desktop {
-  .board-container {
-    padding: 80px 65px 0 65px;
-  }
-}
+
+
 
 @media (max-width: 1350px) {
   .board-content {
@@ -209,7 +212,7 @@
   }
 }
 
-@include tablet-lg {
+@include mobile {
   .board-container {
     padding: 48px 0 100px 0;
     max-width: 100%;
