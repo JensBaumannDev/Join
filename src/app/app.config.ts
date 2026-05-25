@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, ErrorHandler, Injectable } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 
@@ -28,7 +28,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withViewTransitions()),
+    provideRouter(routes),
     { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ]
 };
