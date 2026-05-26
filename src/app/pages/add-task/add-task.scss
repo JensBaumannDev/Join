@@ -38,14 +38,16 @@
     gap: 8px;
     width: 100%;
   }
-  input[type='date'] {
-    display: block;
-    width: 100%;
-  }
 
-  input[type='date']::-webkit-date-and-time-value {
-    height: 1.5em;
-    margin: 0;
+  @supports (-webkit-touch-callout: none) {
+    input[type='date'] {
+      display: block;
+      width: 100%;
+    }
+    input[type='date']::-webkit-date-and-time-value {
+      height: 1.5em;
+      margin: 0;
+    }
   }
 
   &__label {
