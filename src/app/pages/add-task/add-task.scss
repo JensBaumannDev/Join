@@ -485,6 +485,13 @@
       left: -157px;
     }
 
+    &__dropdown-contact {
+      span {
+        white-space: normal;
+        line-height: 1.2;
+      }
+    }
+
     &__input,
     &__assigned-input,
     &__category-input {
