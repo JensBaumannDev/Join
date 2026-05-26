@@ -125,9 +125,9 @@ This application was collaboratively developed by the following team members:
 | Contributor | GitHub | LinkedIn |
 | :--- | :--- | :--- |
 | **Jens Baumann** | [@JensBaumannDev](https://github.com/JensBaumannDev) | [Jens Baumann](https://www.linkedin.com/in/jens-baumann-7a6866315/) |
-| **Julia Keller** | [@JuliaKeller13](https://github.com/JuliaKeller13) | *Coming soon* |
+| **Julia Keller** | [@JuliaKeller13](https://github.com/JuliaKeller13) | [Julia Keller](https://www.linkedin.com/in/julia-keller-970409389/) |
 | **Temirlan Gashimov** | [@TemirlanGashimov](https://github.com/TemirlanGashimov) | *Coming soon* |
-| **Mario Ramirez** | [@marioramirez90](https://github.com/marioramirez90) | *Coming soon* |
+| **Mario Ramirez** | [@marioramirez90](https://github.com/marioramirez90) | [Mario Ramirez](https://www.linkedin.com/in/mario-ramirez-668288283) |
 
 ---
 Developed as part of the software engineering curriculum at the [Developer Akademie](https://developerakademie.com/).
