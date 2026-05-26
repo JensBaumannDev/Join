@@ -42,29 +42,29 @@ span {
   font-weight: 400;
 }
 
-h1 {
+h1, .h1 {
   @include mx.fluid-text(40, 64);
   font-weight: 700;
 }
 
-h2 {
+h2, .h2 {
   @include mx.fluid-text(38, 60);
   font-weight: 700;
   margin: 0;
 }
 
-h3 {
+h3, .h3 {
   font-size: 30px;
   font-weight: 700;
   margin: 0;
 }
 
-h4 {
+h4, .h4 {
   @include mx.fluid-text(19, 27);
   font-weight: 400;
 }
 
-h5 {
+h5, .h5 {
   @include mx.fluid-text(16, 20);
   font-weight: 700;
 }
