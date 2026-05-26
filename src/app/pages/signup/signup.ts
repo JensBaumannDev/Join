@@ -19,11 +19,16 @@ export class Signup {
     loading = false;
     private toastService = inject(ToastService);
 
-    /** Toggle acceptTerms checkbox manually for custom checkbox UI */
+
+    /**
+     * Toggle acceptTerms checkbox manually for custom checkbox UI.
+     */
     toggleAcceptTerms() {
         const ctrl = this.form.get('acceptTerms');
         if (ctrl) ctrl.setValue(!ctrl.value);
     }
+
+
     /** FormBuilder helper instance */
     private fb = inject(FormBuilder);
     /** Service managing authentication state */
@@ -51,6 +56,7 @@ export class Signup {
         acceptTerms: [false, Validators.requiredTrue],
     }, { validators: Signup.passwordMatchValidator });
 
+
     /**
      * Static validator asserting that password matches confirmPassword control value.
      * 
@@ -61,34 +67,60 @@ export class Signup {
         const password = form.get('password')?.value;
         const confirmPasswordControl = form.get('confirmPassword');
 
-        if (!confirmPasswordControl) return null;
-        if (!confirmPasswordControl.value) return null;
+        if (!confirmPasswordControl || !confirmPasswordControl.value) return null;
 
         if (password !== confirmPasswordControl.value) {
-            confirmPasswordControl.setErrors({ ...confirmPasswordControl.errors, passwordMismatch: true });
-            return { passwordMismatch: true };
-        } else {
-            if (confirmPasswordControl.hasError('passwordMismatch')) {
-                const errors = { ...confirmPasswordControl.errors };
-                delete errors['passwordMismatch'];
-                confirmPasswordControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
-            }
-            return null;
+            return Signup.setMismatchError(confirmPasswordControl);
+        }
+        Signup.clearMismatchError(confirmPasswordControl);
+        return null;
+    }
+
+
+    /**
+     * Helper setting the password mismatch error on the control.
+     * 
+     * @param control - The target abstract control.
+     * @returns The validation error payload.
+     */
+    private static setMismatchError(control: AbstractControl) {
+        control.setErrors({ ...control.errors, passwordMismatch: true });
+        return { passwordMismatch: true };
+    }
+
+
+    /**
+     * Helper clearing the password mismatch error from the control.
+     * 
+     * @param control - The target abstract control.
+     */
+    private static clearMismatchError(control: AbstractControl): void {
+        if (control.hasError('passwordMismatch')) {
+            const errors = { ...control.errors };
+            delete errors['passwordMismatch'];
+            control.setErrors(Object.keys(errors).length > 0 ? errors : null);
         }
     }
+
 
     /** Toggles the password field display type */
     togglePassword(): void {
         this.showPassword.update((v) => !v);
     }
 
+
     /** Toggles the confirmation password field display type */
     toggleConfirmPassword(): void {
         this.showConfirmPassword.update((v) => !v);
     }
 
+
     errorMessage: string | null = null;
 
+
+    /**
+     * Validates input controls and invokes user registration.
+     */
     async signUp() {
         if (this.form.invalid || this.loading) return;
         const { name, email, password } = this.getFormValues();
@@ -104,6 +136,7 @@ export class Signup {
         }
     }
 
+
     /** Extracts and normalizes form values for registration */
     private getFormValues() {
         return {
@@ -113,18 +146,33 @@ export class Signup {
         };
     }
 
-    /** Handles user registration via AuthService */
+
+    /**
+     * Handles user registration via AuthService.
+     * 
+     * @param email - User email address.
+     * @param password - User authentication password.
+     * @param name - Display name of the user.
+     */
     private async registerUser(email: string, password: string, name: string) {
         await this.authService.signUp(String(email), String(password), String(name));
     }
 
-    /** Handles successful registration: toast and navigation */
+
+    /**
+     * Handles successful registration: triggers toast notification and navigates to login.
+     */
     private async handleSuccess() {
         this.toastService.show('You Signed Up successfully', false);
         await this.router.navigate(['/login']);
     }
 
-    /** Handles registration errors and user feedback */
+
+    /**
+     * Handles registration errors and resolves system feedback warnings.
+     * 
+     * @param error - The server response error code or payload.
+     */
     private handleError(error: any) {
         let msg = error?.message ?? 'Registration failed. Please try again.';
         if (

@@ -13,7 +13,7 @@
         <div class="separator"></div>
       </div>
 
-      <form [formGroup]="form" class="form" (ngSubmit)="signUp()">
+      <form [formGroup]="form" class="form" (ngSubmit)="signUp()" novalidate>
         <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
           <input matInput formControlName="name" placeholder="Name" autocomplete="off" />
           <img matSuffix src="icons/form/person.svg" alt="user" />

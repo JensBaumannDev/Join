@@ -41,6 +41,7 @@ export class ContactList implements OnInit {
     return user.email === contact.email;
   }
 
+
   /**
    * Returns the display label for a contact, appending (You) if it's the current user.
    * 
@@ -58,6 +59,7 @@ export class ContactList implements OnInit {
     return isCurrentUser ? `${name} (You)` : name;
   }
 
+
   /**
    * Opens the dialog for adding or editing a contact and processes the result.
    * 
@@ -74,23 +76,50 @@ export class ContactList implements OnInit {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe((result: { action: string, data?: Contact } | undefined) => {
-      if (!result) return;
-
-      if (result.action === 'save' && result.data) {
-        this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
-        if (mode === 'edit' && contact?.id) {
-          this.contactService.selectedContact.set({
-            ...contact,
-            ...result.data
-          });
-        }
-      } else if (result.action === 'delete') {
-        this.toastService.show('Contact successfully deleted');
-        this.contactService.selectedContact.set(null);
-      }
-    });
+    dialogRef.afterClosed().subscribe((result) => this.handleDialogResult(result, mode, contact));
   }
+
+
+  /**
+   * Processes the dialog output result and routes to save or delete handlers.
+   * 
+   * @param result - The output action and payload from the dialog.
+   * @param mode - Active dialog configuration mode.
+   * @param contact - Selected contact record.
+   */
+  private handleDialogResult(
+    result: { action: string, data?: Contact } | undefined,
+    mode: 'add' | 'edit',
+    contact?: Contact
+  ): void {
+    if (!result) return;
+
+    if (result.action === 'save' && result.data) {
+      this.handleSaveAction(result.data, mode, contact);
+    } else if (result.action === 'delete') {
+      this.toastService.show('Contact successfully deleted');
+      this.contactService.selectedContact.set(null);
+    }
+  }
+
+
+  /**
+   * Updates state variables and signals after a contact save action.
+   * 
+   * @param data - The contact detail payload.
+   * @param mode - Active dialog configuration mode.
+   * @param contact - Original contact record.
+   */
+  private handleSaveAction(data: Contact, mode: 'add' | 'edit', contact?: Contact): void {
+    this.toastService.show(mode === 'add' ? 'Contact successfully created' : 'Contact successfully updated');
+    if (mode === 'edit' && contact?.id) {
+      this.contactService.selectedContact.set({
+        ...contact,
+        ...data
+      });
+    }
+  }
+
 
   /** Computed property grouping contacts alphabetically by their initials. */
   groupedContacts = computed(() => {
@@ -113,11 +142,15 @@ export class ContactList implements OnInit {
       .sort((a, b) => a.letter.localeCompare(b.letter));
   });
 
-  /** Initialization hook fetching contacts and subscribing to real-time updates. */
+
+  /**
+   * Initialization hook fetching contacts and subscribing to real-time updates.
+   */
   ngOnInit() {
     this.contactService.getContacts();
     this.contactService.subscribeToChanges();
   }
+
 
   /**
    * Selects a contact to display in the detail view.
@@ -127,6 +160,7 @@ export class ContactList implements OnInit {
   selectContact(contact: Contact) {
     this.contactService.selectedContact.set(contact);
   }
+
 
   /**
    * Creates a new contact with a balanced avatar color and re-fetches the list.
@@ -140,6 +174,7 @@ export class ContactList implements OnInit {
     this.contactService.addContact(name, email, phone, this.avatarService.getBalancedColor(usedColors));
     this.contactService.getContacts();
   }
+
 
   /**
    * Deletes a contact from the database and updates selected contact state.

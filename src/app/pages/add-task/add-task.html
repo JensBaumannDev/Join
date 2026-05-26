@@ -1,7 +1,7 @@
 <div class="add-task">
   <h2 class="add-task__title">Add Task</h2>
 
-  <form class="add-task__form" [formGroup]="taskForm" (ngSubmit)="submit()">
+  <form class="add-task__form" [formGroup]="taskForm" (ngSubmit)="submit()" novalidate>
     <div class="add-task__columns">
       <div class="add-task__column">
         <div class="add-task__field">

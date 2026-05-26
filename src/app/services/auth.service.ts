@@ -25,14 +25,19 @@ export class AuthService {
     if (error) throw error;
     return data;
   }
+
+
   /** Injected SupabaseService to handle API connections */
   private supabaseService = inject(SupabaseService);
   /** Injected ContactService for updating user contacts information */
   private contactService = inject(ContactService);
+
+
   /** Helper getter for the central Supabase client instance */
   private get supabase() {
     return this.supabaseService.supabase;
   }
+
 
   /** Signal holding the currently authenticated user session */
   currentUser = signal<User | null>(null);
@@ -40,10 +45,12 @@ export class AuthService {
   /** Signal indicating if the initial session restoration check has finished */
   isAuthResolved = signal(false);
 
+
   /** Restores current authenticated user session from database on startup */
   constructor() {
     void this.loadSession();
   }
+
 
   /**
    * Resolves and returns a human-readable display name for the user.
@@ -57,6 +64,7 @@ export class AuthService {
     return user.user_metadata?.['full_name'] || user.user_metadata?.['display_name'] || user.email || 'Guest';
   }
 
+
   /**
    * Duplicates default tasks, subtasks and contacts (where user_id is null) for a newly registered/logged-in user
    * if they do not have any tasks or contacts yet.
@@ -69,6 +77,11 @@ export class AuthService {
   }
 
 
+  /**
+   * Populates the user's tasks with database templates on first initialization.
+   * 
+   * @param user - The active authenticated user account.
+   */
   private async initTasksCopy(user: User): Promise<void> {
     const { count, error } = await this.supabase
       .from('task').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
@@ -83,6 +96,12 @@ export class AuthService {
   }
 
 
+  /**
+   * Duplicates a single template task and sets user ownership.
+   * 
+   * @param template - The template task record.
+   * @param userId - Target user account ID.
+   */
   private async copyTemplateTaskWithSubtasks(template: any, userId: string): Promise<void> {
     const oldTaskId = template.id;
     const taskCopy = { ...template };
@@ -97,6 +116,12 @@ export class AuthService {
   }
 
 
+  /**
+   * Copies template subtasks to the newly instantiated task record.
+   * 
+   * @param oldTaskId - The parent template task database ID.
+   * @param newTaskId - The newly instantiated task database ID.
+   */
   private async copySubtasksToNewTask(oldTaskId: number, newTaskId: number): Promise<void> {
     const { data: subtasks, error } = await this.supabase
       .from('subtasks').select('*').eq('task_id', oldTaskId);
@@ -111,6 +136,13 @@ export class AuthService {
   }
 
 
+  /**
+   * Maps template contacts into user contact records.
+   * 
+   * @param contacts - Predefined contact records array.
+   * @param userId - Target user account ID.
+   * @returns Cloned contact records array.
+   */
   private buildContactCopies(contacts: any[], userId: string): any[] {
     return contacts.map(c => {
       const copy = { ...c };
@@ -122,6 +154,11 @@ export class AuthService {
   }
 
 
+  /**
+   * Populates the user's contacts with database templates on first initialization.
+   * 
+   * @param user - The active authenticated user account.
+   */
   private async initContactsCopy(user: User): Promise<void> {
     const { count, error } = await this.supabase
       .from('contacts').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
@@ -154,6 +191,13 @@ export class AuthService {
     }
   }
 
+
+  /**
+   * Resolves a contact details record matching email and user_id.
+   * 
+   * @param email - Target contact email address.
+   * @param userId - Target user account ID.
+   */
   private fetchContactByEmail(email: string, userId: string) {
     return this.supabase
       .from('contacts')
@@ -164,6 +208,13 @@ export class AuthService {
       .maybeSingle();
   }
 
+
+  /**
+   * Updates contact name records if user display configurations change.
+   * 
+   * @param contact - The original contact record details.
+   * @param name - The updated display name string.
+   */
   private async updateExistingContactIfNeeded(contact: any, name: string): Promise<void> {
     if (contact.name !== name) {
       const { error } = await this.supabase
@@ -175,6 +226,14 @@ export class AuthService {
     await this.contactService.getContacts();
   }
 
+
+  /**
+   * Generates a new self-representing user contact record.
+   * 
+   * @param email - User email address.
+   * @param name - User display name string.
+   * @param userId - Target user account ID.
+   */
   private async createNewContact(email: string, name: string, userId: string): Promise<void> {
     const { error } = await this.supabase
       .from('contacts')
@@ -185,6 +244,7 @@ export class AuthService {
     }
     await this.contactService.getContacts();
   }
+
 
   /**
    * Restores the user session from local storage on startup.
@@ -201,6 +261,7 @@ export class AuthService {
     }
     this.isAuthResolved.set(true);
   }
+
 
   /**
    * Authenticates a user using email and password.
@@ -228,6 +289,7 @@ export class AuthService {
     }
   }
 
+
   /**
    * Signs out the current user and clears session storage flags.
    * 
@@ -246,6 +308,7 @@ export class AuthService {
       sessionStorage.removeItem('greetingShown');
     }
   }
+
 
   /**
    * Checks if a user is currently authenticated.
