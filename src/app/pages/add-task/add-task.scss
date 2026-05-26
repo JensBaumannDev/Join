@@ -40,26 +40,27 @@
   }
 
   @supports (-webkit-touch-callout: none) {
-  input[type='date'] {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    
-    -webkit-appearance: none;
-    appearance: none;
-    
-    min-height: 3rem;
-    padding: 0.5rem; 
-    line-height: normal;
-  }
+    input[type='date'] {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      line-height: normal;
+    }
 
-  input[type='date']::-webkit-date-and-time-value {
-    text-align: left;
-    height: auto;
-    margin: 0;
+    input[type='date']::-webkit-date-and-time-value {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      text-align: left;
+    }
   }
-}
 
   &__label {
     @include flex(row, wrap, flex-start, center);
