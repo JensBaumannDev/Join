@@ -19,7 +19,7 @@
           <div class="separator"></div>
         </div>
 
-        <form [formGroup]="form" class="form" (ngSubmit)="submit()">
+        <form [formGroup]="form" class="form" (ngSubmit)="submit()" novalidate>
           <mat-form-field appearance="outline" class="custom-input" subscriptSizing="dynamic">
             <input
               matInput

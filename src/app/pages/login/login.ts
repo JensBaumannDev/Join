@@ -48,48 +48,73 @@ export class Login implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * Cleans up subscriptions on component destruction.
+   */
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
   }
 
+
+  /**
+   * Triggers the splash screen animation if not skipped.
+   */
   private triggerAnimation(): void {
-  this.resetScrollPosition();
+    this.resetScrollPosition();
 
-  if (this.shouldSkipAnimation()) {
-    this.skipToFinishedState();
-    return;
+    if (this.shouldSkipAnimation()) {
+      this.skipToFinishedState();
+      return;
+    }
+
+    this.runLogoAnimation();
   }
 
-  this.runLogoAnimation();
-}
 
-private resetScrollPosition(): void {
-  const content = document.querySelector('.content') as HTMLElement;
-  if (content) {
-    content.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  /**
+   * Resets the viewport scroll position.
+   */
+  private resetScrollPosition(): void {
+    const content = document.querySelector('.content') as HTMLElement;
+    if (content) {
+      content.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
   }
-}
 
-private shouldSkipAnimation(): boolean {
-  return !!sessionStorage.getItem('skipLogoAnimation');
-}
 
-private skipToFinishedState(): void {
-  this.splashDone.set(true);
-  sessionStorage.removeItem('skipLogoAnimation');
-}
+  /**
+   * Asserts whether the splash animation should be skipped.
+   */
+  private shouldSkipAnimation(): boolean {
+    return !!sessionStorage.getItem('skipLogoAnimation');
+  }
 
-private runLogoAnimation(): void {
-  this.isAnimating.set(false);
-  this.splashDone.set(false);
 
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    this.isAnimating.set(true);
-    
-    setTimeout(() => this.splashDone.set(true), 50);
-    setTimeout(() => this.isAnimating.set(false), 1250);
-  }));
-}
+  /**
+   * Skips splash animations and sets state variables to finished.
+   */
+  private skipToFinishedState(): void {
+    this.splashDone.set(true);
+    sessionStorage.removeItem('skipLogoAnimation');
+  }
+
+
+  /**
+   * Runs the splash screen animation workflow.
+   */
+  private runLogoAnimation(): void {
+    this.isAnimating.set(false);
+    this.splashDone.set(false);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      this.isAnimating.set(true);
+      
+      setTimeout(() => this.splashDone.set(true), 50);
+      setTimeout(() => this.isAnimating.set(false), 1250);
+    }));
+  }
+
 
   /** Reactive login validation form configuration */
   form = this.fb.group({
@@ -103,17 +128,26 @@ private runLogoAnimation(): void {
     password: ['', Validators.required],
   });
 
+
   /** Toggles the password field type between password and text */
   togglePassword(): void {
     this.showPassword.update((v) => !v);
   }
+
 
   /** Submits login credentials and routes to dashboard summary on success */
   async submit(): Promise<void> {
     if (this.form.invalid || this.loading()) return;
     this.loading.set(true);
     this.loginError.set(false);
+    await this.executeLogin();
+  }
 
+
+  /**
+   * Internal helper executing login and routing.
+   */
+  private async executeLogin(): Promise<void> {
     try {
       const { email, password } = this.form.value;
       await this.authService.login(email!, password!);
@@ -125,6 +159,7 @@ private runLogoAnimation(): void {
     }
   }
 
+
   /** Sets error states on form controls after a failed login attempt */
   private setLoginErrors(): void {
     this.loginError.set(true);
@@ -134,6 +169,7 @@ private runLogoAnimation(): void {
       ctrl?.markAsTouched();
     });
   }
+
 
   /** Clears the validation error styles and active error flags on the controls */
   clearLoginError(): void {
@@ -145,6 +181,7 @@ private runLogoAnimation(): void {
       }
     });
   }
+
 
   /** Logins using default guest user credentials */
   async guestLogin(): Promise<void> {

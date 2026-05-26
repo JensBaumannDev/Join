@@ -14,7 +14,7 @@
     @for (col of columns; track col.id) {
       <div class="column">
         <div class="column-header">
-          <h3>{{ boardConfig?.[col.configKey] || col.label }}</h3>
+          <h3>{{ col.label }}</h3>
           @if (col.id !== 'done') {
             <ng-container *ngTemplateOutlet="addBtn; context: { $implicit: col }"></ng-container>
           }
@@ -35,44 +35,7 @@
               (click)="openTaskDetailDialog(task)"
               [cdkDragStartDelay]="dragDelay()"
             >
-              <div class="inner-drag task-card">
-                @if (task.category) {
-                  <app-category-badge [category]="task.category"></app-category-badge>
-                }
-                <h4 class="task-title">{{ task.title }}</h4>
-                <p class="task-desc">{{ task.description }}</p>
-
-                <app-subtask-progress [subtasks]="task.subtasks || []"></app-subtask-progress>
-
-                <div class="task-footer">
-                  <div class="contact-list" (click)="toggleAvatarPopup($event, task)">
-                    @for (assign of task.assignments.slice(0, 3); track $index) {
-                      @if (getContactInfo(assign); as info) {
-                        <div
-                          class="avatar"
-                          [style.background-color]="info.color"
-                          [attr.title]="getAssignmentLabel(assign)"
-                        >
-                          {{ info.initials }}
-                        </div>
-                      }
-                    }
-
-                    @if (task.assignments.length > 3) {
-                      <div class="avatar avatar-overflow">
-                        +{{ task.assignments.length - 3 }}
-                      </div>
-                    }
-                  </div>
-                  @if (task.priority) {
-                    <img
-                      [src]="getPriorityIcon(task.priority)"
-                      class="prio-icon"
-                      [alt]="task.priority"
-                    />
-                  }
-                </div>
-              </div>
+              <app-task-card [task]="task"></app-task-card>
             </div>
           } @empty {
             <div class="empty-list-placeholder">No tasks {{ col.label }}</div>
@@ -82,28 +45,4 @@
     }
   </div>
 </section>
-
-@if (avatarPopup().visible) {
-  <div
-    class="avatar-popup"
-    [style.bottom.px]="avatarPopup().bottom"
-    [style.top.px]="avatarPopup().top"
-    [style.left.px]="avatarPopup().x"
-    [style.max-height.px]="avatarPopup().maxHeight"
-    (click)="$event.stopPropagation()"
-  >
-    @for (assign of avatarPopup().assignments; track $index) {
-      @if (getContactInfo(assign); as info) {
-        <div class="avatar-popup-row">
-          <div
-            class="avatar avatar-sm"
-            [style.background-color]="info.color"
-          >
-            {{ info.initials }}
-          </div>
-          <span class="avatar-popup-name">{{ getAssignmentLabel(assign) }}</span>
-        </div>
-      }
-    }
-  </div>
-}
+

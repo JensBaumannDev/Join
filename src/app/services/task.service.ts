@@ -34,36 +34,8 @@ export class TaskService {
   /** Signal holding task category names from database */
   categories = signal<string[]>([]);
 
-  /** Signal holding the board configuration data */
-  boardConfig = signal<any>(null);
-
   /** Signal for filtering tasks by search term */
   searchTerm = signal<string>('');
-
-  /** Proxy to ContactService contacts for backwards compatibility */
-  get contacts() {
-    return this.contactService.contacts;
-  }
-
-  /** Proxy to ContactService getContacts for backwards compatibility */
-  async getContacts() {
-    await this.contactService.getContacts();
-  }
-
-  /**
-   * Fetches the board configuration (e.g., column names and layout) from Supabase.
-   * 
-   * @returns A promise resolving when the board configuration is loaded.
-   */
-  async getBoardConfig() {
-    const { data, error } = await this.supabaseService.supabase
-      .from('board')
-      .select('*');
-
-    if (!error && data && data.length > 0) {
-      this.boardConfig.set(data[0]);
-    }
-  }
 
   /**
    * Fetches all tasks from the database sorted by their position and filtered by logged-in user.

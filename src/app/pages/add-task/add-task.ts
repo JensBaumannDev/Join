@@ -86,6 +86,7 @@ export class AddTask implements OnInit {
     return selectedDate < today ? { pastDate: true } : null;
   }
 
+
   /**
    * Initializes form controls using FormBuilder.
    * 
@@ -102,6 +103,7 @@ export class AddTask implements OnInit {
     });
   }
 
+
   /**
    * Document click listener to close dropdowns when clicking outside.
    * 
@@ -110,28 +112,40 @@ export class AddTask implements OnInit {
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    const isAssignedClick = target.closest('.add-task__assigned');
-    const isCategoryClick = target.closest('.add-task__category');
-    const isMoreClick = target.closest('.add-task__more-wrapper');
+    this.closeAssignedDropdown(target);
+    this.closeCategoryDropdown(target);
+    this.closeMoreContacts(target);
+  }
 
-    if (!isAssignedClick) {
+
+  private closeAssignedDropdown(target: HTMLElement): void {
+    if (!target.closest('.add-task__assigned')) {
       this.dropdownOpen = false;
       this.contactSearchTerm = '';
     }
-    if (!isCategoryClick) {
+  }
+
+
+  private closeCategoryDropdown(target: HTMLElement): void {
+    if (!target.closest('.add-task__category')) {
       this.categoryDropdownOpen = false;
     }
+  }
 
-    if (!isMoreClick) {
+
+  private closeMoreContacts(target: HTMLElement): void {
+    if (!target.closest('.add-task__more-wrapper')) {
       this.moreContactsOpen = false;
     }
   }
+
 
   /** Gets filtered contacts based on the search query term. */
   get filteredContacts() {
     const term = this.contactSearchTerm.toLowerCase();
     return this.contacts().filter((c: any) => c.name.toLowerCase().includes(term));
   }
+
 
   /** Fetches contacts and categories on component initialization. */
   async ngOnInit() {
@@ -140,6 +154,7 @@ export class AddTask implements OnInit {
       this.prefillForm();
     }
   }
+
 
   /** Prefills form controls with the existing task and subtask data in edit mode. */
   private prefillForm() {
@@ -157,6 +172,7 @@ export class AddTask implements OnInit {
     });
   }
 
+
   /**
    * Internal helper parsing assignments string array representation.
    * 
@@ -167,11 +183,13 @@ export class AddTask implements OnInit {
     return parseAssignedTo(val);
   }
 
+
   /** Toggles the assigned contacts dropdown list visibility. */
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
     if (this.dropdownOpen) this.categoryDropdownOpen = false;
   }
+
 
   /** Toggles the task categories dropdown list visibility. */
   toggleCategoryDropdown() {
@@ -182,10 +200,12 @@ export class AddTask implements OnInit {
     }
   }
 
+
   /** Toggles the expanded visual list of extra contact icons. */
   toggleMoreContacts() {
     this.moreContactsOpen = !this.moreContactsOpen;
   }
+
 
   /**
    * Toggles a contact's assignment on this task.
@@ -206,6 +226,7 @@ export class AddTask implements OnInit {
     });
   }
 
+
   /**
    * Helper check to see if a contact matches the current user's email.
    * 
@@ -215,6 +236,7 @@ export class AddTask implements OnInit {
   isCurrentUserContact(contact: any): boolean {
     return this.authService.currentUser()?.email === contact?.email;
   }
+
 
   /**
    * Formats contact name label and appends '(You)' suffix for logged in user.
@@ -226,6 +248,7 @@ export class AddTask implements OnInit {
     return this.isCurrentUserContact(contact) ? `${contact.name} (You)` : contact.name;
   }
 
+
   /**
    * Updates task priority field in the form.
    * 
@@ -235,44 +258,20 @@ export class AddTask implements OnInit {
     this.taskForm.patchValue({ priority: value });
   }
 
+
   /** Injectable ToastService instance */
   toastService = inject(ToastService);
 
-  /** Handles task form validation and submits new or edited task to database */
+
+  /**
+   * Handles task form validation and submits new or edited task to database.
+   */
   async submit() {
     if (this.isSubmitting) return;
-
     this.isSubmitting = true;
-
     try {
       if (this.taskForm.valid) {
-        const formValue = this.taskForm.value;
-        const taskData = {
-          title: formValue.title,
-          description: formValue.description,
-          due_date: formValue.dueDate,
-          priority: formValue.priority,
-          category: formValue.category,
-          assigned_to: formValue.assignedTo,
-        };
-
-        if (this.taskToEdit) {
-          await this.taskService.updateTask(String(this.taskToEdit.id), taskData, this.subtaskList);
-          this.toastService.show('Task updated');
-          this.taskCreated.emit();
-        } else {
-          const newTask = { ...taskData, status: this.initialStatus };
-          await this.taskService.createTask(newTask, this.subtaskList);
-          this.toastService.show('Task added to board', true);
-
-          if (this.isDialog) {
-            this.taskCreated.emit();
-          } else {
-            setTimeout(() => {
-              this.router.navigate(['/board']);
-            }, 1000);
-          }
-        }
+        await this.saveTask();
       } else {
         this.taskForm.markAllAsTouched();
         this.isSubmitting = false;
@@ -281,6 +280,44 @@ export class AddTask implements OnInit {
       this.isSubmitting = false;
     }
   }
+
+
+  private async saveTask(): Promise<void> {
+    const taskData = this.getTaskData();
+    if (this.taskToEdit) {
+      await this.taskService.updateTask(String(this.taskToEdit.id), taskData, this.subtaskList);
+      this.toastService.show('Task updated');
+      this.taskCreated.emit();
+    } else {
+      await this.createNewTask(taskData);
+    }
+  }
+
+
+  private getTaskData() {
+    const formValue = this.taskForm.value;
+    return {
+      title: formValue.title,
+      description: formValue.description,
+      due_date: formValue.dueDate,
+      priority: formValue.priority,
+      category: formValue.category,
+      assigned_to: formValue.assignedTo,
+    };
+  }
+
+
+  private async createNewTask(taskData: any): Promise<void> {
+    const newTask = { ...taskData, status: this.initialStatus };
+    await this.taskService.createTask(newTask, this.subtaskList);
+    this.toastService.show('Task added to board', true);
+    if (this.isDialog) {
+      this.taskCreated.emit();
+    } else {
+      setTimeout(() => this.router.navigate(['/board']), 1000);
+    }
+  }
+
 
   /** Resets the form and selected contact list to initial values */
   clear() {
@@ -291,6 +328,7 @@ export class AddTask implements OnInit {
     this.selectedContacts = [];
     this.subtaskList = [];
   }
+
 
   /** Callback responding to cancel click event */
   onCancelOrClear() {

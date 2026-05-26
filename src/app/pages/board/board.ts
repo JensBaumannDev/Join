@@ -13,18 +13,16 @@ import {
 } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../services/task.service';
 import { ContactService } from '../../services/contact.service';
-import { AvatarService } from '../../services/avatar.service';
 import { Task } from '../../interfaces/task.interface';
 import { FindTask } from '../../components/find-task/find-task';
-import { CategoryBadge } from '../../components/category-badge/category-badge';
-import { SubtaskProgress } from '../../components/subtask-progress/subtask-progress';
+import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { parseAssignedTo } from '../../utils/task.utils';
 
 /** Page component managing the kanban board interface and drag-and-drop task workflow */
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, CategoryBadge, SubtaskProgress],
+  imports: [NgTemplateOutlet, CdkDropListGroup, CdkDropList, CdkDrag, FindTask, TaskCardComponent],
   templateUrl: './board.html',
   styleUrl: './board.scss'
 })
@@ -33,8 +31,6 @@ export class Board implements OnInit, OnDestroy {
   private taskService = inject(TaskService);
   /** Injected ContactService for retrieving assignees info */
   private contactService = inject(ContactService);
-  /** Injected AvatarService for resolving user visual avatar settings */
-  private avatarService = inject(AvatarService);
   /** Injected DialogService for managing overlay dialog views */
   private dialogService = inject(DialogService);
   /** Injected Angular Router for navigating between board views */
@@ -44,76 +40,6 @@ export class Board implements OnInit, OnDestroy {
 
   /** Signal tracking the current screen width for responsive rendering */
   screenWidth = signal(window.innerWidth);
-
-  /** State for the avatar popup */
-  avatarPopup = signal<{
-    visible: boolean;
-    taskId: string | number | null;
-    x: number;
-    bottom?: number | null;
-    top?: number | null;
-    maxHeight: number;
-    assignments: any[];
-  }>({
-    visible: false,
-    taskId: null,
-    x: 0,
-    maxHeight: 260,
-    assignments: [],
-  });
-
-  /**
-   * Toggles the display state of the assignee avatar overlay popup.
-   * Computes the alignment and maximum height based on available screen space.
-   * 
-   * @param event - The mouse click event.
-   * @param task - The active task object.
-   */
-  toggleAvatarPopup(event: MouseEvent, task: Task) {
-    event.stopPropagation();
-
-    const popup = this.avatarPopup();
-
-    if (popup.visible && popup.taskId === task.id) {
-      this.avatarPopup.update(p => ({
-        ...p,
-        visible: false,
-        taskId: null,
-      }));
-      return;
-    }
-
-    const target = event.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const assignments = this.getTaskAssignments(task);
-    const headerHeight = 95;
-    const margin = 12;
-
-    const spaceAbove = rect.top - headerHeight - margin;
-    const spaceBelow = window.innerHeight - rect.bottom - margin;
-    const openDirection = (spaceAbove > 150 || spaceAbove > spaceBelow) ? 'up' : 'down';
-
-    const bottom = openDirection === 'up' ? window.innerHeight - rect.top + 8 : null;
-    const top = openDirection === 'down' ? rect.bottom + 8 : null;
-
-    this.avatarPopup.set({
-      visible: true,
-      taskId: task.id,
-      x: Math.max(12, Math.min(rect.left, window.innerWidth - 262)),
-      bottom,
-      top,
-      maxHeight: 260,
-      assignments,
-    });
-  }
-
-  /** Closes the avatar popup overlay. */
-  @HostListener('document:click')
-  closeAvatarPopup() {
-    if (this.avatarPopup().visible) {
-      this.avatarPopup.update(p => ({ ...p, visible: false }));
-    }
-  }
 
   /** Updates the screenWidth signal when the window is resized. */
   @HostListener('window:resize')
@@ -152,77 +78,44 @@ export class Board implements OnInit, OnDestroy {
 
 
 
-  /**
-   * Maps raw string names or assignments of a task into structured contact assignment objects.
-   * 
-   * @param task - The task to parse assignments for.
-   * @param allContacts - The master list of all contact records to match against.
-   * @returns An array of enriched assignment objects.
-   */
-  private parseTaskAssignments(task: Task, allContacts: any[]): any[] {
-    if (task.task_assignments && task.task_assignments.length > 0) {
-      return task.task_assignments;
-    }
-
-    const val: any = task.assigned_to;
-    if (!val) return [];
-
-    const names = parseAssignedTo(val);
-    return names.map(name => {
-      const contact = allContacts.find(c => c.name === name);
-      const assignment = {
-        name: name,
-        color: contact?.color,
-        contact: contact,
-      };
-      return {
-        ...assignment,
-        isYou: this.isCurrentUserAssignment(assignment),
-      };
-    });
-  }
-
-  /** All tasks filtered by the search term and enriched with pre-computed contact assignments */
+  /** All tasks filtered by the search term */
   filteredTasks = computed(() => {
     const term = this.taskService.searchTerm().toLowerCase();
     const tasks = this.taskService.tasks();
-    const allContacts = this.contactService.contacts();
-    
-    const enriched = tasks.map(t => {
-      const assignments = this.parseTaskAssignments(t, allContacts);
-      return {
-        ...t,
-        assignments
-      };
-    });
 
-    if (!term) return enriched;
-    return enriched.filter(t =>
+    if (!term) return tasks;
+
+    return tasks.filter(t =>
       (t.title?.toLowerCase() ?? '').includes(term) ||
       (t.description?.toLowerCase() ?? '').includes(term) ||
       (t.category?.toLowerCase() ?? '').includes(term)
     );
   });
 
+
   /** Computed list of tasks currently in the 'To do' status */
   todo = computed(() => this.filteredTasks().filter(t =>
     ['to do', 'todo'].includes(t.status?.toLowerCase() ?? '')
   ));
+
 
   /** Computed list of tasks currently in the 'In progress' status */
   in_progress = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'in progress'
   ));
 
+
   /** Computed list of tasks currently in the 'Await feedback' status */
   await_feedback = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'await feedback'
   ));
 
+
   /** Computed list of tasks currently in the 'Done' status */
   done = computed(() => this.filteredTasks().filter(t =>
     t.status?.toLowerCase() === 'done'
   ));
+
 
   /** Configuration defining columns, labels, and task lists */
   columns = [
@@ -232,99 +125,23 @@ export class Board implements OnInit, OnDestroy {
     { id: 'done', configKey: 'done', label: 'Done', tasks: this.done },
   ];
 
-  /** Retrieves the current board configuration from the task service */
-  get boardConfig() {
-    return this.taskService.boardConfig();
-  }
 
-  /** Event listener callback for capturing and handling window and element scrolls */
-  private onScrollAction = (event: Event) => {
-    if (this.avatarPopup().visible) {
-      const target = event.target as HTMLElement;
-      if (target?.closest?.('.avatar-popup')) {
-        return;
-      }
-      this.avatarPopup.update(p => ({ ...p, visible: false, taskId: null }));
-    }
-  };
-
-  /** Initializes the board by fetching configuration and tasks and registering scroll listeners */
-  async ngOnInit() {
-    window.addEventListener('scroll', this.onScrollAction, true);
+  /**
+   * Initializes the board by fetching configuration and tasks.
+   */
+  async ngOnInit(): Promise<void> {
     await Promise.all([
-      this.taskService.getBoardConfig(),
       this.taskService.getTasks(),
       this.contactService.getContacts()
     ]);
   }
 
-  /** Cleans up registered scroll event listeners to prevent memory leaks */
-  ngOnDestroy() {
-    window.removeEventListener('scroll', this.onScrollAction, true);
-  }
 
   /**
-   * Resolves the static SVG file path for a task's priority level.
-   * 
-   * @param priority - The priority string (e.g. 'urgent', 'medium', 'low').
-   * @returns The relative file path to the SVG asset.
+   * Lifecycle cleanup hook.
    */
-  getPriorityIcon(priority: string): string {
-    const p = priority?.toLowerCase();
-    return `./icons/board/prio-${p === 'urgent' || p === 'medium' || p === 'low' ? p : 'low'}.svg`;
-  }
+  ngOnDestroy(): void {}
 
-  /**
-   * Retrieves initials and color configuration for a specific assignment.
-   * 
-   * @param assignment - The assignment object containing contact details.
-   * @returns An object with initials and background color.
-   */
-  getContactInfo(assignment: any) {
-    const name = assignment.contact?.name || assignment.name || 'Unknown';
-    const color = assignment.contact?.color || assignment.color;
-    return this.avatarService.getAvatarData(name, color);
-  }
-
-  /** Getter resolving the name of the current authenticated user */
-  private get currentUserContactName(): string | null {
-    const user = this.authService.currentUser();
-    if (!user?.email) return null;
-    const contact = this.contactService.contacts().find((c) => c.email === user.email);
-    return contact?.name || this.authService.getDisplayName(user);
-  }
-
-  /**
-   * Checks if a given assignment belongs to the currently logged in user.
-   * 
-   * @param assign - The assignment object.
-   * @returns True if it matches the current user, false otherwise.
-   */
-  private isCurrentUserAssignment(assign: any): boolean {
-    const name = assign.contact?.name || assign.name;
-    return !!name && name === this.currentUserContactName;
-  }
-
-  /**
-   * Generates a descriptive string for an assignment, appending '(You)' if it matches the active user.
-   * 
-   * @param assign - The assignment object.
-   * @returns The generated display name label.
-   */
-  getAssignmentLabel(assign: any): string {
-    const name = assign.contact?.name || assign.name || 'Unknown';
-    return this.isCurrentUserAssignment(assign) ? `${name} (You)` : name;
-  }
-
-  /**
-   * Returns pre-computed contact assignments for a task.
-   * 
-   * @param task - The target task object.
-   * @returns An array of assignment objects.
-   */
-  getTaskAssignments(task: Task): any[] {
-    return (task as any).assignments || [];
-  }
 
   /**
    * Handles same-column task reordering after a drag-and-drop event.

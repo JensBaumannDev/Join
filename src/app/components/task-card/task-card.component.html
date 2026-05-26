@@ -1,0 +1,46 @@
+<div class="inner-drag task-card">
+  @if (task.category) {
+  <app-category-badge [category]="task.category"></app-category-badge>
+  }
+  <h4 class="task-title">{{ task.title }}</h4>
+  <p class="task-desc">{{ task.description }}</p>
+
+  <app-subtask-progress [subtasks]="task.subtasks || []"></app-subtask-progress>
+
+  <div class="task-footer">
+    <div class="contact-list" (click)="toggleAvatarPopup($event)">
+      @for (assign of getTaskAssignments().slice(0, 3); track $index) {
+      @if (getContactInfo(assign); as info) {
+      <div class="avatar" [style.background-color]="info.color" [attr.title]="getAssignmentLabel(assign)">
+        {{ info.initials }}
+      </div>
+      }
+      }
+
+      @if (getTaskAssignments().length > 3) {
+      <div class="avatar avatar-overflow">
+        +{{ getTaskAssignments().length - 3 }}
+      </div>
+      }
+    </div>
+    @if (task.priority) {
+    <img [src]="getPriorityIcon(task.priority)" class="prio-icon" [alt]="task.priority" />
+    }
+  </div>
+</div>
+
+@if (avatarPopup().visible) {
+<div class="avatar-popup" [style.bottom.px]="avatarPopup().bottom" [style.top.px]="avatarPopup().top"
+  [style.left.px]="avatarPopup().x" [style.max-height.px]="avatarPopup().maxHeight" (click)="$event.stopPropagation()">
+  @for (assign of avatarPopup().assignments; track $index) {
+  @if (getContactInfo(assign); as info) {
+  <div class="avatar-popup-row">
+    <div class="avatar avatar-sm" [style.background-color]="info.color">
+      {{ info.initials }}
+    </div>
+    <span class="avatar-popup-name">{{ getAssignmentLabel(assign) }}</span>
+  </div>
+  }
+  }
+</div>
+}
