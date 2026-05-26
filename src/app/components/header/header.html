@@ -18,7 +18,7 @@
 
           @if (menuOpen || isClosing) {
           <div class="user-menu" [class.closing]="isClosing">
-            <a routerLink="/help" class="user-menu-item header-help-mobile">Help</a>
+            <a routerLink="/help" class="user-menu-item header-help-mobile" (click)="closeMenu()">Help</a>
             <a routerLink="/legal-notice" class="user-menu-item" (click)="closeMenu()">Legal Notice</a>
             <a routerLink="/privacy-policy" class="user-menu-item" (click)="closeMenu()">Privacy Policy</a>
             <span class="user-menu-item" (click)="logout()">Log out</span>
