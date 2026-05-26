@@ -109,7 +109,6 @@
     font-size: 20px;
     color: $color-text;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -117,7 +116,7 @@
     font-size: 16px;
     color: $color-accent;
     white-space: nowrap;
-    overflow: hidden;
+
     text-overflow: ellipsis;
   }
 
