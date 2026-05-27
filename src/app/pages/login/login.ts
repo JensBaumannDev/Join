@@ -188,7 +188,7 @@ export class Login implements OnInit, OnDestroy {
     if (this.loading()) return;
     this.loading.set(true);
     try {
-      await this.authService.login('guest@join.com', 'guest123');
+      await this.authService.login('Guest@join.com', 'Guestjoin123456789!');
       this.router.navigate(['/summary']);
     } catch {
       this.loginError.set(true);
