@@ -114,6 +114,7 @@
     .btn-secondary,
     .btn-primary {
       padding: 12px 24px;
+      font-weight: 700;
     }
   }
 }
@@ -128,8 +129,13 @@
   .footer-link {
     color: $color-text-muted;
     text-decoration: none;
-    transition: background-color 125ms, color 125ms;
     cursor: pointer;
+    text-align: center;
+    
+    display: inline-block;
+    min-width: 110px;
+
+    transition: background-color 125ms, color 125ms;
 
     &:hover {
       color: $color-highlight;
