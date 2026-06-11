@@ -1,0 +1,6 @@
+RewriteEngine On
+# If an existing asset or directory is requested, go to it as-is
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Otherwise, redirect all other requests to index.html for client-side routing
+RewriteRule ^ index.html [L]
